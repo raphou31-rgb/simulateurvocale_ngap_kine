@@ -1,0 +1,3240 @@
+{
+  "source": "https://ngap-kine.fr/",
+  "fetched_records": 93,
+  "workflow_tree": {
+    "Bilan": {
+      "Tous le corps": {
+        "_acts": [
+          {
+            "id": 93,
+            "libelle": "Bilan ostéoarticulaire simple des conséquences motrices des affections orthopédiques ou rhumatologiques inflammatoires ou non",
+            "cotation": "AMK 10,00",
+            "old": "AMK 10,00",
+            "ifd": null,
+            "theme": "Bilans"
+          },
+          {
+            "id": 96,
+            "libelle": "Bilan musculaire (avec tests) des conséquences motrices des affections neurologiques ",
+            "cotation": "AMK 20,00",
+            "old": "AMK 20,00",
+            "ifd": null,
+            "theme": "Bilans"
+          }
+        ]
+      },
+      "2 membres ou le tronc et 1 membre": {
+        "_acts": [
+          {
+            "id": 95,
+            "libelle": "Bilan musculaire (avec tests) des conséquences motrices des affections neurologiques ",
+            "cotation": "AMK 10,00",
+            "old": "AMK 10,00",
+            "ifd": null,
+            "theme": "Bilans"
+          },
+          {
+            "id": 92,
+            "libelle": "Bilan ostéoarticulaire simple des conséquences motrices des affections orthopédiques ou rhumatologiques inflammatoires ou non",
+            "cotation": "AMK 8,50",
+            "old": "AMK 8,50",
+            "ifd": null,
+            "theme": "Bilans"
+          }
+        ]
+      },
+      "_acts": [
+        {
+          "id": 89,
+          "libelle": "Bilan BDK pour toute pathologie non neurologique centrale",
+          "cotation": "AMK 10,70",
+          "old": "AMK 10,70",
+          "ifd": null,
+          "theme": "Bilans"
+        }
+      ],
+      "Neurologie": {
+        "_acts": [
+          {
+            "id": 90,
+            "libelle": "Bilan BDK en neurologie centrale",
+            "cotation": "AMK 10,80",
+            "old": "AMK 10,8",
+            "ifd": null,
+            "theme": "Bilans"
+          }
+        ]
+      },
+      "1 membre": {
+        "_acts": [
+          {
+            "id": 94,
+            "libelle": "Bilan musculaire (avec tests) des conséquences motrices des affections neurologiques ",
+            "cotation": "AMK 5,00",
+            "old": "AMK 5,00",
+            "ifd": null,
+            "theme": "Bilans"
+          },
+          {
+            "id": 91,
+            "libelle": "Bilan ostéoarticulaire simple des conséquences motrices des affections orthopédiques ou rhumatologiques inflammatoires ou non",
+            "cotation": "AMK 5,00",
+            "old": "AMK 5,00",
+            "ifd": null,
+            "theme": "Bilans"
+          }
+        ]
+      }
+    },
+    "Membres inférieurs": {
+      "Amputation": {
+        "Non-opéré": {
+          "_acts": [
+            {
+              "id": 47,
+              "libelle": "Rééducation après amputation d'un membre inférieur",
+              "cotation": "APM 7,50",
+              "old": "AMS 7,5",
+              "ifd": null,
+              "theme": "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage"
+            }
+          ]
+        }
+      },
+      "Genou": {
+        "Opéré": {
+          "LCA, ligaments croisés, reconstruction du ligament croisé antérieur du genou": {
+            "Membre inférieur opéré": {
+              "_acts": [
+                {
+                  "id": 33,
+                  "libelle": "Rééducation après reconstruction du ligament croisé antérieur du genou  ",
+                  "cotation": "RIC 7,48",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                }
+              ]
+            }
+          },
+          "Opération ménisque, ménisectomie": {
+            "Membre inférieur opéré": {
+              "_acts": [
+                {
+                  "id": 34,
+                  "libelle": "Rééducation après méniscectomie isolée, totale ou subtotale, par arthroscopie  ",
+                  "cotation": "RIC 7,49",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                }
+              ]
+            }
+          },
+          "Prothèse de genou, prothèse totale ou uni-compartimentaire genou": {
+            "Membre inférieur opéré": {
+              "_acts": [
+                {
+                  "id": 32,
+                  "libelle": "Rééducation après arthroplastie du genou par prothèse totale ou uni-compartimentaire  ",
+                  "cotation": "RIC 7,52",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                }
+              ]
+            }
+          },
+          "Fracture de la rotule ou du plateau tibial,\nfracture de jambe (tibia/fibula)": {
+            "Membre inférieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 36,
+                    "libelle": "Rééducation des conséquences d'une affection du genou ou de la jambe ",
+                    "cotation": "VIC 7,50",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Non-opéré": {
+          "Entorse de genou, tendinopathie patellaire, lésions musculaires, lésions méniscales,\nsyndrome rotulien / fémoro-patellaire,\nentorse du ligament latéral interne (LLI)": {
+            "Membre inférieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 35,
+                    "libelle": "Rééducation des conséquences d'une affection du genou ou de la jambe ",
+                    "cotation": "VIM 7,51",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Hanche": {
+        "Opéré": {
+          "Prothèse de Hanche, prothèse totale de hanche": {
+            "Membre inférieur opéré": {
+              "_acts": [
+                {
+                  "id": 37,
+                  "libelle": "Rééducation après arthroplastie de hanche par prothèse totale  ",
+                  "cotation": "RIC 7,50",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                }
+              ]
+            }
+          },
+          "Fracture du col du fémur, fracture du bassin ou de l’acétabulum,\nréinsertion du quadriceps ou des ischio-jambiers,\narthrodèse ou chirurgie correctrice de hanche": {
+            "Membre inférieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 39,
+                    "libelle": "Rééducation des conséquences d'une affection de la hanche ou de la cuisse ",
+                    "cotation": "VIC 7,49",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Non-opéré": {
+          "Tendinopathies hanche, arthrose hanche, bursite hanche, lésions musculaires hanche,\nconflit fémoro-acétabulaire": {
+            "Membre inférieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 38,
+                    "libelle": "Rééducation des conséquences d'une affection de la hanche ou de la cuisse ",
+                    "cotation": "VIM 7,49",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Cheville": {
+        "Pied": {
+          "Opéré": {
+            "Entorse de cheville, entorse externe récente de cheville-pied": {
+              "Membre inférieur opéré": {
+                "opérée": {
+                  "_acts": [
+                    {
+                      "id": 28,
+                      "libelle": "Rééducation des conséquences d'une entorse externe récente de cheville-pied",
+                      "cotation": "RIC 7,51",
+                      "old": "AMS 7,5",
+                      "ifd": null,
+                      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                    }
+                  ]
+                }
+              }
+            },
+            "Fracture malléolaire (mono/bi/tri-malléolaire),\nfracture du calcanéum, fracture du médio-pied (ex. Lisfranc),\nligamentoplastie de cheville pour instabilité chronique,\nchirurgie de l’avant-pied": {
+              "Membre inférieur opéré": {
+                "opérée": {
+                  "_acts": [
+                    {
+                      "id": 31,
+                      "libelle": "Rééducation des conséquences d'une affection de la cheville ou pied ",
+                      "cotation": "VIC 7,51",
+                      "old": "AMS 7,5",
+                      "ifd": null,
+                      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "Non-opéré": {
+            "Entorse de cheville, entorse externe récente de cheville-pied": {
+              "Membre inférieur non opéré": {
+                "non opérée": {
+                  "_acts": [
+                    {
+                      "id": 29,
+                      "libelle": "Rééducation des conséquences d'une entorse externe récente de cheville-pied",
+                      "cotation": "RIM 7,50",
+                      "old": "AMS 7,5",
+                      "ifd": null,
+                      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                    }
+                  ]
+                }
+              }
+            },
+            "Instabilité chronique de cheville, lésions musculaires,\nAponévrosite plantaire, fasciite plantaire,\ntendinopathie d’Achille": {
+              "Membre inférieur non opéré": {
+                "non opérée": {
+                  "_acts": [
+                    {
+                      "id": 30,
+                      "libelle": "Rééducation des conséquences d'une affection de la cheville ou pied ",
+                      "cotation": "VIM 7,50",
+                      "old": "AMS 7,5",
+                      "ifd": null,
+                      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "Opéré": {
+        "Membre inférieur opéré": {
+          "avec chirurgie sur au moins un segment": {
+            "_acts": [
+              {
+                "id": 41,
+                "libelle": "Rééducation secondaire à l'affection d'au moins deux segments du même membre inférieur",
+                "cotation": "VIC 7,52",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+              }
+            ]
+          }
+        }
+      },
+      "Non-opéré": {
+        "Membre inférieur non opéré": {
+          "sans chirurgie": {
+            "_acts": [
+              {
+                "id": 40,
+                "libelle": "Rééducation secondaire à l'affection d'au moins deux segments du même membre inférieur",
+                "cotation": "VIM 7,52",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Membres supérieurs": {
+      "Amputation": {
+        "Non-opéré": {
+          "_acts": [
+            {
+              "id": 46,
+              "libelle": "Rééducation après amputation d'un membre supérieur",
+              "cotation": "APM 7,51",
+              "old": "AMS 7,5",
+              "ifd": null,
+              "theme": "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage"
+            }
+          ]
+        }
+      },
+      "Poignet": {
+        "Neurologie": {
+          "Opéré": {
+            "Canal carpien, neuropathie, libération nerf médian": {
+              "Membre supérieur opéré": {
+                "_acts": [
+                  {
+                    "id": 12,
+                    "libelle": "Rééducation après libération du nerf médian au canal carpien ",
+                    "cotation": "RSC 7,49",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Opéré": {
+          "Fracture poignet, fracture avant-bras, fracture de l’extrémité distale des deux os de l’avant-bras": {
+            "Membre supérieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 16,
+                    "libelle": "Rééducation des conséquences d'une fracture de l’extrémité distale des deux os de l’avant-bras ",
+                    "cotation": "RSC 7,50",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          },
+          "Fracture du radius distal\nfracture du scaphoïde, section de tendons fléchisseurs ou extenseurs\nFractures métacarpiennes ou phalangiennes, ostéosynthèses": {
+            "Membre supérieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 14,
+                    "libelle": "Rééducation des conséquences d'une affection du poignet ou main ",
+                    "cotation": "VSC 7,51",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Non-opéré": {
+          "Entorse du poignet (ligament scapho-lunaire ou radio-carpien), fracture stable du radius distal\nfracture stable scaphoïde, tendinopathies de la main/poignet, ténosynovite De Quervain, \ndoigts à ressaut, arthrose trapézo-métacarpienne, \nrhizarthrose, syndrome du canal carpien": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 13,
+                    "libelle": "Rééducation des conséquences d'une affection du poignet ou main ",
+                    "cotation": "VSM 7,50",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Epaule": {
+        "Opéré": {
+          "Opération coiffe des rotateurs de l'épaule, opération rupture de la coiffe de l'épaule": {
+            "Membre supérieur opéré": {
+              "_acts": [
+                {
+                  "id": 22,
+                  "libelle": "Rééducation après réinsertion et/ou suture d’un ou de plusieurs tendons de la coiffe des rotateurs de l’épaule, par arthroscopie ou abord direct ",
+                  "cotation": "RSC 7,51",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                }
+              ]
+            }
+          },
+          "Prothèse d’épaule (totale, partielle, inversée),\nfracture de l’humérus proximal,\ninstabilité récidivante, luxation récidivante,\nréparation du tendon du biceps": {
+            "Membre supérieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 25,
+                    "libelle": "Rééducation des conséquences d'une affection de l’épaule ou du bras  ",
+                    "cotation": "VSC 7,50",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Non-opéré": {
+          "Tendinopathie épaule, tendinopathie de la coiffe des rotateurs": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 21,
+                    "libelle": "Rééducation dans le cadre d’une tendinopathie de la coiffe des rotateurs non opérée ",
+                    "cotation": "RSM 7,49",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          },
+          "Fracture extrémité proximale humérus, fracture humérus, fracture épaule": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 23,
+                    "libelle": "Rééducation des conséquences d'une fracture non opérée de l’extrémité proximale de l’humérus ",
+                    "cotation": "RSM 7,50",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          },
+          "Tendinopathie de la coiffe des rotateurs, \ncapsulite rétractile, épaule gelée\ninstabilité antérieure ou multidirectionnelle de l’épaule, luxations récidivantes,\nfracture non déplacée de l’humérus proximal,\nTendinopathie ou rupture partielle du long biceps": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 24,
+                    "libelle": "Rééducation des conséquences d'une affection de l’épaule ou du bras  ",
+                    "cotation": "VSM 7,48",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Coude": {
+        "Opéré": {
+          "Fracture coude, luxation coude": {
+            "Membre supérieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 18,
+                    "libelle": "Rééducation des conséquences d'une fracture avec ou sans luxation du coude chez l’adulte ",
+                    "cotation": "RSC 7,52",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          },
+          "Fracture de la palette humérale, fracture de l’olécrâne\nfracture des deux os de l’avant-bras (radius + ulna),\nluxation de coude, réinsertion du tendon du biceps distal": {
+            "Membre supérieur opéré": {
+              "opérée": {
+                "_acts": [
+                  {
+                    "id": 20,
+                    "libelle": "Rééducation des conséquences d'une affection du coude ou de l'avant-bras ",
+                    "cotation": "VSC 7,49",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Non-opéré": {
+          "Fracture poignet, fracture avant-bras, fracture de l’extrémité distale des deux os de l’avant-bras": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 15,
+                    "libelle": "Rééducation des conséquences d'une fracture de l’extrémité distale des deux os de l’avant-bras ",
+                    "cotation": "RSM 7,51",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          },
+          "Fracture coude, luxation coude": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 17,
+                    "libelle": "Rééducation des conséquences d'une fracture avec ou sans luxation du coude chez l’adulte ",
+                    "cotation": "RSM 7,52",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          },
+          "Fracture stable de l’avant-bras (radius ou ulna), fracture non déplacée de la palette humérale\nLuxation du coude réduite, épicondylite latérale ou médiale, tennis elbow, golf elbow,\nbursite olécrânienne chronique ou séquellaire": {
+            "Membre supérieur non opéré": {
+              "non opérée": {
+                "_acts": [
+                  {
+                    "id": 19,
+                    "libelle": "Rééducation des conséquences d'une affection du coude ou de l'avant-bras ",
+                    "cotation": "VSM 7,49",
+                    "old": "AMS 7,5",
+                    "ifd": null,
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Membres inférieurs": {
+        "Rachis": {
+          "Non-opéré": {
+            "Affections orthopédiques et rhumatologiques sur au moins 2 territoires (membres, ou rachis et membres)": {
+              "sans chirurgie": {
+                "_acts": [
+                  {
+                    "id": 48,
+                    "libelle": "Rééducation secondaire à l'affection d’au moins 2 territoires lésés (hors 2 territoires ou plus du même membre ou 2 territoires ou plus du rachis) ",
+                    "cotation": "TER 9,49",
+                    "old": "AMS 9,5",
+                    "ifd": "IFS",
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques de tout ou partie de plusieurs membres, ou du tronc et d'un ou plusieurs membres"
+                  }
+                ]
+              }
+            }
+          },
+          "Opéré": {
+            "Affections orthopédiques et rhumatologiques sur au moins 2 territoires (membres, ou rachis et membres)": {
+              "avec chirurgie sur au moins un territoire": {
+                "_acts": [
+                  {
+                    "id": 49,
+                    "libelle": "Rééducation secondaire à l'affection d’au moins 2 territoires lésés (hors 2 territoires ou plus du même membre ou 2 territoires ou plus du rachis) ",
+                    "cotation": "TER 9,51",
+                    "old": "AMS 9,5",
+                    "ifd": "IFS",
+                    "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques de tout ou partie de plusieurs membres, ou du tronc et d'un ou plusieurs membres"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Opéré": {
+        "Membre supérieur opéré": {
+          "avec chirurgie sur au moins un segment": {
+            "_acts": [
+              {
+                "id": 27,
+                "libelle": "Rééducation secondaire à l’affection d'au moins deux segments du même membre supérieur ",
+                "cotation": "VSC 7,52",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+              }
+            ]
+          }
+        }
+      },
+      "Non-opéré": {
+        "Membre supérieur non opéré": {
+          "sans chirurgie": {
+            "_acts": [
+              {
+                "id": 26,
+                "libelle": "Rééducation secondaire à l’affection d'au moins deux segments du même membre supérieur ",
+                "cotation": "VSM 7,51",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Autres": {
+      "Amputation": {
+        "Non-opéré": {
+          "_acts": [
+            {
+              "id": 50,
+              "libelle": "Rééducation après amputation d'au moins 2 membres",
+              "cotation": "APM 9,50",
+              "old": "AMS 9,5",
+              "ifd": null,
+              "theme": "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage"
+            }
+          ]
+        }
+      },
+      "Maxillo-facial": {
+        "Non-opéré": {
+          "Bruxisme, chirurgie TM, trismus, DTM": {
+            "Maxillo-facial et ORL": {
+              "_acts": [
+                {
+                  "id": 71,
+                  "libelle": "Rééducation maxillo-faciale en dehors de la paralysie faciale",
+                  "cotation": "ARL 7,99",
+                  "old": "AMK ou AMC 8",
+                  "ifd": null,
+                  "theme": "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques"
+                }
+              ]
+            }
+          },
+          "Dysphagie, post-chirurgie ORL": {
+            "Maxillo-facial et ORL": {
+              "_acts": [
+                {
+                  "id": 73,
+                  "libelle": "Rééducation des troubles de la déglutition isolés",
+                  "cotation": "ARL 8,01",
+                  "old": "AMK ou AMC 8",
+                  "ifd": null,
+                  "theme": "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Vestibulaire": {
+        "Non-opéré": {
+          "Vertige positionnel paroxystique bénin (VPPB), névrite vestibulaire, labyrinthite": {
+            "Maxillo-facial et ORL": {
+              "_acts": [
+                {
+                  "id": 72,
+                  "libelle": "Rééducation vestibulaire et des troubles de l'équilibre",
+                  "cotation": "ARL 8",
+                  "old": "AMK ou AMC 8",
+                  "ifd": null,
+                  "theme": "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Pédiatrie": {
+        "Non-opéré": {
+          "Encéphalopathie": {
+            "Neuromusculaire": {
+              "_acts": [
+                {
+                  "id": 63,
+                  "libelle": "Rééducation des malades atteints d'encéphalopathie infantile, du stade initial aux conséquences à l’âge adulte",
+                  "cotation": "NMI 11",
+                  "old": "AMK ou AMC 11",
+                  "ifd": "IFS",
+                  "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Rhumathologie": {
+        "Non-opéré": {
+          "Polyarthrite rhumatoïde, spondylarthrite, arthrites": {
+            "Rhumatisme inflammatoires": {
+              "atteinte localisée à un membre ou le tronc": {
+                "_acts": [
+                  {
+                    "id": 51,
+                    "libelle": "Rééducation des malades atteints de rhumatisme inflammatoire (pelvispondylite, polyarthrite rhumatoïde...)",
+                    "cotation": "NMI 8",
+                    "old": "AMK ou AMC 8",
+                    "ifd": "IFS",
+                    "theme": "Rééducation des conséquences des affections rhumatismales inflammatoires"
+                  }
+                ]
+              },
+              "atteinte de plusieurs membres, ou du tronc et d'un ou plusieurs membres": {
+                "_acts": [
+                  {
+                    "id": 52,
+                    "libelle": "Rééducation des malades atteints de rhumatisme inflammatoire (pelvispondylite, polyarthrite rhumatoïde...)",
+                    "cotation": "NMI 9,01",
+                    "old": "AMK ou AMC 9",
+                    "ifd": "IFS",
+                    "theme": "Rééducation des conséquences des affections rhumatismales inflammatoires"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Neurologie": {
+        "Non-opéré": {
+          "Sciatique ou cruralgie par hernie discale ou canal lombaire étroit, cervico-brachialgie, \natteinte nerveuse, paralysie faciale": {
+            "Neuromusculaire": {
+              "atteintes localisées à un membre ou à la face": {
+                "_acts": [
+                  {
+                    "id": 55,
+                    "libelle": "Rééducation des atteintes périphériques radiculaires ou tronculaires :",
+                    "cotation": "NMI 8,5",
+                    "old": "AMK ou AMC 8,5",
+                    "ifd": "IFS",
+                    "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Soins palliatifs": {
+        "Non-opéré": {
+          "Cancer": {
+            "Palliatif": {
+              "_acts": [
+                {
+                  "id": 88,
+                  "libelle": "Prise en charge, dans le cadre des soins palliatifs, comportant les actes nécessaires en fonction des situations cliniques (mobilisation, massage, drainage bronchique...), cotation journalière forfaitaire quel que soit le nombre d'interventions",
+                  "cotation": "PLL 12",
+                  "old": "AMK ou AMC 12",
+                  "ifd": null,
+                  "theme": "Soins palliatifs"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Uro-gynéco": {
+        "Post-Partum": {
+          "Abdominal": {
+            "_acts": [
+              {
+                "id": 54,
+                "libelle": "Rééducation abdominale du post-partum",
+                "cotation": "RAB 8",
+                "old": "AMK ou AMC 8",
+                "ifd": null,
+                "theme": "Rééducation de la paroi abdominale"
+              }
+            ]
+          }
+        },
+        "Non-opéré": {
+          "Incontinence": {
+            "Périnéosphinctérien": {
+              "_acts": [
+                {
+                  "id": 81,
+                  "libelle": "Rééducation périnéale active sous contrôle manuel et/ou électrostimulation et/ou biofeedback ",
+                  "cotation": "RAB 8,5",
+                  "old": "AMK ou AMC 8,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections périnéosphinctériennes "
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Abdomen": {
+        "Chirurgie": {
+          "Abdominal": {
+            "_acts": [
+              {
+                "id": 53,
+                "libelle": "Rééducation abdominale pré-opératoire ou post-opératoire",
+                "cotation": "RAB 8,01",
+                "old": "AMK ou AMC 8",
+                "ifd": null,
+                "theme": "Rééducation de la paroi abdominale"
+              }
+            ]
+          }
+        }
+      },
+      "Brûlures": {
+        "Brûlures, cicatrices": {
+          "_acts": [
+            {
+              "id": 86,
+              "libelle": "Rééducation d'un patient atteint de brûlures localisées à un membre ou à un segment de membre",
+              "cotation": "RPB 8",
+              "old": "AMK ou AMC 8",
+              "ifd": null,
+              "theme": "Rééducation des patients atteints de brûlures"
+            },
+            {
+              "id": 87,
+              "libelle": "Rééducation d'un patient atteint de brûlures étendues à plusieurs membres et/ou au tronc",
+              "cotation": "RPB 9",
+              "old": "AMK ou AMC 9",
+              "ifd": null,
+              "theme": "Rééducation des patients atteints de brûlures"
+            }
+          ]
+        }
+      },
+      "Gériatrie": {
+        "Non-opéré": {
+          "Déambulatoire (gériatrie)": {
+            "_acts": [
+              {
+                "id": 84,
+                "libelle": "Rééducation de la déambulation dans le cadre du maintien de l'autonomie de la personne âgée (séance d'une durée de l'ordre de vingt minutes)",
+                "cotation": "RPE 6",
+                "old": "AMK ou AMC 6",
+                "ifd": "IFS",
+                "theme": "Rééducation de la déambulation du sujet âgé"
+              },
+              {
+                "id": 83,
+                "libelle": "Rééducation analytique et globale, musculo-articulaire des deux membres inférieurs, de la posture, de l'équilibre et de la coordination chez le sujet âgé",
+                "cotation": "RPE 8,5",
+                "old": "AMK ou AMC 8,5",
+                "ifd": null,
+                "theme": "Rééducation de la déambulation du sujet âgé"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Respi": {
+      "Non-opéré": {
+        "Mucoviscidose": {
+          "Respiratoire": {
+            "_acts": [
+              {
+                "id": 68,
+                "libelle": "Prise en charge kinésithérapique respiratoire du patient atteint de mucoviscidose.",
+                "cotation": "ARL 10",
+                "old": "AMK ou AMC 10",
+                "ifd": "IFS",
+                "theme": "Rééducation des conséquences des affections respiratoires"
+              }
+            ]
+          }
+        },
+        "Respiratoire": {
+          "_acts": [
+            {
+              "id": 70,
+              "libelle": "Réadaptation respiratoire kinésithérapique pour les patients atteints de handicap respiratoire chronique en prise en charge de groupe de 2 à 4 personnes avec rééducation respiratoire en individuel",
+              "cotation": "ARL 20",
+              "old": "AMK ou AMC 20",
+              "ifd": "IFS",
+              "theme": "Rééducation des conséquences des affections respiratoires"
+            },
+            {
+              "id": 69,
+              "libelle": "Réadaptation respiratoire kinésithérapique pour les patients atteints de handicap respiratoire chronique et prise en charge individuelle",
+              "cotation": "ARL 28",
+              "old": "AMK ou AMC 28",
+              "ifd": "IFS",
+              "theme": "Rééducation des conséquences des affections respiratoires"
+            }
+          ]
+        },
+        "Bronchiololite": {
+          "Respiratoire": {
+            "_acts": [
+              {
+                "id": 65,
+                "libelle": "Rééducation des maladies respiratoires avec désencombrement urgent (bronchiolite du nourrisson, poussée aiguë au cours d'une pathologie respiratoire chronique).",
+                "cotation": "ARL 8,49",
+                "old": "AMK ou AMC 8,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections respiratoires"
+              }
+            ]
+          }
+        },
+        "BPCO, asthme, sarcoïdose, emphysème": {
+          "Respiratoire": {
+            "_acts": [
+              {
+                "id": 66,
+                "libelle": "Rééducation des maladies respiratoires, obstructives, restrictives ou mixtes (en dehors des situations d'urgence)",
+                "cotation": "ARL 8,5",
+                "old": "AMK ou AMC 8,5",
+                "ifd": "IFS",
+                "theme": "Rééducation des conséquences des affections respiratoires"
+              }
+            ]
+          }
+        },
+        "Chirurgie cardiaque, chirurgie thoracique, chirurgie bariatrique": {
+          "Respiratoire": {
+            "_acts": [
+              {
+                "id": 67,
+                "libelle": "Rééducation respiratoire préopératoire ou post-opératoire",
+                "cotation": "ARL 8,51",
+                "old": "AMK ou AMC 8,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections respiratoires"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Rachis": {
+      "Non-opéré": {
+        "Scheuermann, scoliose, hyperlordose, cyphose": {
+          "Déviation du rachis": {
+            "_acts": [
+              {
+                "id": 43,
+                "libelle": "Rééducation pour déviation du Rachis dorsal",
+                "cotation": "DRA 7,48",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)"
+              },
+              {
+                "id": 42,
+                "libelle": "Rééducation pour déviation du Rachis lombo-sacré ",
+                "cotation": "DRA 7,49",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)"
+              },
+              {
+                "id": 45,
+                "libelle": "Rééducation pour déviation portant sur au moins deux segments rachis",
+                "cotation": "DRA 7,50",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)"
+              },
+              {
+                "id": 44,
+                "libelle": "Rééducation pour déviation du Rachis cervical",
+                "cotation": "DRA 7,51",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)"
+              }
+            ]
+          }
+        },
+        "Cervicalgie": {
+          "Rachis non opéré": {
+            "_acts": [
+              {
+                "id": 6,
+                "libelle": "Rééducation dans le cadre de la prise en charge d’une cervicalgie non spécifique sans atteinte neurologique ",
+                "cotation": "RAM 7,47",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+              }
+            ]
+          }
+        },
+        "Traumatisme récent du rachis cervical sans lésion neurologique, whiplash\ncoup de fouet, coup du lapin": {
+          "Rachis non opéré": {
+            "_acts": [
+              {
+                "id": 7,
+                "libelle": "Rééducation dans le cadre d’un traumatisme récent du rachis cervical sans lésion neurologique ",
+                "cotation": "RAM 7,48",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+              }
+            ]
+          }
+        },
+        "Lombalgie, lombalgie commune": {
+          "Rachis non opéré": {
+            "_acts": [
+              {
+                "id": 1,
+                "libelle": "Rééducation dans le cadre de la prise en charge d’une lombalgie commune ",
+                "cotation": "RAM 7,49",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+              }
+            ]
+          }
+        },
+        "Douleurs dorsales, douleurs inter-costales, arthrose, dorsalgie": {
+          "Rachis non opéré": {
+            "sans chirurgie": {
+              "_acts": [
+                {
+                  "id": 4,
+                  "libelle": "Rééducation des conséquences d'une affection du rachis dorsal ",
+                  "cotation": "RAM 7,50",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+                }
+              ]
+            }
+          }
+        },
+        "Arthrose, syndrome du canal lombaire étroit, instabilité lombaire": {
+          "Rachis non opéré": {
+            "sans chirurgie": {
+              "_acts": [
+                {
+                  "id": 2,
+                  "libelle": "Rééducation des conséquences d'une affection du rachis lombo-sacré  ",
+                  "cotation": "RAM 7,51",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+                }
+              ]
+            }
+          }
+        },
+        "Arthrose, douleurs cervicales": {
+          "Rachis non opéré": {
+            "sans chirurgie": {
+              "_acts": [
+                {
+                  "id": 8,
+                  "libelle": "Rééducation des conséquences d'une affection du rachis cervical ",
+                  "cotation": "RAM 7,52",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+                }
+              ]
+            }
+          }
+        },
+        "Rachis non opéré": {
+          "sans chirurgie": {
+            "_acts": [
+              {
+                "id": 10,
+                "libelle": "Rééducation des conséquences d'une affection d'au moins deux segments du rachis ",
+                "cotation": "RAM 7,53",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+              }
+            ]
+          }
+        }
+      },
+      "Neurologie": {
+        "Non-opéré": {
+          "Sciatique ou cruralgie par hernie discale ou canal lombaire étroit, \ncervico-brachialgie, atteinte nerveuse": {
+            "Neuromusculaire": {
+              "atteintes intéressant plusieurs membres": {
+                "_acts": [
+                  {
+                    "id": 56,
+                    "libelle": "Rééducation des atteintes périphériques radiculaires ou tronculaires :",
+                    "cotation": "NMI 10,01",
+                    "old": "AMK ou AMC 10",
+                    "ifd": "IFS",
+                    "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Opéré": {
+        "Hernie discale opérée, discectomie, arthrodèse\nmyélopathie, décompression, laminectomie,\nfracture thoracique dorsale,\ntumeur dorsale": {
+          "Rachis opéré": {
+            "avec chirurgie": {
+              "_acts": [
+                {
+                  "id": 5,
+                  "libelle": "Rééducation des conséquences d'une affection du rachis dorsal ",
+                  "cotation": "RAO 7,48",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+                }
+              ]
+            }
+          }
+        },
+        "Hernie discale opérée, discectomie, arthrodèse\nmyélopathie, décompression, laminectomie,\nfracture lombaire, fracture sacrum,\ntumeur lombo-sacrée": {
+          "Rachis opéré": {
+            "avec chirurgie": {
+              "_acts": [
+                {
+                  "id": 3,
+                  "libelle": "Rééducation des conséquences d'une affection du rachis lombo-sacré  ",
+                  "cotation": "RAO 7,49",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+                }
+              ]
+            }
+          }
+        },
+        "Hernie discale opérée, discectomie, arthrodèse\nmyélopathie, décompression, laminectomie,\nfracture cervicale, instabilité cervicale,\ntumeur cervicale": {
+          "Rachis opéré": {
+            "avec chirurgie": {
+              "_acts": [
+                {
+                  "id": 9,
+                  "libelle": "Rééducation des conséquences d'une affection du rachis cervical ",
+                  "cotation": "RAO 7,50",
+                  "old": "AMS 7,5",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+                }
+              ]
+            }
+          }
+        },
+        "Rachis opéré": {
+          "avec chirurgie sur au moins un segment": {
+            "_acts": [
+              {
+                "id": 11,
+                "libelle": "Rééducation des conséquences d'une affection d'au moins deux segments du rachis ",
+                "cotation": "RAO 7,51",
+                "old": "AMS 7,5",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) "
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Neurologie": {
+      "Non-opéré": {
+        "Parkinson, sclérose en plaques, ataxies, dystrophies": {
+          "Neuromusculaire": {
+            "localisation des déficiences à 2 membres ou plus, ou d'un membre et à tout ou partie du tronc et de la face": {
+              "_acts": [
+                {
+                  "id": 60,
+                  "libelle": "Rééducation des affections neurologiques stables ou évolutives pouvant regrouper des déficiences diverses (commande musculaire, tonus, sensibilité, équilibre, coordination...) en dehors de l'hémiplégie et de la paraplégie, notamment les affections neurodégénératives",
+                  "cotation": "NMI 10",
+                  "old": "AMK ou AMC 10",
+                  "ifd": "IFS",
+                  "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+                }
+              ]
+            },
+            "localisation des déficiences à un membre et sa racine": {
+              "_acts": [
+                {
+                  "id": 59,
+                  "libelle": "Rééducation des affections neurologiques stables ou évolutives pouvant regrouper des déficiences diverses (commande musculaire, tonus, sensibilité, équilibre, coordination...) en dehors de l'hémiplégie et de la paraplégie, notamment les affections neurodégénératives",
+                  "cotation": "NMI 8,51",
+                  "old": "AMK ou AMC 8,5",
+                  "ifd": "IFS",
+                  "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+                }
+              ]
+            }
+          }
+        },
+        "Myopathie": {
+          "Neuromusculaire": {
+            "_acts": [
+              {
+                "id": 62,
+                "libelle": "Rééducation des malades atteints de myopathie",
+                "cotation": "NMI 10,99",
+                "old": "AMK ou AMC 11",
+                "ifd": "IFS",
+                "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+              }
+            ]
+          }
+        },
+        "Traumatisme médullaire, compression médullaire, myélite": {
+          "Neuromusculaire": {
+            "_acts": [
+              {
+                "id": 58,
+                "libelle": "Rééducation de la paraplégie et de la tétraplégie",
+                "cotation": "NMI 11,01",
+                "old": "AMK ou AMC 11",
+                "ifd": "IFS",
+                "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+              }
+            ]
+          }
+        },
+        "AVC, traumatisme crânien, tumeur cérébrale": {
+          "Neuromusculaire": {
+            "_acts": [
+              {
+                "id": 57,
+                "libelle": "Rééducation de l'hémiplégie",
+                "cotation": "NMI 9",
+                "old": "AMK ou AMC 9",
+                "ifd": "IFS",
+                "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Vasculaire - oedème": {
+      "Lymphoedème, cancer du sein": {
+        "Vasculaire": {
+          "un membre": {
+            "_acts": [
+              {
+                "id": 79,
+                "libelle": "Supplément pour bandage multicouche :",
+                "cotation": "RAV 1",
+                "old": "AMK ou AMC 1",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections vasculaires"
+              }
+            ]
+          },
+          "_acts": [
+            {
+              "id": 78,
+              "libelle": "Rééducation pour un lymphœdème du membre supérieur après traitement d’un cancer du sein, associée à une rééducation de l’épaule homolatérale à la phase intensive du traitement du lymphœdème",
+              "cotation": "RAV 15,5",
+              "old": "AMK ou AMC 15,5",
+              "ifd": null,
+              "theme": "Rééducation des conséquences des affections vasculaires"
+            }
+          ],
+          "deux membres": {
+            "_acts": [
+              {
+                "id": 80,
+                "libelle": "Supplément pour bandage multicouche :",
+                "cotation": "RAV 2",
+                "old": "AMK ou AMC 2",
+                "ifd": null,
+                "theme": "Rééducation des conséquences des affections vasculaires"
+              }
+            ]
+          }
+        }
+      },
+      "Insuffisance veineuse, saphénectomie, varices": {
+        "Vasculaire": {
+          "_acts": [
+            {
+              "id": 75,
+              "libelle": "Rééducation pour insuffisance veineuse des membres inférieurs avec retentissement articulaire et/ou troubles trophiques",
+              "cotation": "RAV 7,99",
+              "old": "AMK ou AMC 8",
+              "ifd": null,
+              "theme": "Rééducation des conséquences des affections vasculaires"
+            }
+          ]
+        }
+      },
+      "Opéré": {
+        "Lymphoedème, cancer du sein": {
+          "Vasculaire": {
+            "pour un membre ou pour le cou et la face": {
+              "_acts": [
+                {
+                  "id": 76,
+                  "libelle": "Rééducation pour lymphœdèmes vrais (après chirurgie et/ou radiothérapie, lymphœdèmes congénitaux) par drainage manuel :",
+                  "cotation": "RAV 8",
+                  "old": "AMK ou AMC 8",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections vasculaires"
+                }
+              ]
+            },
+            "deux membres": {
+              "_acts": [
+                {
+                  "id": 77,
+                  "libelle": "Rééducation pour lymphœdèmes vrais (après chirurgie et/ou radiothérapie, lymphœdèmes congénitaux) par drainage manuel :",
+                  "cotation": "RAV 9",
+                  "old": "AMK ou AMC 9",
+                  "ifd": null,
+                  "theme": "Rééducation des conséquences des affections vasculaires"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Arthéropathie": {
+        "Vasculaire": {
+          "_acts": [
+            {
+              "id": 74,
+              "libelle": "Rééducation pour artériopathie des membres inférieurs (claudication, troubles trophiques)",
+              "cotation": "RAV 8,01",
+              "old": "AMK ou AMC 8",
+              "ifd": null,
+              "theme": "Rééducation des conséquences des affections vasculaires"
+            }
+          ]
+        }
+      }
+    },
+    "Pédiatrie": {
+      "Neurologie": {
+        "Paralysie cérébrale, polyhandicap, infirmité motrice cérébrale, IMC": {
+          "Affections orthopédiques et rhumatologiques sur au moins 2 territoires (membres, ou rachis et membres)": {
+            "_acts": [
+              {
+                "id": 61,
+                "libelle": "Rééducation des enfants présentant une paralysie cérébrale ou un polyhandicap \nCet acte s'intègre au parcours de rééducation et de réadaptation des enfants en situation de polyhandicap ou de paralysie cérébrale (formation adaptée, objectifs de rééducation…). \nLa prescription initiale de cet acte doit émaner de l'établissement ou du service sanitaire ou médico-social coordonnant le parcours de soins du patient. \nLes séances d'une durée de l'ordre de 30 minutes sont à adapter aux capacités physiques de l'enfant et au rythme des autres prises en charge. \n",
+                "cotation": "TER 16",
+                "old": null,
+                "ifd": "IFS",
+                "theme": "Rééducation des conséquences d'affections neurologiques et musculaires"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "flat_catalog": [
+    {
+      "ID": 93,
+      "libelle": "Bilan ostéoarticulaire simple des conséquences motrices des affections orthopédiques ou rhumatologiques inflammatoires ou non",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": "Tous le corps",
+      "lettre_cle": "AMK",
+      "cotation_valeur": "10,00",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "10,00",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 95,
+      "libelle": "Bilan musculaire (avec tests) des conséquences motrices des affections neurologiques ",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": "2 membres ou le tronc et 1 membre",
+      "lettre_cle": "AMK",
+      "cotation_valeur": "10,00",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "10,00",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 89,
+      "libelle": "Bilan BDK pour toute pathologie non neurologique centrale",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": null,
+      "lettre_cle": "AMK",
+      "cotation_valeur": "10,70",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "10,70",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 90,
+      "libelle": "Bilan BDK en neurologie centrale",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": null,
+      "lettre_cle": "AMK",
+      "cotation_valeur": "10,80",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "10,8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": "Neurologie",
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 96,
+      "libelle": "Bilan musculaire (avec tests) des conséquences motrices des affections neurologiques ",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": "Tous le corps",
+      "lettre_cle": "AMK",
+      "cotation_valeur": "20,00",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "20,00",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 94,
+      "libelle": "Bilan musculaire (avec tests) des conséquences motrices des affections neurologiques ",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": "1 membre",
+      "lettre_cle": "AMK",
+      "cotation_valeur": "5,00",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "5,00",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 91,
+      "libelle": "Bilan ostéoarticulaire simple des conséquences motrices des affections orthopédiques ou rhumatologiques inflammatoires ou non",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": "1 membre",
+      "lettre_cle": "AMK",
+      "cotation_valeur": "5,00",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "5,00",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 92,
+      "libelle": "Bilan ostéoarticulaire simple des conséquences motrices des affections orthopédiques ou rhumatologiques inflammatoires ou non",
+      "theme": "Bilans",
+      "pathologies": "Bilan",
+      "reeducation": "Bilan",
+      "sous_division": "2 membres ou le tronc et 1 membre",
+      "lettre_cle": "AMK",
+      "cotation_valeur": "8,50",
+      "old_lettre_cle": "AMK",
+      "old_cotation_valeur": "8,50",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": null,
+      "vignette_label_1": "Bilan",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 47,
+      "libelle": "Rééducation après amputation d'un membre inférieur",
+      "theme": "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage",
+      "pathologies": "Amputation",
+      "reeducation": "Amputation",
+      "sous_division": null,
+      "lettre_cle": "APM",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membres inférieurs, Amputation",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Amputation",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 46,
+      "libelle": "Rééducation après amputation d'un membre supérieur",
+      "theme": "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage",
+      "pathologies": "Amputation",
+      "reeducation": "Amputation",
+      "sous_division": null,
+      "lettre_cle": "APM",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membres supérieurs, Amputation",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Amputation",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 50,
+      "libelle": "Rééducation après amputation d'au moins 2 membres",
+      "theme": "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage",
+      "pathologies": "Amputation",
+      "reeducation": "Amputation",
+      "sous_division": null,
+      "lettre_cle": "APM",
+      "cotation_valeur": "9,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "9,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Amputation",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Amputation",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 68,
+      "libelle": "Prise en charge kinésithérapique respiratoire du patient atteint de mucoviscidose.",
+      "theme": "Rééducation des conséquences des affections respiratoires",
+      "pathologies": "Mucoviscidose",
+      "reeducation": "Respiratoire",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "10",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "10",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Respi",
+      "vignette_label_1": "Respi",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 70,
+      "libelle": "Réadaptation respiratoire kinésithérapique pour les patients atteints de handicap respiratoire chronique en prise en charge de groupe de 2 à 4 personnes avec rééducation respiratoire en individuel",
+      "theme": "Rééducation des conséquences des affections respiratoires",
+      "pathologies": null,
+      "reeducation": "Respiratoire",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "20",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "20",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Respi",
+      "vignette_label_1": "Respi",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 69,
+      "libelle": "Réadaptation respiratoire kinésithérapique pour les patients atteints de handicap respiratoire chronique et prise en charge individuelle",
+      "theme": "Rééducation des conséquences des affections respiratoires",
+      "pathologies": null,
+      "reeducation": "Respiratoire",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "28",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "28",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Respi",
+      "vignette_label_1": "Respi",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 71,
+      "libelle": "Rééducation maxillo-faciale en dehors de la paralysie faciale",
+      "theme": "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques",
+      "pathologies": "Bruxisme, chirurgie TM, trismus, DTM",
+      "reeducation": "Maxillo-facial et ORL",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "7,99",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Maxillo-facial",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Maxillo-facial",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 72,
+      "libelle": "Rééducation vestibulaire et des troubles de l'équilibre",
+      "theme": "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques",
+      "pathologies": "Vertige positionnel paroxystique bénin (VPPB), névrite vestibulaire, labyrinthite",
+      "reeducation": "Maxillo-facial et ORL",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "8",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Vestibulaire",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Vestibulaire",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 73,
+      "libelle": "Rééducation des troubles de la déglutition isolés",
+      "theme": "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques",
+      "pathologies": "Dysphagie, post-chirurgie ORL",
+      "reeducation": "Maxillo-facial et ORL",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "8,01",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Maxillo-facial",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Maxillo-facial",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 65,
+      "libelle": "Rééducation des maladies respiratoires avec désencombrement urgent (bronchiolite du nourrisson, poussée aiguë au cours d'une pathologie respiratoire chronique).",
+      "theme": "Rééducation des conséquences des affections respiratoires",
+      "pathologies": "Bronchiololite",
+      "reeducation": "Respiratoire",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "8,49",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Respi",
+      "vignette_label_1": "Respi",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 66,
+      "libelle": "Rééducation des maladies respiratoires, obstructives, restrictives ou mixtes (en dehors des situations d'urgence)",
+      "theme": "Rééducation des conséquences des affections respiratoires",
+      "pathologies": "BPCO, asthme, sarcoïdose, emphysème",
+      "reeducation": "Respiratoire",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "8,5",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Respi",
+      "vignette_label_1": "Respi",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 67,
+      "libelle": "Rééducation respiratoire préopératoire ou post-opératoire",
+      "theme": "Rééducation des conséquences des affections respiratoires",
+      "pathologies": "Chirurgie cardiaque, chirurgie thoracique, chirurgie bariatrique",
+      "reeducation": "Respiratoire",
+      "sous_division": null,
+      "lettre_cle": "ARL",
+      "cotation_valeur": "8,51",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Respi",
+      "vignette_label_1": "Respi",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 43,
+      "libelle": "Rééducation pour déviation du Rachis dorsal",
+      "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)",
+      "pathologies": "Scheuermann, scoliose, hyperlordose, cyphose",
+      "reeducation": "Déviation du rachis",
+      "sous_division": null,
+      "lettre_cle": "DRA",
+      "cotation_valeur": "7,48",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 42,
+      "libelle": "Rééducation pour déviation du Rachis lombo-sacré ",
+      "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)",
+      "pathologies": "Scheuermann, scoliose, hyperlordose, cyphose",
+      "reeducation": "Déviation du rachis",
+      "sous_division": null,
+      "lettre_cle": "DRA",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 45,
+      "libelle": "Rééducation pour déviation portant sur au moins deux segments rachis",
+      "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)",
+      "pathologies": "Scheuermann, scoliose, hyperlordose, cyphose",
+      "reeducation": "Déviation du rachis",
+      "sous_division": null,
+      "lettre_cle": "DRA",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 44,
+      "libelle": "Rééducation pour déviation du Rachis cervical",
+      "theme": "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)",
+      "pathologies": "Scheuermann, scoliose, hyperlordose, cyphose",
+      "reeducation": "Déviation du rachis",
+      "sous_division": null,
+      "lettre_cle": "DRA",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 60,
+      "libelle": "Rééducation des affections neurologiques stables ou évolutives pouvant regrouper des déficiences diverses (commande musculaire, tonus, sensibilité, équilibre, coordination...) en dehors de l'hémiplégie et de la paraplégie, notamment les affections neurodégénératives",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Parkinson, sclérose en plaques, ataxies, dystrophies",
+      "reeducation": "Neuromusculaire",
+      "sous_division": "    localisation des déficiences à 2 membres ou plus, ou d'un membre et à tout ou partie du tronc et de la face",
+      "lettre_cle": "NMI",
+      "cotation_valeur": "10",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "10",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Neurologie",
+      "vignette_label_1": "Neurologie",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 56,
+      "libelle": "Rééducation des atteintes périphériques radiculaires ou tronculaires :",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Sciatique ou cruralgie par hernie discale ou canal lombaire étroit, \ncervico-brachialgie, atteinte nerveuse",
+      "reeducation": "Neuromusculaire",
+      "sous_division": "    atteintes intéressant plusieurs membres",
+      "lettre_cle": "NMI",
+      "cotation_valeur": "10,01",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "10",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis, Neurologie",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": "Neurologie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 62,
+      "libelle": "Rééducation des malades atteints de myopathie",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Myopathie",
+      "reeducation": "Neuromusculaire",
+      "sous_division": null,
+      "lettre_cle": "NMI",
+      "cotation_valeur": "10,99",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "11",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Neurologie",
+      "vignette_label_1": "Neurologie",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 63,
+      "libelle": "Rééducation des malades atteints d'encéphalopathie infantile, du stade initial aux conséquences à l’âge adulte",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Encéphalopathie",
+      "reeducation": "Neuromusculaire",
+      "sous_division": null,
+      "lettre_cle": "NMI",
+      "cotation_valeur": "11",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "11",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Pédiatrie",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Pédiatrie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 58,
+      "libelle": "Rééducation de la paraplégie et de la tétraplégie",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Traumatisme médullaire, compression médullaire, myélite",
+      "reeducation": "Neuromusculaire",
+      "sous_division": null,
+      "lettre_cle": "NMI",
+      "cotation_valeur": "11,01",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "11",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Neurologie",
+      "vignette_label_1": "Neurologie",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 51,
+      "libelle": "Rééducation des malades atteints de rhumatisme inflammatoire (pelvispondylite, polyarthrite rhumatoïde...)",
+      "theme": "Rééducation des conséquences des affections rhumatismales inflammatoires",
+      "pathologies": "Polyarthrite rhumatoïde, spondylarthrite, arthrites",
+      "reeducation": "Rhumatisme inflammatoires",
+      "sous_division": "atteinte localisée à un membre ou le tronc",
+      "lettre_cle": "NMI",
+      "cotation_valeur": "8",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Rhumathologie",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Rhumathologie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 55,
+      "libelle": "Rééducation des atteintes périphériques radiculaires ou tronculaires :",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Sciatique ou cruralgie par hernie discale ou canal lombaire étroit, cervico-brachialgie, \natteinte nerveuse, paralysie faciale",
+      "reeducation": "Neuromusculaire",
+      "sous_division": "    atteintes localisées à un membre ou à la face",
+      "lettre_cle": "NMI",
+      "cotation_valeur": "8,5",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis, Neurologie",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Neurologie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 59,
+      "libelle": "Rééducation des affections neurologiques stables ou évolutives pouvant regrouper des déficiences diverses (commande musculaire, tonus, sensibilité, équilibre, coordination...) en dehors de l'hémiplégie et de la paraplégie, notamment les affections neurodégénératives",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Parkinson, sclérose en plaques, ataxies, dystrophies",
+      "reeducation": "Neuromusculaire",
+      "sous_division": "    localisation des déficiences à un membre et sa racine",
+      "lettre_cle": "NMI",
+      "cotation_valeur": "8,51",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Neurologie",
+      "vignette_label_1": "Neurologie",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 57,
+      "libelle": "Rééducation de l'hémiplégie",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "AVC, traumatisme crânien, tumeur cérébrale",
+      "reeducation": "Neuromusculaire",
+      "sous_division": null,
+      "lettre_cle": "NMI",
+      "cotation_valeur": "9",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "9",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Neurologie",
+      "vignette_label_1": "Neurologie",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 52,
+      "libelle": "Rééducation des malades atteints de rhumatisme inflammatoire (pelvispondylite, polyarthrite rhumatoïde...)",
+      "theme": "Rééducation des conséquences des affections rhumatismales inflammatoires",
+      "pathologies": "Polyarthrite rhumatoïde, spondylarthrite, arthrites",
+      "reeducation": "Rhumatisme inflammatoires",
+      "sous_division": "atteinte de plusieurs membres, ou du tronc et d'un ou plusieurs membres",
+      "lettre_cle": "NMI",
+      "cotation_valeur": "9,01",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "9",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Rhumathologie",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Rhumathologie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 88,
+      "libelle": "Prise en charge, dans le cadre des soins palliatifs, comportant les actes nécessaires en fonction des situations cliniques (mobilisation, massage, drainage bronchique...), cotation journalière forfaitaire quel que soit le nombre d'interventions",
+      "theme": "Soins palliatifs",
+      "pathologies": "Cancer",
+      "reeducation": "Palliatif",
+      "sous_division": null,
+      "lettre_cle": "PLL",
+      "cotation_valeur": "12",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "12",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Soins palliatifs",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Soins palliatifs",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 54,
+      "libelle": "Rééducation abdominale du post-partum",
+      "theme": "Rééducation de la paroi abdominale",
+      "pathologies": "Post-Partum",
+      "reeducation": "Abdominal",
+      "sous_division": null,
+      "lettre_cle": "RAB",
+      "cotation_valeur": "8",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Uro-gynéco",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Uro-gynéco",
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 53,
+      "libelle": "Rééducation abdominale pré-opératoire ou post-opératoire",
+      "theme": "Rééducation de la paroi abdominale",
+      "pathologies": "Chirurgie",
+      "reeducation": "Abdominal",
+      "sous_division": null,
+      "lettre_cle": "RAB",
+      "cotation_valeur": "8,01",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Abdomen",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Abdomen",
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 81,
+      "libelle": "Rééducation périnéale active sous contrôle manuel et/ou électrostimulation et/ou biofeedback ",
+      "theme": "Rééducation des conséquences des affections périnéosphinctériennes ",
+      "pathologies": "Incontinence",
+      "reeducation": "Périnéosphinctérien",
+      "sous_division": null,
+      "lettre_cle": "RAB",
+      "cotation_valeur": "8,5",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Uro-gynéco",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Uro-gynéco",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 6,
+      "libelle": "Rééducation dans le cadre de la prise en charge d’une cervicalgie non spécifique sans atteinte neurologique ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Cervicalgie",
+      "reeducation": "Rachis non opéré",
+      "sous_division": null,
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,47",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 7,
+      "libelle": "Rééducation dans le cadre d’un traumatisme récent du rachis cervical sans lésion neurologique ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Traumatisme récent du rachis cervical sans lésion neurologique, whiplash\ncoup de fouet, coup du lapin",
+      "reeducation": "Rachis non opéré",
+      "sous_division": null,
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,48",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 1,
+      "libelle": "Rééducation dans le cadre de la prise en charge d’une lombalgie commune ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Lombalgie, lombalgie commune",
+      "reeducation": "Rachis non opéré",
+      "sous_division": null,
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 4,
+      "libelle": "Rééducation des conséquences d'une affection du rachis dorsal ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Douleurs dorsales, douleurs inter-costales, arthrose, dorsalgie",
+      "reeducation": "Rachis non opéré",
+      "sous_division": "sans chirurgie ",
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 2,
+      "libelle": "Rééducation des conséquences d'une affection du rachis lombo-sacré  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Arthrose, syndrome du canal lombaire étroit, instabilité lombaire",
+      "reeducation": "Rachis non opéré",
+      "sous_division": "sans chirurgie ",
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 8,
+      "libelle": "Rééducation des conséquences d'une affection du rachis cervical ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Arthrose, douleurs cervicales",
+      "reeducation": "Rachis non opéré",
+      "sous_division": "sans chirurgie ",
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 10,
+      "libelle": "Rééducation des conséquences d'une affection d'au moins deux segments du rachis ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": null,
+      "reeducation": "Rachis non opéré",
+      "sous_division": "sans chirurgie",
+      "lettre_cle": "RAM",
+      "cotation_valeur": "7,53",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 5,
+      "libelle": "Rééducation des conséquences d'une affection du rachis dorsal ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Hernie discale opérée, discectomie, arthrodèse\nmyélopathie, décompression, laminectomie,\nfracture thoracique dorsale,\ntumeur dorsale",
+      "reeducation": "Rachis opéré",
+      "sous_division": "avec chirurgie",
+      "lettre_cle": "RAO",
+      "cotation_valeur": "7,48",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 3,
+      "libelle": "Rééducation des conséquences d'une affection du rachis lombo-sacré  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Hernie discale opérée, discectomie, arthrodèse\nmyélopathie, décompression, laminectomie,\nfracture lombaire, fracture sacrum,\ntumeur lombo-sacrée",
+      "reeducation": "Rachis opéré",
+      "sous_division": "avec chirurgie",
+      "lettre_cle": "RAO",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 9,
+      "libelle": "Rééducation des conséquences d'une affection du rachis cervical ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": "Hernie discale opérée, discectomie, arthrodèse\nmyélopathie, décompression, laminectomie,\nfracture cervicale, instabilité cervicale,\ntumeur cervicale",
+      "reeducation": "Rachis opéré",
+      "sous_division": "avec chirurgie",
+      "lettre_cle": "RAO",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 11,
+      "libelle": "Rééducation des conséquences d'une affection d'au moins deux segments du rachis ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.) ",
+      "pathologies": null,
+      "reeducation": "Rachis opéré",
+      "sous_division": "avec chirurgie sur au moins un segment",
+      "lettre_cle": "RAO",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Rachis",
+      "vignette_label_1": "Rachis",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 79,
+      "libelle": "Supplément pour bandage multicouche :",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Lymphoedème, cancer du sein",
+      "reeducation": "Vasculaire",
+      "sous_division": "un membre",
+      "lettre_cle": "RAV",
+      "cotation_valeur": "1",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "1",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 78,
+      "libelle": "Rééducation pour un lymphœdème du membre supérieur après traitement d’un cancer du sein, associée à une rééducation de l’épaule homolatérale à la phase intensive du traitement du lymphœdème",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Lymphoedème, cancer du sein",
+      "reeducation": "Vasculaire",
+      "sous_division": null,
+      "lettre_cle": "RAV",
+      "cotation_valeur": "15,5",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "15,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 80,
+      "libelle": "Supplément pour bandage multicouche :",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Lymphoedème, cancer du sein",
+      "reeducation": "Vasculaire",
+      "sous_division": "deux membres",
+      "lettre_cle": "RAV",
+      "cotation_valeur": "2",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "2",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 75,
+      "libelle": "Rééducation pour insuffisance veineuse des membres inférieurs avec retentissement articulaire et/ou troubles trophiques",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Insuffisance veineuse, saphénectomie, varices",
+      "reeducation": "Vasculaire",
+      "sous_division": null,
+      "lettre_cle": "RAV",
+      "cotation_valeur": "7,99",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 76,
+      "libelle": "Rééducation pour lymphœdèmes vrais (après chirurgie et/ou radiothérapie, lymphœdèmes congénitaux) par drainage manuel :",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Lymphoedème, cancer du sein",
+      "reeducation": "Vasculaire",
+      "sous_division": "pour un membre ou pour le cou et la face",
+      "lettre_cle": "RAV",
+      "cotation_valeur": "8",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 74,
+      "libelle": "Rééducation pour artériopathie des membres inférieurs (claudication, troubles trophiques)",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Arthéropathie",
+      "reeducation": "Vasculaire",
+      "sous_division": null,
+      "lettre_cle": "RAV",
+      "cotation_valeur": "8,01",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 77,
+      "libelle": "Rééducation pour lymphœdèmes vrais (après chirurgie et/ou radiothérapie, lymphœdèmes congénitaux) par drainage manuel :",
+      "theme": "Rééducation des conséquences des affections vasculaires",
+      "pathologies": "Lymphoedème, cancer du sein",
+      "reeducation": "Vasculaire",
+      "sous_division": "deux membres",
+      "lettre_cle": "RAV",
+      "cotation_valeur": "9",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "9",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Vasculaire - oedème",
+      "vignette_label_1": "Vasculaire - oedème",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 33,
+      "libelle": "Rééducation après reconstruction du ligament croisé antérieur du genou  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "LCA, ligaments croisés, reconstruction du ligament croisé antérieur du genou  ",
+      "reeducation": "Membre inférieur opéré",
+      "sous_division": null,
+      "lettre_cle": "RIC",
+      "cotation_valeur": "7,48",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre inférieur, Genou",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Genou",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 34,
+      "libelle": "Rééducation après méniscectomie isolée, totale ou subtotale, par arthroscopie  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Opération ménisque, ménisectomie",
+      "reeducation": "Membre inférieur opéré",
+      "sous_division": null,
+      "lettre_cle": "RIC",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre inférieur, Genou",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Genou",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 37,
+      "libelle": "Rééducation après arthroplastie de hanche par prothèse totale  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Prothèse de Hanche, prothèse totale de hanche",
+      "reeducation": "Membre inférieur opéré",
+      "sous_division": null,
+      "lettre_cle": "RIC",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre inférieur, Hanche",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Hanche",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 28,
+      "libelle": "Rééducation des conséquences d'une entorse externe récente de cheville-pied",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Entorse de cheville, entorse externe récente de cheville-pied",
+      "reeducation": "Membre inférieur opéré",
+      "sous_division": "opérée  ",
+      "lettre_cle": "RIC",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre inférieur, Cheville, Pied",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Cheville",
+      "vignette_label_3": "Pied",
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 32,
+      "libelle": "Rééducation après arthroplastie du genou par prothèse totale ou uni-compartimentaire  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Prothèse de genou, prothèse totale ou uni-compartimentaire genou",
+      "reeducation": "Membre inférieur opéré",
+      "sous_division": null,
+      "lettre_cle": "RIC",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre inférieur, Genou",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Genou",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 29,
+      "libelle": "Rééducation des conséquences d'une entorse externe récente de cheville-pied",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Entorse de cheville, entorse externe récente de cheville-pied",
+      "reeducation": "Membre inférieur non opéré",
+      "sous_division": "non opérée ",
+      "lettre_cle": "RIM",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre inférieur, Cheville, Pied",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Cheville",
+      "vignette_label_3": "Pied",
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 86,
+      "libelle": "Rééducation d'un patient atteint de brûlures localisées à un membre ou à un segment de membre",
+      "theme": "Rééducation des patients atteints de brûlures",
+      "pathologies": "Brûlures, cicatrices",
+      "reeducation": "Brûlures",
+      "sous_division": null,
+      "lettre_cle": "RPB",
+      "cotation_valeur": "8",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Brûlures",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Brûlures",
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 87,
+      "libelle": "Rééducation d'un patient atteint de brûlures étendues à plusieurs membres et/ou au tronc",
+      "theme": "Rééducation des patients atteints de brûlures",
+      "pathologies": "Brûlures, cicatrices",
+      "reeducation": "Brûlures",
+      "sous_division": null,
+      "lettre_cle": "RPB",
+      "cotation_valeur": "9",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "9",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Brûlures",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Brûlures",
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 84,
+      "libelle": "Rééducation de la déambulation dans le cadre du maintien de l'autonomie de la personne âgée (séance d'une durée de l'ordre de vingt minutes)",
+      "theme": "Rééducation de la déambulation du sujet âgé",
+      "pathologies": null,
+      "reeducation": "Déambulatoire (gériatrie)",
+      "sous_division": null,
+      "lettre_cle": "RPE",
+      "cotation_valeur": "6",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "6",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Gériatrie",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Gériatrie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 83,
+      "libelle": "Rééducation analytique et globale, musculo-articulaire des deux membres inférieurs, de la posture, de l'équilibre et de la coordination chez le sujet âgé",
+      "theme": "Rééducation de la déambulation du sujet âgé",
+      "pathologies": null,
+      "reeducation": "Déambulatoire (gériatrie)",
+      "sous_division": null,
+      "lettre_cle": "RPE",
+      "cotation_valeur": "8,5",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": "8,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Autres, Gériatrie",
+      "vignette_label_1": "Autres",
+      "vignette_label_2": "Gériatrie",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 12,
+      "libelle": "Rééducation après libération du nerf médian au canal carpien ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Canal carpien, neuropathie, libération nerf médian",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": null,
+      "lettre_cle": "RSC",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Poignet, Neurologie",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Poignet",
+      "vignette_label_3": "Neurologie",
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 16,
+      "libelle": "Rééducation des conséquences d'une fracture de l’extrémité distale des deux os de l’avant-bras ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture poignet, fracture avant-bras, fracture de l’extrémité distale des deux os de l’avant-bras",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": "opérée  ",
+      "lettre_cle": "RSC",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Poignet",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Poignet",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 22,
+      "libelle": "Rééducation après réinsertion et/ou suture d’un ou de plusieurs tendons de la coiffe des rotateurs de l’épaule, par arthroscopie ou abord direct ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Opération coiffe des rotateurs de l'épaule, opération rupture de la coiffe de l'épaule ",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": null,
+      "lettre_cle": "RSC",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Epaule",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Epaule",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 18,
+      "libelle": "Rééducation des conséquences d'une fracture avec ou sans luxation du coude chez l’adulte ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture coude, luxation coude",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": "opérée  ",
+      "lettre_cle": "RSC",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Coude",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Coude",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 21,
+      "libelle": "Rééducation dans le cadre d’une tendinopathie de la coiffe des rotateurs non opérée ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Tendinopathie épaule, tendinopathie de la coiffe des rotateurs",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "RSM",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Epaule",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Epaule",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 23,
+      "libelle": "Rééducation des conséquences d'une fracture non opérée de l’extrémité proximale de l’humérus ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture extrémité proximale humérus, fracture humérus, fracture épaule",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "RSM",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Epaule",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Epaule",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 15,
+      "libelle": "Rééducation des conséquences d'une fracture de l’extrémité distale des deux os de l’avant-bras ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture poignet, fracture avant-bras, fracture de l’extrémité distale des deux os de l’avant-bras",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "RSM",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Coude",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Coude",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 17,
+      "libelle": "Rééducation des conséquences d'une fracture avec ou sans luxation du coude chez l’adulte ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture coude, luxation coude",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "RSM",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": true,
+      "vignette_label_0": "Membre supérieur, Coude",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Coude",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 61,
+      "libelle": "Rééducation des enfants présentant une paralysie cérébrale ou un polyhandicap \nCet acte s'intègre au parcours de rééducation et de réadaptation des enfants en situation de polyhandicap ou de paralysie cérébrale (formation adaptée, objectifs de rééducation…). \nLa prescription initiale de cet acte doit émaner de l'établissement ou du service sanitaire ou médico-social coordonnant le parcours de soins du patient. \nLes séances d'une durée de l'ordre de 30 minutes sont à adapter aux capacités physiques de l'enfant et au rythme des autres prises en charge. \n",
+      "theme": "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "pathologies": "Paralysie cérébrale, polyhandicap, infirmité motrice cérébrale, IMC",
+      "reeducation": "Affections orthopédiques et rhumatologiques sur au moins 2 territoires (membres, ou rachis et membres)",
+      "sous_division": null,
+      "lettre_cle": "TER",
+      "cotation_valeur": "16",
+      "old_lettre_cle": "AMK ou AMC",
+      "old_cotation_valeur": null,
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Pédiatrie, Neurologie",
+      "vignette_label_1": "Pédiatrie",
+      "vignette_label_2": "Neurologie",
+      "vignette_label_3": null,
+      "vignette_label_4": null
+    },
+    {
+      "ID": 48,
+      "libelle": "Rééducation secondaire à l'affection d’au moins 2 territoires lésés (hors 2 territoires ou plus du même membre ou 2 territoires ou plus du rachis) ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques de tout ou partie de plusieurs membres, ou du tronc et d'un ou plusieurs membres",
+      "pathologies": null,
+      "reeducation": "Affections orthopédiques et rhumatologiques sur au moins 2 territoires (membres, ou rachis et membres)",
+      "sous_division": "sans chirurgie",
+      "lettre_cle": "TER",
+      "cotation_valeur": "9,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "9,5",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre supérieur, Membre inférieur, Rachis",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Membres inférieurs",
+      "vignette_label_3": "Rachis",
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 49,
+      "libelle": "Rééducation secondaire à l'affection d’au moins 2 territoires lésés (hors 2 territoires ou plus du même membre ou 2 territoires ou plus du rachis) ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques de tout ou partie de plusieurs membres, ou du tronc et d'un ou plusieurs membres",
+      "pathologies": null,
+      "reeducation": "Affections orthopédiques et rhumatologiques sur au moins 2 territoires (membres, ou rachis et membres)",
+      "sous_division": "avec chirurgie sur au moins un territoire",
+      "lettre_cle": "TER",
+      "cotation_valeur": "9,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "9,5",
+      "indemnite_deplacement": "IFS",
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre supérieur, Membre inférieur, Rachis",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Membres inférieurs",
+      "vignette_label_3": "Rachis",
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 39,
+      "libelle": "Rééducation des conséquences d'une affection de la hanche ou de la cuisse ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Fracture du col du fémur, fracture du bassin ou de l’acétabulum,\nréinsertion du quadriceps ou des ischio-jambiers,\narthrodèse ou chirurgie correctrice de hanche",
+      "reeducation": "Membre inférieur opéré ",
+      "sous_division": "opérée ",
+      "lettre_cle": "VIC",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre inférieur, Hanche",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Hanche",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 36,
+      "libelle": "Rééducation des conséquences d'une affection du genou ou de la jambe ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Fracture de la rotule ou du plateau tibial,\nfracture de jambe (tibia/fibula)",
+      "reeducation": "Membre inférieur opéré ",
+      "sous_division": "opérée ",
+      "lettre_cle": "VIC",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre inférieur, Genou",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Genou",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 31,
+      "libelle": "Rééducation des conséquences d'une affection de la cheville ou pied ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Fracture malléolaire (mono/bi/tri-malléolaire),\nfracture du calcanéum, fracture du médio-pied (ex. Lisfranc),\nligamentoplastie de cheville pour instabilité chronique,\nchirurgie de l’avant-pied",
+      "reeducation": "Membre inférieur opéré ",
+      "sous_division": "opérée ",
+      "lettre_cle": "VIC",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre inférieur, Cheville, Pied",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Cheville",
+      "vignette_label_3": "Pied",
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 41,
+      "libelle": "Rééducation secondaire à l'affection d'au moins deux segments du même membre inférieur",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": null,
+      "reeducation": "Membre inférieur opéré ",
+      "sous_division": "avec chirurgie sur au moins un segment",
+      "lettre_cle": "VIC",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre inférieur ",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 38,
+      "libelle": "Rééducation des conséquences d'une affection de la hanche ou de la cuisse ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Tendinopathies hanche, arthrose hanche, bursite hanche, lésions musculaires hanche,\nconflit fémoro-acétabulaire",
+      "reeducation": "Membre inférieur non opéré",
+      "sous_division": "non opérée ",
+      "lettre_cle": "VIM",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre inférieur, Hanche",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Hanche",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 30,
+      "libelle": "Rééducation des conséquences d'une affection de la cheville ou pied ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Instabilité chronique de cheville, lésions musculaires,\nAponévrosite plantaire, fasciite plantaire,\ntendinopathie d’Achille",
+      "reeducation": "Membre inférieur non opéré",
+      "sous_division": "non opérée ",
+      "lettre_cle": "VIM",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre inférieur, Cheville, Pied",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Cheville",
+      "vignette_label_3": "Pied",
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 35,
+      "libelle": "Rééducation des conséquences d'une affection du genou ou de la jambe ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": "Entorse de genou, tendinopathie patellaire, lésions musculaires, lésions méniscales,\nsyndrome rotulien / fémoro-patellaire,\nentorse du ligament latéral interne (LLI)",
+      "reeducation": "Membre inférieur non opéré",
+      "sous_division": "non opérée ",
+      "lettre_cle": "VIM",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre inférieur, Genou",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": "Genou",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 40,
+      "libelle": "Rééducation secondaire à l'affection d'au moins deux segments du même membre inférieur",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "pathologies": null,
+      "reeducation": "Membre inférieur non opéré",
+      "sous_division": "sans chirurgie",
+      "lettre_cle": "VIM",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre inférieur",
+      "vignette_label_1": "Membres inférieurs",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 20,
+      "libelle": "Rééducation des conséquences d'une affection du coude ou de l'avant-bras ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture de la palette humérale, fracture de l’olécrâne\nfracture des deux os de l’avant-bras (radius + ulna),\nluxation de coude, réinsertion du tendon du biceps distal",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": "opérée  ",
+      "lettre_cle": "VSC",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre supérieur, Coude",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Coude",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 25,
+      "libelle": "Rééducation des conséquences d'une affection de l’épaule ou du bras  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Prothèse d’épaule (totale, partielle, inversée),\nfracture de l’humérus proximal,\ninstabilité récidivante, luxation récidivante,\nréparation du tendon du biceps",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": "opérée  ",
+      "lettre_cle": "VSC",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre supérieur, Epaule",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Epaule",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 14,
+      "libelle": "Rééducation des conséquences d'une affection du poignet ou main ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture du radius distal\nfracture du scaphoïde, section de tendons fléchisseurs ou extenseurs\nFractures métacarpiennes ou phalangiennes, ostéosynthèses",
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": "opérée  ",
+      "lettre_cle": "VSC",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre supérieur, Poignet",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Poignet",
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 27,
+      "libelle": "Rééducation secondaire à l’affection d'au moins deux segments du même membre supérieur ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": null,
+      "reeducation": "Membre supérieur opéré",
+      "sous_division": "avec chirurgie sur au moins un segment",
+      "lettre_cle": "VSC",
+      "cotation_valeur": "7,52",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre supérieur",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Opéré"
+    },
+    {
+      "ID": 24,
+      "libelle": "Rééducation des conséquences d'une affection de l’épaule ou du bras  ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Tendinopathie de la coiffe des rotateurs, \ncapsulite rétractile, épaule gelée\ninstabilité antérieure ou multidirectionnelle de l’épaule, luxations récidivantes,\nfracture non déplacée de l’humérus proximal,\nTendinopathie ou rupture partielle du long biceps",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "VSM",
+      "cotation_valeur": "7,48",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre supérieur, Epaule",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Epaule",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 19,
+      "libelle": "Rééducation des conséquences d'une affection du coude ou de l'avant-bras ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Fracture stable de l’avant-bras (radius ou ulna), fracture non déplacée de la palette humérale\nLuxation du coude réduite, épicondylite latérale ou médiale, tennis elbow, golf elbow,\nbursite olécrânienne chronique ou séquellaire",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "VSM",
+      "cotation_valeur": "7,49",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre supérieur, Coude",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Coude",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 13,
+      "libelle": "Rééducation des conséquences d'une affection du poignet ou main ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": "Entorse du poignet (ligament scapho-lunaire ou radio-carpien), fracture stable du radius distal\nfracture stable scaphoïde, tendinopathies de la main/poignet, ténosynovite De Quervain, \ndoigts à ressaut, arthrose trapézo-métacarpienne, \nrhizarthrose, syndrome du canal carpien",
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "non opérée  ",
+      "lettre_cle": "VSM",
+      "cotation_valeur": "7,50",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": false,
+      "vignette_label_0": "Membre supérieur, Poignet",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": "Poignet",
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    },
+    {
+      "ID": 26,
+      "libelle": "Rééducation secondaire à l’affection d'au moins deux segments du même membre supérieur ",
+      "theme": "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "pathologies": null,
+      "reeducation": "Membre supérieur non opéré",
+      "sous_division": "sans chirurgie",
+      "lettre_cle": "VSM",
+      "cotation_valeur": "7,51",
+      "old_lettre_cle": "AMS",
+      "old_cotation_valeur": "7,5",
+      "indemnite_deplacement": null,
+      "soumis_referentiel": null,
+      "vignette_label_0": "Membre supérieur",
+      "vignette_label_1": "Membres supérieurs",
+      "vignette_label_2": null,
+      "vignette_label_3": null,
+      "vignette_label_4": "Non-opéré"
+    }
+  ],
+  "facets": {
+    "top_level_labels": [
+      "Autres",
+      "Bilan",
+      "Membres inférieurs",
+      "Membres supérieurs",
+      "Neurologie",
+      "Pédiatrie",
+      "Rachis",
+      "Respi",
+      "Vasculaire - oedème"
+    ],
+    "themes": [
+      "Bilans",
+      "Rééducation dans le cadre des pathologies maxillo-faciales et oto-rhino-laryngologiques",
+      "Rééducation de la déambulation du sujet âgé",
+      "Rééducation de la paroi abdominale",
+      "Rééducation des conséquences d'affections neurologiques et musculaires",
+      "Rééducation des conséquences des affections orthopédiques et rhumatologiques de tout ou partie de plusieurs membres, ou du tronc et d'un ou plusieurs membres",
+      "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre inférieur et de sa racine (hors amputations de l’article 1 F)",
+      "Rééducation des conséquences des affections orthopédiques et rhumatologiques du membre supérieur et de sa racine (hors amputations l’article 1 F)",
+      "Rééducation des conséquences des affections orthopédiques et rhumatologiques du rachis (hors déviations latérales ou sagittales du rachis de l’article 1 E.)",
+      "Rééducation des conséquences des affections périnéosphinctériennes",
+      "Rééducation des conséquences des affections respiratoires",
+      "Rééducation des conséquences des affections rhumatismales inflammatoires",
+      "Rééducation des conséquences des affections vasculaires",
+      "Rééducation des patients atteints de brûlures",
+      "Rééducation et réadaptation après amputation de tout ou partie des membres, y compris l'adaptation à l'appareillage",
+      "Rééducation pour déviation latérale ou sagittale du rachis (personnes de moins de 18 ans)",
+      "Soins palliatifs"
+    ],
+    "codes": [
+      "AMK",
+      "APM",
+      "ARL",
+      "DRA",
+      "NMI",
+      "PLL",
+      "RAB",
+      "RAM",
+      "RAO",
+      "RAV",
+      "RIC",
+      "RIM",
+      "RPB",
+      "RPE",
+      "RSC",
+      "RSM",
+      "TER",
+      "VIC",
+      "VIM",
+      "VSC",
+      "VSM"
+    ]
+  }
+}

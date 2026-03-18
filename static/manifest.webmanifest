@@ -1,0 +1,9 @@
+{
+  "name": "Assistant NGAP Kine",
+  "short_name": "NGAP Kine",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4efe6",
+  "theme_color": "#1f5c4a",
+  "icons": []
+}
