@@ -3,8 +3,8 @@ services:
     name: simulateur-ngap-kine
     runtime: python
     plan: starter
-    buildCommand: python3 -m py_compile app.py ngap_catalog.py assistant_ngap.py analyse_message.py ngap_database.py
-    startCommand: python3 app.py --mode web --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: OPENAI_API_KEY
         sync: false

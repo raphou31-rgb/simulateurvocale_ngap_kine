@@ -1,1 +1,2 @@
-# Cette application utilise uniquement la bibliothèque standard Python.
+Flask>=3.0,<4.0
+gunicorn>=23.0,<24.0
