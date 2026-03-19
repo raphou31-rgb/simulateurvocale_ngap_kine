@@ -492,7 +492,6 @@
             <button id="reset" class="danger">Réinitialiser</button>
           </div>
           <div id="status" class="status"></div>
-          <div id="context" class="chips"></div>
           <div id="result" class="result"></div>
           <div id="explain" class="explain hidden"></div>
           <div id="choices" class="choices"></div>
@@ -524,7 +523,8 @@
         analyze: 15000,
         transcribe: 45000,
       };
-      const APP_VERSION = "render-release-1";
+      const AUTO_STOP_RECORDING_MS = 3000;
+      const APP_VERSION = "render-release-2";
       const DEBUG_LOGS = false;
       const $ = (id) => document.getElementById(id);
 
@@ -633,16 +633,6 @@
         $("status").textContent = data.done
           ? "Réponse finale prête."
           : "Une précision est nécessaire.";
-        $("context").innerHTML = "";
-        [context ? `Contexte: ${context}` : "", attente ? `Attente: ${attente}` : ""]
-          .filter(Boolean)
-          .forEach((label) => {
-            const chip = document.createElement("span");
-            chip.className = "chip";
-            chip.textContent = polishDisplayText(label);
-            $("context").appendChild(chip);
-          });
-
         $("choices").innerHTML = "";
         (data.choices || []).forEach((item) => {
           const button = document.createElement("button");
@@ -1402,7 +1392,7 @@
                 startResolved = true;
                 recordStartedAt = performance.now();
                 controller.onListening(this.path);
-                stopTimer = setTimeout(() => this.stop("auto"), 8000);
+                stopTimer = setTimeout(() => this.stop("auto"), AUTO_STOP_RECORDING_MS);
                 resolve();
               };
 

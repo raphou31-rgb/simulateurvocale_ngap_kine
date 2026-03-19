@@ -429,6 +429,94 @@ def regle_est_conclusive(regle):
     return True
 
 
+def question_precision_pour_candidat_unique(message, regle):
+    if regle is None:
+        return None, ""
+
+    message_normalise = normaliser_texte(message)
+    indices = extraire_indices(message)
+    famille = str(regle.get("famille", "")).strip().lower()
+
+    if famille in {"rachis", "deviation rachis"}:
+        if (
+            indices["segment"] == "lombaire"
+            and indices.get("chirurgie") is None
+            and not _contient_un_des(
+                message_normalise,
+                ["commune", "lombo sacre", "lombo-sacre", "deviation", "scoliose", "lordose", "sciatique", "cruralgie"],
+            )
+        ):
+            return "Question : lombalgie commune / lombo-sacre / deviation ?", "rachis_lombaire_precision"
+        if (
+            indices["segment"] == "cervical"
+            and indices.get("chirurgie") is None
+            and not _contient_un_des(message_normalise, ["cervicalgie commune", "commune"])
+            and not _contient_un_des(
+                message_normalise,
+                ["trauma", "traumatisme", "recent", "récent", "deviation", "scoliose"],
+            )
+        ):
+            return "Question : cervicalgie / trauma recent / deviation ?", "rachis_cervical_precision"
+        if (
+            indices["segment"] == "dorsal"
+            and indices.get("chirurgie") is None
+            and not _contient_un_des(message_normalise, ["dorsalgie", "rachis dorsal", "rachis thoracique"])
+            and not _contient_un_des(message_normalise, ["deviation", "cyphose"])
+        ):
+            return "Question : dorsal ou deviation ?", "rachis_dorsal_precision"
+        if (
+            indices["territoire"] == "rachis"
+            and indices["segment"] is None
+            and not _contient_un_des(message_normalise, ["deviation", "scoliose", "cyphose", "lordose"])
+        ):
+            return "Question : plusieurs segments ou deviation ?", "rachis_precision"
+
+    if famille == "membre inferieur":
+        if indices["multiple"] and indices.get("chirurgie") is None:
+            return "Question : operes ou non ?", "deux_membres_precision"
+        if "genou" in message_normalise or "genoux" in message_normalise:
+            if indices.get("chirurgie") is None and not _contient_un_des(
+                message_normalise,
+                ["lca", "ligament croise", "meniscectomie", "prothese", "fracture"],
+            ):
+                return "Question : chirurgie du genou ou non ?", "genou_chirurgie"
+            if indices.get("chirurgie") == "oui" and not _contient_un_des(
+                message_normalise,
+                ["lca", "ligament croise", "meniscectomie", "prothese", "fracture"],
+            ):
+                return "Question : prothese / lca / meniscectomie / autre ?", "genou_chirurgie_type"
+        if "cheville" in message_normalise and indices.get("chirurgie") is None:
+            return "Question : chirurgie ou non ?", "cheville_chirurgie"
+        if ("hanche" in message_normalise or "cuisse" in message_normalise) and indices.get("chirurgie") is None:
+            return "Question : chirurgie de hanche ou non ?", "hanche_chirurgie"
+
+    if famille == "membre superieur":
+        if indices["multiple"] and indices.get("chirurgie") is None:
+            return "Question : operes ou non ?", "membre_sup_multiple_precision"
+        if "canal carpien" in message_normalise:
+            return None, ""
+        if (
+            ("coude" in message_normalise or "avant bras" in message_normalise or "avant-bras" in message_normalise)
+            and indices.get("chirurgie") is None
+            and not _contient_un_des(message_normalise, ["fracture", "luxation"])
+        ):
+            return "Question : operee ou non ?", "coude_chirurgie"
+        if (
+            ("poignet" in message_normalise or "main" in message_normalise)
+            and indices.get("chirurgie") is None
+            and not _contient_un_des(message_normalise, ["fracture", "canal carpien"])
+        ):
+            return "Question : operee ou non ?", "poignet_chirurgie"
+        if (
+            ("epaule" in message_normalise or "epaules" in message_normalise or "bras" in message_normalise)
+            and indices.get("chirurgie") is None
+            and not _contient_un_des(message_normalise, ["coiffe", "prothese"])
+        ):
+            return "Question : operee ou non ?", "epaule_chirurgie"
+
+    return None, ""
+
+
 def _contient_un_des(m, expressions):
     return any(expr in m for expr in expressions)
 
@@ -852,6 +940,14 @@ def essayer_resolution_depuis_message(message, contexte_precedent):
     candidates = dedoublonner_regles(trouver_regles_candidates(message))
     conclusive = [regle for regle in candidates if regle_est_conclusive(regle)]
     if len(conclusive) == 1:
+        question, attente = question_precision_pour_candidat_unique(message, conclusive[0])
+        if question:
+            return {
+                "texte": question,
+                "nouveau_contexte": f"{contexte_precedent} {message}".strip(),
+                "termine": False,
+                "attente": attente
+            }
         return {
             "texte": formater_reponse_finale(conclusive[0]),
             "nouveau_contexte": "",
@@ -872,6 +968,14 @@ def essayer_resolution_depuis_message(message, contexte_precedent):
     candidates = dedoublonner_regles(trouver_regles_candidates(message_complet))
     conclusive = [regle for regle in candidates if regle_est_conclusive(regle)]
     if len(conclusive) == 1:
+        question, attente = question_precision_pour_candidat_unique(message_complet, conclusive[0])
+        if question:
+            return {
+                "texte": question,
+                "nouveau_contexte": message_complet,
+                "termine": False,
+                "attente": attente
+            }
         return {
             "texte": formater_reponse_finale(conclusive[0]),
             "nouveau_contexte": "",
@@ -1007,7 +1111,7 @@ def determiner_question(message, candidates):
         return "Question : Quel territoire ?", "general_precision"
 
     if len(candidates) == 1:
-        return None, ""
+        return question_precision_pour_candidat_unique(message, candidates[0])
 
     if not candidates:
         if indices["territoire"] == "rachis":
@@ -1868,6 +1972,14 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         message_complet = f"{contexte_precedent} {message}".strip()
         candidates = dedoublonner_regles(trouver_regles_candidates(message_complet))
         if len(candidates) == 1:
+            question, nouvelle_attente = question_precision_pour_candidat_unique(message_complet, candidates[0])
+            if question:
+                return {
+                    "texte": question,
+                    "nouveau_contexte": message_complet,
+                    "termine": False,
+                    "attente": nouvelle_attente
+                }
             return {
                 "texte": formater_reponse_finale(candidates[0]),
                 "nouveau_contexte": "",
@@ -2748,6 +2860,14 @@ def repondre(message, contexte_precedent="", attente=""):
         }
 
     if len(candidates) == 1:
+        question, nouvelle_attente = question_precision_pour_candidat_unique(message_complet, candidates[0])
+        if question:
+            return {
+                "texte": question,
+                "nouveau_contexte": message_complet,
+                "termine": False,
+                "attente": nouvelle_attente
+            }
         if not regle_est_conclusive(candidates[0]):
             return reponse_prudente(message_complet, "general_precision")
         return {

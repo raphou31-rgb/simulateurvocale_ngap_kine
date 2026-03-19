@@ -97,6 +97,12 @@ class TestNGAPNonRegression(unittest.TestCase):
             RULE_BY_ID["rachis_lombalgie_commune"]["cotation"],
         )
 
+    def test_lombalgie_simple_demande_precision(self):
+        result = repondre("lombalgie")
+        self.assertFalse(result["termine"])
+        self.assertTrue(result["texte"].startswith("Question :"))
+        self.assertNotEqual(result["attente"], "")
+
     def test_genou_lca_final(self):
         self.assert_final_with_known_cotation(
             "lca genou",
@@ -618,6 +624,12 @@ class TestNGAPNonRegression(unittest.TestCase):
         self.assertFalse(result["termine"])
         self.assertEqual(result["texte"], "Question : operee ou non ?")
         self.assertEqual(result["attente"], "poignet_chirurgie")
+
+    def test_genou_simple_demande_chirurgie(self):
+        result = repondre("genou")
+        self.assertFalse(result["termine"])
+        self.assertEqual(result["texte"], "Question : chirurgie du genou ou non ?")
+        self.assertEqual(result["attente"], "genou_chirurgie")
 
     def test_acromioplastie_final(self):
         self.assert_final_with_known_cotation(
