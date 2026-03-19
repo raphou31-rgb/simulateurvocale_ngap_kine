@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "python3 app.py --mode web --host 127.0.0.1 --port 8000",
-    "build": "python3 -m py_compile app.py ngap_catalog.py assistant_ngap.py analyse_message.py ngap_database.py",
+    "build": "python3 -m py_compile app.py assistant_ngap.py analyse_message.py ngap_database.py",
     "start": "python3 app.py --mode web",
-    "test": "python3 -m unittest discover -s tests -q",
-    "audit": "python3 audit_ngap_consistency.py"
+    "test": "python3 -m unittest discover -s tests -q"
   }
 }

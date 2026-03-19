@@ -377,10 +377,6 @@
         font-size: 0.92rem;
       }
 
-      .matches {
-        display: none;
-      }
-
       .choices {
         margin-top: 16px;
         display: flex;
@@ -500,7 +496,6 @@
           <div id="result" class="result"></div>
           <div id="explain" class="explain hidden"></div>
           <div id="choices" class="choices"></div>
-          <div id="matches" class="matches"></div>
         </section>
 
         <section id="view-history" class="view hidden">
@@ -525,7 +520,62 @@
         "tendinopathie", "epicondylite", "lymphoedeme", "cancer du sein",
         "parkinson", "hemiplegie", "bpco", "respiratoire"
       ];
+      const NETWORK_TIMEOUTS = {
+        analyze: 15000,
+        transcribe: 45000,
+      };
+      const APP_VERSION = "render-release-1";
+      const DEBUG_LOGS = false;
       const $ = (id) => document.getElementById(id);
+
+      if (DEBUG_LOGS) {
+        console.log("[app]", {
+          version: APP_VERSION,
+          page_origin: window.location.origin,
+          user_agent: navigator.userAgent,
+        });
+      }
+
+      function buildApiUrl(path) {
+        return new URL(path, window.location.origin).toString();
+      }
+
+      async function fetchJsonWithDebug(path, options = {}, timeoutMs = 15000) {
+        const requestUrl = buildApiUrl(path);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        const pageOrigin = window.location.origin;
+        const requestOrigin = new URL(requestUrl).origin;
+        const sameOrigin = pageOrigin === requestOrigin;
+
+        if (DEBUG_LOGS) {
+          console.log("[network]", {
+            app_version: APP_VERSION,
+            request_url: requestUrl,
+            page_origin: pageOrigin,
+            same_origin: sameOrigin,
+            timeout_ms: timeoutMs,
+            method: options.method || "GET",
+            user_agent: navigator.userAgent,
+          });
+        }
+
+        try {
+          const response = await fetch(requestUrl, {
+            ...options,
+            signal: controller.signal,
+          });
+          let data = {};
+          try {
+            data = await response.json();
+          } catch (_) {
+            data = {};
+          }
+          return { response, data, requestUrl, sameOrigin, timeoutMs };
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      }
 
       async function analyzeMessage() {
         const message = $("message").value.trim();
@@ -546,13 +596,16 @@
         $("status").textContent = "Analyse en cours...";
         let data;
         try {
-          const response = await fetch("/api/analyze", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message, context, attente }),
-          });
-
-          data = await response.json();
+          const { response, data: responseData } = await fetchJsonWithDebug(
+            "/api/analyze",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ message, context, attente }),
+            },
+            NETWORK_TIMEOUTS.analyze
+          );
+          data = responseData;
           if (!response.ok) {
             $("status").textContent = data.error || "Erreur serveur.";
             return;
@@ -598,8 +651,6 @@
           button.addEventListener("click", () => submitMessage(item.value));
           $("choices").appendChild(button);
         });
-
-        $("matches").innerHTML = "";
 
         if (data.done) {
           saveHistoryEntry(data.answer, data.result_meta || null);
@@ -793,7 +844,6 @@
         $("status").textContent = "Cas rechargé depuis l'historique.";
         $("context").innerHTML = "";
         $("choices").innerHTML = "";
-        $("matches").innerHTML = "";
         context = "";
         attente = "";
         setActiveTab("assistant");
@@ -1486,7 +1536,9 @@
           if (window.__ngapDictationLogs.length > 100) {
             window.__ngapDictationLogs.shift();
           }
-          console.log("[dictation]", payload);
+          if (DEBUG_LOGS) {
+            console.log("[dictation]", payload);
+          }
         }
 
         function canUseWebkitRecognition() {
@@ -1622,18 +1674,18 @@
             formData.append("selected_mime_type", metadata.selectedMimeType || blob.type || "application/octet-stream");
             formData.append("tested_mime_types", JSON.stringify(metadata.testedMimeTypes || []));
             try {
-              response = await fetch("/api/transcribe", {
-                method: "POST",
-                body: formData,
-              });
+              const result = await fetchJsonWithDebug(
+                "/api/transcribe",
+                {
+                  method: "POST",
+                  body: formData,
+                },
+                NETWORK_TIMEOUTS.transcribe
+              );
+              response = result.response;
+              data = result.data;
             } catch (_) {
               throw { error: "network-error", message: "Connexion impossible pendant l'envoi audio." };
-            }
-
-            try {
-              data = await response.json();
-            } catch (_) {
-              data = {};
             }
 
             if (!response.ok) {
@@ -1651,7 +1703,6 @@
             log("audio_upload_succeeded", {
               path: "audioFallbackBackend",
               provider: data.provider || "",
-              backend_response: data,
             });
             return transcript;
           },
@@ -1752,7 +1803,6 @@
         renderResultMeta(null);
         $("context").innerHTML = "";
         $("choices").innerHTML = "";
-        $("matches").innerHTML = "";
       }
 
       $("tab-assistant").addEventListener("click", () => setActiveTab("assistant"));
@@ -1770,7 +1820,7 @@
       syncActionState();
 
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+        navigator.serviceWorker.register("/service-worker.js?v=20260319").catch(() => {});
       }
     </script>
   </body>

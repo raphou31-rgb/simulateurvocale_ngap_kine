@@ -12,7 +12,6 @@ from uuid import uuid4
 from flask import Flask, jsonify, request, send_from_directory
 
 from assistant_ngap import decrire_reponse_finale, proposer_choix, traiter_transcription_texte
-from ngap_catalog import search_catalog
 
 
 BASE_DIR = Path(__file__).parent
@@ -382,23 +381,6 @@ def analyze_api():
 
     resultat = traiter_transcription_texte(message, contexte, attente)
     choices = proposer_choix(message, contexte, resultat["attente"])
-    try:
-        catalog_matches = [
-            {
-                "id": item["ID"],
-                "libelle": item["libelle"].strip(),
-                "theme": item.get("theme", "").strip(),
-                "cotation": item["cotation"],
-            }
-            for item in search_catalog(message)
-        ]
-    except FileNotFoundError as exc:
-        log_transcription_event(
-            "catalog_search_unavailable",
-            exception_type=type(exc).__name__,
-            exception_message=str(exc),
-        )
-        catalog_matches = []
     result_meta = None
     if resultat["termine"]:
         result_meta = decrire_reponse_finale(resultat["texte"], message, contexte)
@@ -410,7 +392,6 @@ def analyze_api():
             "attente": resultat["attente"],
             "done": resultat["termine"],
             "choices": choices,
-            "catalog_matches": catalog_matches,
             "result_meta": result_meta,
         }
     )

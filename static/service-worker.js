@@ -1,4 +1,4 @@
-const CACHE_NAME = "ngap-kine-v2";
+const CACHE_NAME = "ngap-kine-v3";
 const ASSETS = ["/", "/manifest.webmanifest", "/service-worker.js"];
 
 self.addEventListener("install", (event) => {
