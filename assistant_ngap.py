@@ -472,11 +472,10 @@ def question_precision_pour_candidat_unique(message, regle):
             return "Question : plusieurs segments ou deviation ?", "rachis_precision"
 
     if famille == "membre inferieur":
-        if indices["multiple"] and _membre_inf_deux_membres_distincts(message_normalise):
-            return (
-                "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
-                "membre_inf_repartition_precision",
-            )
+        if indices["multiple"] and _membre_inf_bilateral_explicite(message_normalise) and indices.get("chirurgie") is None:
+            return "Question : operes ou non ?", "deux_membres_precision"
+        if indices["multiple"] and _membre_inf_meme_membre_explicite(message_normalise) and indices.get("chirurgie") is None:
+            return "Question : operes ou non ?", "deux_membres_precision"
         if indices["multiple"] and indices.get("chirurgie") is None:
             return "Question : operes ou non ?", "deux_membres_precision"
         if "genou" in message_normalise or "genoux" in message_normalise:
@@ -549,7 +548,7 @@ def _segments_rachis_detectes(m):
     return segments
 
 
-def _membre_inf_deux_membres_distincts(m):
+def _membre_inf_bilateral_explicite(m):
     return (
         _contient_un_des(
             m,
@@ -574,37 +573,19 @@ def _membre_inf_deux_membres_distincts(m):
     )
 
 
-def _reponse_meme_membre(m):
+def _membre_inf_meme_membre_explicite(m):
     return _contient_un_des(
         m,
         [
+            "deux segments membre inferieur",
+            "2 segments membre inferieur",
+            "plusieurs segments membre inferieur",
             "meme membre",
             "même membre",
             "membre membre",
             "un seul membre",
             "sur le meme membre",
             "sur le même membre",
-        ],
-    )
-
-
-def _reponse_un_segment_par_membre(m):
-    return _contient_un_des(
-        m,
-        [
-            "chaque membre",
-            "un segment sur chaque membre",
-            "un ligament sur chaque membre",
-            "un sur chaque membre",
-            "un a gauche un a droite",
-            "un à gauche un à droite",
-            "gauche et droite",
-            "genou gauche et genou droit",
-            "jambe gauche et jambe droite",
-            "bilateral",
-            "bilatéral",
-            "bilaterale",
-            "bilatérale",
         ],
     )
 
@@ -1733,15 +1714,9 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
     if attente == "deux_membres_precision":
         contexte_complet = f"{contexte_precedent} {message}".strip()
         contexte_normalise = normaliser_texte(contexte_complet)
-        if _membre_inf_deux_membres_distincts(contexte_normalise):
-            return {
-                "texte": "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
-                "nouveau_contexte": contexte_complet,
-                "termine": False,
-                "attente": "membre_inf_repartition_precision"
-            }
         if _reponse_chirurgie_positive(message_normalise) or "operes" in message_normalise or "opérés" in message_normalise:
-            regle = trouver_regle_par_id("membre_inf_plusieurs_segments_operes")
+            regle_id = "membre_inf_deux_membres_operes" if _membre_inf_bilateral_explicite(contexte_normalise) else "membre_inf_plusieurs_segments_operes"
+            regle = trouver_regle_par_id(regle_id)
             return {
                 "texte": formater_reponse_finale(regle),
                 "nouveau_contexte": "",
@@ -1749,7 +1724,8 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
                 "attente": ""
             }
         if _reponse_chirurgie_negative(message_normalise) or "non operes" in message_normalise or "non opérés" in message_normalise:
-            regle = trouver_regle_par_id("membre_inf_plusieurs_segments_non_operes")
+            regle_id = "membre_inf_deux_membres_non_operes" if _membre_inf_bilateral_explicite(contexte_normalise) else "membre_inf_plusieurs_segments_non_operes"
+            regle = trouver_regle_par_id(regle_id)
             return {
                 "texte": formater_reponse_finale(regle),
                 "nouveau_contexte": "",
@@ -1761,45 +1737,6 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
             "nouveau_contexte": contexte_precedent,
             "termine": False,
             "attente": "deux_membres_precision"
-        }
-    if attente == "membre_inf_repartition_precision":
-        contexte_complet = f"{contexte_precedent} {message}".strip()
-        contexte_normalise = normaliser_texte(contexte_complet)
-        if _reponse_meme_membre(message_normalise):
-            if _reponse_chirurgie_positive(contexte_normalise):
-                regle = trouver_regle_par_id("membre_inf_plusieurs_segments_operes")
-                return {
-                    "texte": formater_reponse_finale(regle),
-                    "nouveau_contexte": "",
-                    "termine": True,
-                    "attente": ""
-                }
-            if _reponse_chirurgie_negative(contexte_normalise):
-                regle = trouver_regle_par_id("membre_inf_plusieurs_segments_non_operes")
-                return {
-                    "texte": formater_reponse_finale(regle),
-                    "nouveau_contexte": "",
-                    "termine": True,
-                    "attente": ""
-                }
-            return {
-                "texte": "Question : operes ou non ?",
-                "nouveau_contexte": contexte_complet,
-                "termine": False,
-                "attente": "deux_membres_precision"
-            }
-        if _reponse_un_segment_par_membre(message_normalise):
-            return {
-                "texte": "Je ne peux pas déterminer une cotation unique fiable s'il s'agit d'un segment sur chaque membre inférieur. Merci de préciser si une cotation séparée par membre est attendue.",
-                "nouveau_contexte": contexte_complet,
-                "termine": False,
-                "attente": "general_precision"
-            }
-        return {
-            "texte": "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
-            "nouveau_contexte": contexte_precedent,
-            "termine": False,
-            "attente": "membre_inf_repartition_precision"
         }
 
     if attente == "genou_non_opere_precision":
@@ -2755,18 +2692,11 @@ def repondre(message, contexte_precedent="", attente=""):
             }
 
     if indices["territoire"] == "membre inferieur" and indices.get("multiple"):
-        if _membre_inf_deux_membres_distincts(message_normalise):
-            return {
-                "texte": "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
-                "nouveau_contexte": message_complet,
-                "termine": False,
-                "attente": "membre_inf_repartition_precision"
-            }
         regle_id = None
         if indices.get("chirurgie") == "oui":
-            regle_id = "membre_inf_plusieurs_segments_operes"
+            regle_id = "membre_inf_deux_membres_operes" if _membre_inf_bilateral_explicite(message_normalise) else "membre_inf_plusieurs_segments_operes"
         elif indices.get("chirurgie") == "non":
-            regle_id = "membre_inf_plusieurs_segments_non_operes"
+            regle_id = "membre_inf_deux_membres_non_operes" if _membre_inf_bilateral_explicite(message_normalise) else "membre_inf_plusieurs_segments_non_operes"
         if regle_id:
             regle = trouver_regle_par_id(regle_id)
             if regle_est_conclusive(regle):
@@ -3128,10 +3058,6 @@ CHOIX_ATTENTE = {
     "neuro_stable_etendue": [
         {"label": "Un membre", "value": "un membre"},
         {"label": "Plusieurs", "value": "plusieurs membres"},
-    ],
-    "membre_inf_repartition_precision": [
-        {"label": "Même membre", "value": "meme membre"},
-        {"label": "Chaque membre", "value": "un segment sur chaque membre"},
     ],
     "respiratoire_chronique_mode": [
         {"label": "Individuel", "value": "individuel"},

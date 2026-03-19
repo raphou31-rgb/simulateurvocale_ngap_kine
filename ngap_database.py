@@ -490,6 +490,44 @@ NGAP_RULES = [
     "required_fields": []
 },
 {
+    "id": "membre_inf_deux_membres_non_operes",
+    "acte": "Rééducation secondaire à l'affection des deux membres inférieurs non opérés",
+    "famille": "membre inferieur",
+    "detail": "deux membres inférieurs non opérés",
+    "cotation": "VIM 8.12",
+    "seances_max": None,
+    "referentiel": "non",
+    "keywords_any": [
+        "deux membres inferieurs non operes",
+        "deux membres inferieurs non opérés",
+        "deux membre inferieur non chirurgie",
+        "bilateral genoux non operes",
+        "bilateral genoux non opérés",
+        "deux genoux non operes",
+        "deux genoux non opérés"
+    ],
+    "required_fields": []
+},
+{
+    "id": "membre_inf_deux_membres_operes",
+    "acte": "Rééducation secondaire à l'affection des deux membres inférieurs avec chirurgie",
+    "famille": "membre inferieur",
+    "detail": "deux membres inférieurs avec chirurgie",
+    "cotation": "VIC 8.12",
+    "seances_max": None,
+    "referentiel": "non",
+    "keywords_any": [
+        "deux membres inferieurs operes",
+        "deux membres inferieurs opérés",
+        "deux membre inferieur chirurgie",
+        "bilateral genoux operes",
+        "bilateral genoux opérés",
+        "deux genoux operes",
+        "deux genoux opérés"
+    ],
+    "required_fields": []
+},
+{
     "id": "membre_inf_plusieurs_segments_non_operes",
     "acte": "Rééducation secondaire à l'affection d'au moins deux segments du même membre inférieur non opérés",
     "famille": "membre inferieur",
@@ -500,9 +538,7 @@ NGAP_RULES = [
     "keywords_any": [
         "deux segments membre inferieur",
         "2 segments membre inferieur",
-        "plusieurs segments membre inferieur",
-        "deux membres inferieurs non operes",
-        "deux membres inferieurs non opérés"
+        "plusieurs segments membre inferieur"
     ],
     "required_fields": []
 },
@@ -517,9 +553,7 @@ NGAP_RULES = [
     "keywords_any": [
         "deux segments membre inferieur operes",
         "2 segments membre inferieur operes",
-        "plusieurs segments membre inferieur operes",
-        "deux membres inferieurs operes",
-        "deux membres inferieurs opérés"
+        "plusieurs segments membre inferieur operes"
     ],
     "required_fields": []
 },

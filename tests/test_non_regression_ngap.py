@@ -269,45 +269,34 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_deux_genoux_demande_operes_ou_non(self):
-        result = repondre("Reeducation des genoux deux membres inférieurs")
-        self.assertFalse(result["termine"])
-        self.assertEqual(
-            result["texte"],
-            "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
+        self.assert_short_question(
+            "Reeducation des genoux deux membres inférieurs",
+            "Question : operes ou non ?",
         )
 
     def test_deux_genoux_apres_chirurgie_final(self):
-        result = repondre("les deux genoux apres chirurgie")
-        self.assertFalse(result["termine"])
-        self.assertEqual(
-            result["texte"],
-            "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
+        self.assert_final_with_known_cotation(
+            "les deux genoux apres chirurgie",
+            RULE_BY_ID["membre_inf_deux_membres_operes"]["cotation"],
         )
-        self.assertEqual(result["attente"], "membre_inf_repartition_precision")
 
     def test_bilateral_genoux_operes_final(self):
-        result = repondre("bilateral genoux operes")
-        self.assertFalse(result["termine"])
-        self.assertEqual(
-            result["texte"],
-            "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
+        self.assert_final_with_known_cotation(
+            "bilateral genoux operes",
+            RULE_BY_ID["membre_inf_deux_membres_operes"]["cotation"],
         )
-        self.assertEqual(result["attente"], "membre_inf_repartition_precision")
 
-    def test_deux_genoux_meme_membre_apres_chirurgie_final(self):
-        result = repondre("les deux genoux apres chirurgie")
-        result = repondre("meme membre", result["nouveau_contexte"], result["attente"])
-        self.assertTrue(result["termine"])
-        self.assertIn(RULE_BY_ID["membre_inf_plusieurs_segments_operes"]["cotation"], result["texte"])
-
-    def test_deux_membres_inferieurs_non_operes_ne_donne_pas_reponse_fausse(self):
-        result = repondre("reeducation des deux membres inferieurs pas operee")
-        self.assertFalse(result["termine"])
-        self.assertEqual(
-            result["texte"],
-            "Question : S'agit-il de deux segments du même membre inférieur, ou d'un segment sur chaque membre inférieur ?",
+    def test_deux_segments_meme_membre_apres_chirurgie_final(self):
+        self.assert_final_with_known_cotation(
+            "deux segments membre inferieur operes",
+            RULE_BY_ID["membre_inf_plusieurs_segments_operes"]["cotation"],
         )
-        self.assertEqual(result["attente"], "membre_inf_repartition_precision")
+
+    def test_deux_membres_inferieurs_non_operes_final(self):
+        self.assert_final_with_known_cotation(
+            "reeducation des deux membres inferieurs pas operee",
+            RULE_BY_ID["membre_inf_deux_membres_non_operes"]["cotation"],
+        )
 
     def test_genou_opere_demande_type_chirurgie(self):
         self.assert_short_question(
