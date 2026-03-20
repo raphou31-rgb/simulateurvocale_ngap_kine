@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import re
+import time
 from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
@@ -12,12 +13,37 @@ from uuid import uuid4
 from flask import Flask, jsonify, request, send_from_directory
 
 from assistant_ngap import decrire_reponse_finale, proposer_choix, traiter_transcription_texte
+from debug_trace import DEBUG_ENABLED, get_trace
+from questions_ux import humaniser_question
+
+try:
+    from flask_limiter import Limiter
+    from flask_limiter.util import get_remote_address
+except ImportError:  # pragma: no cover
+    class Limiter:  # type: ignore[no-redef]
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def limit(self, _rule):
+            def decorator(func):
+                return func
+
+            return decorator
+
+    def get_remote_address():  # type: ignore[no-redef]
+        return "127.0.0.1"
 
 
 BASE_DIR = Path(__file__).parent
 STATIC_DIR = BASE_DIR / "static"
 MAX_AUDIO_UPLOAD_BYTES = 10 * 1024 * 1024
-app = Flask(__name__, static_folder=str(STATIC_DIR / "static"), static_url_path="/static")
+app = Flask(__name__, static_folder=None)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=[],
+    storage_uri="memory://",
+)
 
 
 class TranscriptionError(Exception):
@@ -343,6 +369,19 @@ def _json_response(payload: dict, status: HTTPStatus = HTTPStatus.OK):
     return response
 
 
+@app.before_request
+def log_request_start():
+    request._start_time = time.time()
+
+
+@app.after_request
+def log_request_end(response):
+    if request.path.startswith("/api/"):
+        duration_ms = round((time.time() - getattr(request, "_start_time", time.time())) * 1000)
+        print(f"[api] {request.method} {request.path} {response.status_code} {duration_ms}ms")
+    return response
+
+
 @app.get("/")
 def index():
     return send_from_directory(STATIC_DIR, "index.html")
@@ -363,7 +402,37 @@ def favicon():
     return send_from_directory(STATIC_DIR, "favicon.ico")
 
 
+@app.get("/static/<path:filename>")
+def static_files(filename):
+    primary_path = STATIC_DIR / filename
+    legacy_path = STATIC_DIR / "static" / filename
+    if primary_path.is_file():
+        return send_from_directory(STATIC_DIR, filename)
+    if legacy_path.is_file():
+        return send_from_directory(STATIC_DIR / "static", filename)
+    return _json_response({"error": "Fichier statique introuvable."}, status=HTTPStatus.NOT_FOUND)
+
+
+@app.get("/health")
+def health():
+    """Health check pour Render et monitoring."""
+    import sys
+
+    from ngap_database import NGAP_RULES
+
+    has_openai_key = bool(os.environ.get("OPENAI_API_KEY", "").strip())
+    return _json_response(
+        {
+            "status": "ok",
+            "rules_count": len(NGAP_RULES),
+            "stt_configured": has_openai_key,
+            "python_version": sys.version,
+        }
+    )
+
+
 @app.post("/api/analyze")
+@limiter.limit("60/minute")
 def analyze_api():
     payload = request.get_json(silent=True)
     if not isinstance(payload, dict):
@@ -380,24 +449,29 @@ def analyze_api():
         return _json_response({"error": "Taille de requête invalide."}, status=HTTPStatus.BAD_REQUEST)
 
     resultat = traiter_transcription_texte(message, contexte, attente)
+    if not resultat["termine"]:
+        resultat["texte"] = humaniser_question(resultat["texte"])
     choices = proposer_choix(message, contexte, resultat["attente"])
     result_meta = None
     if resultat["termine"]:
         result_meta = decrire_reponse_finale(resultat["texte"], message, contexte)
 
-    return _json_response(
-        {
-            "answer": resultat["texte"],
-            "context": resultat["nouveau_contexte"],
-            "attente": resultat["attente"],
-            "done": resultat["termine"],
-            "choices": choices,
-            "result_meta": result_meta,
-        }
-    )
+    response_payload = {
+        "answer": resultat["texte"],
+        "context": resultat["nouveau_contexte"],
+        "attente": resultat["attente"],
+        "done": resultat["termine"],
+        "choices": choices,
+        "result_meta": result_meta,
+    }
+    if DEBUG_ENABLED:
+        response_payload["_debug_trace"] = get_trace()
+
+    return _json_response(response_payload)
 
 
 @app.post("/api/transcribe")
+@limiter.limit("20/minute")
 def transcribe_api():
     content_length = request.content_length or 0
     if content_length <= 0 or content_length > MAX_AUDIO_UPLOAD_BYTES:
@@ -581,6 +655,14 @@ def transcribe_api():
             "selected_mime_type": selected_mime_type,
             "recording_duration_ms": recording_duration_ms,
         }
+    )
+
+
+@app.errorhandler(429)
+def ratelimit_handler(_error):
+    return _json_response(
+        {"error": "Trop de requêtes. Réessayez dans quelques secondes.", "error_code": "rate_limited"},
+        status=HTTPStatus.TOO_MANY_REQUESTS,
     )
 
 

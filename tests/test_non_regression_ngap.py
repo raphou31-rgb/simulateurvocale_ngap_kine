@@ -97,6 +97,7 @@ class TestNGAPNonRegression(unittest.TestCase):
             "membre_sup_coude_avant_bras_non_opere": "VSM 8.09",
             "membre_sup_poignet_main_non_opere": "VSM 8.10",
             "membre_sup_poignet_main_opere": "VSC 8.11",
+            "membre_sup_fracture_humerus_prox_operee": "RSC 8.10",
             "membre_sup_plusieurs_segments_non_operes": "VSM 8.11",
             "membre_sup_plusieurs_segments_operes": "VSC 8.12",
             "vasculaire_bandage_un_membre": "RAV 1.00",
@@ -236,6 +237,12 @@ class TestNGAPNonRegression(unittest.TestCase):
         self.assertIn("Analyse :", result["texte"])
         self.assertIn("Justification :", result["texte"])
         self.assertIn("Confiance : ", result["texte"])
+
+    def test_lca_non_opere_donne_genou_non_opere(self):
+        self.assert_final_with_known_cotation(
+            "rupture lca genou non opere",
+            RULE_BY_ID["membre_inf_genou_jambe_non_opere"]["cotation"],
+        )
 
     def test_bpco_majuscule_sans_handicap_chronique_final(self):
         self.assert_final_with_known_cotation(
@@ -386,6 +393,20 @@ class TestNGAPNonRegression(unittest.TestCase):
     def test_deux_membres_superieurs_non_operes_final(self):
         self.assert_final_with_known_cotation("reeducation des deux membres superieurs non operes", "TER 9.49")
 
+    def test_deux_membres_inf_puis_non_donne_ter_sans_chirurgie(self):
+        r1 = repondre("Reeducation des genoux deux membres inferieurs")
+        self.assertFalse(r1["termine"])
+        r2 = repondre("non", r1["nouveau_contexte"], r1["attente"])
+        self.assertTrue(r2["termine"])
+        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.49")
+
+    def test_deux_membres_inf_puis_oui_donne_ter_avec_chirurgie(self):
+        r1 = repondre("Reeducation des genoux deux membres inferieurs")
+        self.assertFalse(r1["termine"])
+        r2 = repondre("oui", r1["nouveau_contexte"], r1["attente"])
+        self.assertTrue(r2["termine"])
+        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.51")
+
     def test_genou_opere_demande_type_chirurgie(self):
         self.assert_short_question(
             "cotation pour un genou droit opéré",
@@ -508,23 +529,62 @@ class TestNGAPNonRegression(unittest.TestCase):
             RULE_BY_ID["membre_sup_epaule_bras_non_opere"]["cotation"],
         )
 
-    def test_cervicalgie_commune_demande_age(self):
-        result = repondre("cervicalgie commune")
-        self.assertFalse(result["termine"])
-        self.assertEqual(result["texte"], "Question : moins de 18 ans ?")
-        self.assertEqual(result["attente"], "rachis_cervicalgie_age")
+    def test_cervicalgie_commune_reponse_directe(self):
+        self.assert_final_with_known_cotation(
+            "cervicalgie commune",
+            RULE_BY_ID["rachis_cervicalgie_commune"]["cotation"],
+        )
 
-    def test_cervicalgie_commune_adulte_demande_type_exact(self):
-        result = repondre("cervicalgie commune adulte")
-        self.assertFalse(result["termine"])
-        self.assertEqual(result["texte"], "Question : trauma recent ou autre atteinte rachis ?")
-        self.assertEqual(result["attente"], "rachis_cervicalgie_adulte_precision")
+    def test_cervicalgie_commune_adulte_reponse_directe(self):
+        self.assert_final_with_known_cotation(
+            "cervicalgie commune adulte",
+            RULE_BY_ID["rachis_cervicalgie_commune"]["cotation"],
+        )
 
     def test_cervicalgie_commune_mineur_final(self):
-        result = repondre("cervicalgie commune")
-        result = repondre("oui", result["nouveau_contexte"], result["attente"])
-        self.assertTrue(result["termine"])
-        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["rachis_cervicalgie_commune"]["cotation"])
+        self.assert_final_with_known_cotation(
+            "cervicalgie commune mineur",
+            RULE_BY_ID["rachis_cervicalgie_commune"]["cotation"],
+        )
+
+    def test_cervicalgie_commune_enfant_reponse_directe(self):
+        self.assert_final_with_known_cotation(
+            "cervicalgie commune enfant",
+            RULE_BY_ID["rachis_cervicalgie_commune"]["cotation"],
+        )
+
+    def test_cervicalgie_seule_demande_precision(self):
+        result = repondre("cervicalgie")
+        self.assertFalse(result["termine"])
+        self.assertNotIn("18 ans", result["texte"])
+
+    def test_general_precision_puis_message_complet_donne_reponse(self):
+        r1 = repondre("reeducation")
+        self.assertFalse(r1["termine"])
+        self.assertEqual(r1["attente"], "general_precision")
+
+        r2 = repondre(
+            "reeducation des deux membres inferieurs non opere",
+            r1["nouveau_contexte"],
+            r1["attente"],
+        )
+        self.assertTrue(r2["termine"])
+        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.49")
+
+    def test_general_precision_propose_des_choix(self):
+        result = repondre("douleur")
+        self.assertFalse(result["termine"])
+        self.assertEqual(result["attente"], "general_precision")
+        choices = proposer_choix("douleur", "", result["attente"])
+        self.assertEqual(
+            choices,
+            [
+                {"label": "Membre inférieur", "value": "membre inferieur"},
+                {"label": "Membre supérieur", "value": "membre superieur"},
+                {"label": "Rachis", "value": "rachis"},
+                {"label": "Autre", "value": "autre pathologie"},
+            ],
+        )
 
     def test_trauma_cervical_recent_final(self):
         self.assert_final_with_known_cotation(
@@ -651,6 +711,23 @@ class TestNGAPNonRegression(unittest.TestCase):
             RULE_BY_ID["membre_inf_cheville_pied_non_opere"]["cotation"],
         )
 
+    def test_entorse_genou_ne_donne_pas_cheville(self):
+        result = repondre("entorse du genou non operee")
+        self.assertTrue(result["termine"])
+        cotation = _extract_cotation(result["texte"])
+        self.assertEqual(cotation, RULE_BY_ID["membre_inf_genou_jambe_non_opere"]["cotation"])
+
+    def test_entorse_genou_non_operee_final(self):
+        self.assert_final_with_known_cotation(
+            "entorse du genou non operee",
+            RULE_BY_ID["membre_inf_genou_jambe_non_opere"]["cotation"],
+        )
+
+    def test_entorse_genou_demande_chirurgie(self):
+        result = repondre("entorse du genou")
+        self.assertFalse(result["termine"])
+        self.assertEqual(result["attente"], "genou_chirurgie")
+
     def test_fracture_cheville_operee_final(self):
         self.assert_final_with_known_cotation(
             "fracture cheville opérée",
@@ -713,6 +790,23 @@ class TestNGAPNonRegression(unittest.TestCase):
             RULE_BY_ID["membre_sup_fracture_humerus_prox_non_operee"]["cotation"],
         )
 
+    def test_fracture_humerus_prox_operee_final(self):
+        self.assert_final_with_known_cotation(
+            "fracture proximale humerus opérée",
+            RULE_BY_ID["membre_sup_fracture_humerus_prox_operee"]["cotation"],
+        )
+
+    def test_fracture_humerus_operee_final(self):
+        self.assert_final_with_known_cotation(
+            "fracture humerus operee",
+            RULE_BY_ID["membre_sup_fracture_humerus_prox_operee"]["cotation"],
+        )
+
+    def test_fracture_humerus_operee_demande_chirurgie(self):
+        result = repondre("fracture humerus")
+        self.assertFalse(result["termine"])
+        self.assertEqual(result["texte"], "Question : operee ou non ?")
+
     def test_coiffe_operee_final(self):
         self.assert_final_with_known_cotation(
             "chirurgie coiffe",
@@ -742,6 +836,22 @@ class TestNGAPNonRegression(unittest.TestCase):
         self.assertFalse(result["termine"])
         self.assertEqual(result["texte"], "Question : chirurgie du genou ou non ?")
         self.assertEqual(result["attente"], "genou_chirurgie")
+
+    def test_sciatique_rachis_donne_lombosacre(self):
+        result = repondre("sciatique")
+        self.assertFalse(result["termine"])
+        result2 = repondre("rachis", result["nouveau_contexte"], result["attente"])
+        self.assertTrue(result2["termine"])
+        self.assertIn(RULE_BY_ID["rachis_lombosacre_non_opere"]["cotation"], result2["texte"])
+
+    def test_sciatique_neuro_donne_peripherique_un_membre(self):
+        result = repondre("sciatique")
+        result2 = repondre("peripherique", result["nouveau_contexte"], result["attente"])
+        self.assertTrue(result2["termine"])
+        self.assertIn(
+            RULE_BY_ID["neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre"]["cotation"],
+            result2["texte"],
+        )
 
     def test_acromioplastie_final(self):
         self.assert_final_with_known_cotation(
@@ -829,10 +939,8 @@ class TestNGAPNonRegression(unittest.TestCase):
     def test_seances_pth(self):
         self.assert_seances("prothese totale de hanche", "15")
 
-    def test_seances_referentiel_missing_from_source(self):
-        result = repondre("cervicalgie commune")
-        result = repondre("oui", result["nouveau_contexte"], result["attente"])
-        self.assertEqual(_extract_seances(result["texte"]), "15")
+    def test_seances_cervicalgie_commune(self):
+        self.assert_seances("cervicalgie commune", "15")
 
     def test_deviation_rachis_cervical_adulte_trauma_non_final(self):
         result = repondre("deviation rachis cervical")

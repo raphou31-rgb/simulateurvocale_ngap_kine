@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 
 PHRASE_NORMALIZATION_MAP = {
@@ -46,10 +47,10 @@ PHRASE_NORMALIZATION_MAP = {
     "matériel d ostéosynthèse": "chirurgie",
     "osteosynthese": "chirurgie",
     "ostéosynthèse": "chirurgie",
-    "vis": "chirurgie",
-    "plaque": "chirurgie",
-    "clou": "chirurgie",
-    "broche": "chirurgie",
+    "vis d osteosynthese": "chirurgie",
+    "plaque d osteosynthese": "chirurgie",
+    "clou centro medullaire": "chirurgie",
+    "broche percutanee": "chirurgie",
     "prothese totale du genou": "prothese genou",
     "prothese totale de hanche": "prothese hanche",
     "protheses de hanche": "prothese hanche chirurgie",
@@ -64,12 +65,12 @@ PHRASE_NORMALIZATION_MAP = {
     "prothese epaule": "prothese epaule chirurgie",
     "arthroplastie epaule": "prothese epaule chirurgie",
     "changement de prothese": "prothese chirurgie",
-    "ligament croise anterieur": "ligament croise genou chirurgie",
-    "croise anterieur": "ligament croise genou chirurgie",
-    "ligament croise posterieur": "ligament croise genou chirurgie",
-    "croise posterieur": "ligament croise genou chirurgie",
-    "ligament croise": "ligament croise genou chirurgie",
-    "lcp": "ligament croise genou chirurgie",
+    "ligament croise anterieur": "ligament croise genou",
+    "croise anterieur": "ligament croise genou",
+    "ligament croise posterieur": "ligament croise genou",
+    "croise posterieur": "ligament croise genou",
+    "ligament croise": "ligament croise genou",
+    "lcp": "ligament croise genou",
     "plastie ligamentaire": "ligament croise genou chirurgie",
     "plastie en croix": "ligament croise genou chirurgie",
     "refection des ligaments": "ligament croise genou chirurgie",
@@ -208,6 +209,13 @@ PHRASE_NORMALIZATION_MAP = {
 }
 
 
+PHRASE_NORMALIZATION_TOKENS = {
+    token
+    for phrase in PHRASE_NORMALIZATION_MAP
+    for token in re.findall(r"[a-z]+", phrase.lower())
+}
+
+
 WORD_NORMALIZATION_MAP = {
     "thendinopathie": "tendinopathie",
     "tendinite": "tendinopathie",
@@ -315,6 +323,8 @@ def expand_medical_language(text: str) -> str:
     for pattern, replacement in ASR_REGEX_REPLACEMENTS:
         normalized = re.sub(pattern, replacement, normalized)
 
+    normalized = _apply_fuzzy_word_corrections(normalized)
+
     for source in sorted(PHRASE_NORMALIZATION_MAP, key=len, reverse=True):
         normalized = re.sub(
             r"\b" + re.escape(source) + r"\b",
@@ -324,15 +334,6 @@ def expand_medical_language(text: str) -> str:
 
     for source, target in WORD_NORMALIZATION_MAP.items():
         normalized = re.sub(r"\b" + re.escape(source) + r"\b", target, normalized)
-
-    normalized = _apply_fuzzy_word_corrections(normalized)
-
-    for source in sorted(PHRASE_NORMALIZATION_MAP, key=len, reverse=True):
-        normalized = re.sub(
-            r"\b" + re.escape(source) + r"\b",
-            PHRASE_NORMALIZATION_MAP[source],
-            normalized,
-        )
 
     return re.sub(r"\s+", " ", normalized).strip()
 
@@ -346,9 +347,11 @@ def _apply_fuzzy_word_corrections(text: str) -> str:
     return " ".join(corrected)
 
 
-def _find_fuzzy_replacement(word: str) -> str | None:
+def _find_fuzzy_replacement(word: str) -> Optional[str]:
     clean_word = re.sub(r"[^a-z]", "", word.lower())
     if len(clean_word) < 4:
+        return None
+    if clean_word in PHRASE_NORMALIZATION_TOKENS and clean_word not in FUZZY_CANONICAL_WORDS:
         return None
     if clean_word in FUZZY_CANONICAL_WORDS:
         return clean_word

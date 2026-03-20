@@ -1,5 +1,11 @@
-const CACHE_NAME = "ngap-kine-v3";
-const ASSETS = ["/", "/manifest.webmanifest", "/service-worker.js"];
+const CACHE_NAME = "ngap-kine-v4";
+const ASSETS = [
+  "/",
+  "/manifest.webmanifest",
+  "/favicon.ico",
+  "/static/icon-192.png",
+  "/static/icon-512.png",
+];
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
@@ -20,6 +26,10 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") {
+    return;
+  }
+
+  if (event.request.url.includes("/api/")) {
     return;
   }
 

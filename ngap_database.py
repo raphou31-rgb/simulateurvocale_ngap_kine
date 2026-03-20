@@ -13,7 +13,6 @@ NGAP_RULES = [
         "douleur lombaire commune",
         "rachis lombaire commune"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_lombosacre_non_opere",
@@ -32,7 +31,6 @@ NGAP_RULES = [
         "rachis lombaire non opéré",
         "rachis lombaire sans chirurgie"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_lombosacre_opere",
@@ -53,7 +51,6 @@ NGAP_RULES = [
         "lombo sacre opere",
         "lombo sacre opéré"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_dorsal_non_opere",
@@ -67,7 +64,6 @@ NGAP_RULES = [
         "rachis dorsal",
         "rachis thoracique"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_dorsal_opere",
@@ -84,7 +80,6 @@ NGAP_RULES = [
         "rachis thoracique opéré",
         "rachis dorsal chirurgie"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_cervical_non_opere",
@@ -102,7 +97,6 @@ NGAP_RULES = [
         "cervical non opere",
         "cervical non opéré"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_cervicalgie_commune",
@@ -116,7 +110,6 @@ NGAP_RULES = [
         "cervicalgie",
         "cervicalgie commune",
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_cervical_opere",
@@ -134,7 +127,6 @@ NGAP_RULES = [
         "chirurgie cervicale",
         "rachis cervical chirurgie"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_trauma_cervical_recent",
@@ -151,7 +143,6 @@ NGAP_RULES = [
         "traumatisme cervical recent",
         "coup du lapin"
     ],
-    "required_fields": []
 },
 {
     "id": "rachis_plusieurs_segments",
@@ -167,7 +158,23 @@ NGAP_RULES = [
         "2 segments rachis",
         "plusieurs segments du rachis"
     ],
-    "required_fields": []
+},
+{
+    "id": "rachis_plusieurs_segments_opere",
+    "acte": "Rééducation portant sur au moins deux segments du rachis opérés",
+    "famille": "rachis",
+    "detail": "plusieurs segments du rachis opérés",
+    "cotation": "RAO 8.11",
+    "seances_max": None,
+    "referentiel": "non",
+    "keywords_any": [
+        "plusieurs segments rachis operes",
+        "plusieurs segments rachis opérés",
+        "deux segments rachis operes",
+        "deux segments rachis opérés",
+        "rachis plusieurs segments operes",
+        "rachis plusieurs segments opérés"
+    ],
 },
 {
     "id": "deviation_rachis_lombosacre",
@@ -184,7 +191,6 @@ NGAP_RULES = [
         "déviation rachis lombo-sacré",
         "scoliose lombaire"
     ],
-    "required_fields": []
 },
 {
     "id": "deviation_rachis_dorsal",
@@ -199,7 +205,6 @@ NGAP_RULES = [
         "déviation rachis dorsal",
         "scoliose dorsale"
     ],
-    "required_fields": []
 },
 {
     "id": "deviation_rachis_cervical",
@@ -220,7 +225,6 @@ NGAP_RULES = [
         "scoliose cervicale enfant",
         "scoliose cervicale adolescent"
     ],
-    "required_fields": []
 },
 {
     "id": "deviation_rachis_plusieurs_segments",
@@ -238,7 +242,6 @@ NGAP_RULES = [
         "scoliose thoraco lombaire",
         "scoliose thoraco-lombaire"
     ],
-    "required_fields": []
 },
     {
         "id": "membre_inf_lca",
@@ -265,7 +268,6 @@ NGAP_RULES = [
             "patient opéré du ligament croisé",
             "patient opere du ligament croise"
         ],
-        "required_fields": []
     },
     {
         "id": "membre_inf_ptg",
@@ -285,7 +287,6 @@ NGAP_RULES = [
             "prothese totale",
             "prothèse totale"
         ],
-        "required_fields": []
     },
     {
         "id": "membre_inf_meniscectomie",
@@ -303,7 +304,6 @@ NGAP_RULES = [
             "menisque opéré",
             "ménisque opéré"
         ],
-        "required_fields": []
     },
 {
     "id": "membre_inf_entorse_cheville_non_operee",
@@ -323,7 +323,6 @@ NGAP_RULES = [
         "entorse recente",
         "entorse récente"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_entorse_cheville_operee",
@@ -342,7 +341,6 @@ NGAP_RULES = [
         "entorse pied operee",
         "entorse pied opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_cheville_pied_non_opere",
@@ -368,7 +366,6 @@ NGAP_RULES = [
         "fracture pied non operee",
         "fracture pied non opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_cheville_pied_opere",
@@ -394,7 +391,6 @@ NGAP_RULES = [
         "fracture pied operee",
         "fracture pied opérée"
     ],
-    "required_fields": []
 },{
     "id": "membre_inf_genou_jambe_non_opere",
     "acte": "Rééducation des conséquences d'une affection du genou ou de la jambe non opérée",
@@ -411,7 +407,6 @@ NGAP_RULES = [
         "affection genou non operee",
         "affection genou non opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_genou_jambe_opere",
@@ -429,7 +424,6 @@ NGAP_RULES = [
         "affection genou operee",
         "affection genou opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_hanche_cuisse_non_operee",
@@ -447,7 +441,6 @@ NGAP_RULES = [
         "affection hanche non operee",
         "affection hanche non opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_hanche_cuisse_operee",
@@ -465,7 +458,6 @@ NGAP_RULES = [
         "affection hanche operee",
         "affection hanche opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_pth",
@@ -487,45 +479,6 @@ NGAP_RULES = [
         "prothese hanche chirurgie",
         "prothèse hanche chirurgie"
     ],
-    "required_fields": []
-},
-{
-    "id": "membre_inf_deux_membres_non_operes",
-    "acte": "Rééducation secondaire à l'affection des deux membres inférieurs non opérés",
-    "famille": "membre inferieur",
-    "detail": "deux membres inférieurs non opérés",
-    "cotation": "VIM 8.12",
-    "seances_max": None,
-    "referentiel": "non",
-    "keywords_any": [
-        "deux membres inferieurs non operes",
-        "deux membres inferieurs non opérés",
-        "deux membre inferieur non chirurgie",
-        "bilateral genoux non operes",
-        "bilateral genoux non opérés",
-        "deux genoux non operes",
-        "deux genoux non opérés"
-    ],
-    "required_fields": []
-},
-{
-    "id": "membre_inf_deux_membres_operes",
-    "acte": "Rééducation secondaire à l'affection des deux membres inférieurs avec chirurgie",
-    "famille": "membre inferieur",
-    "detail": "deux membres inférieurs avec chirurgie",
-    "cotation": "VIC 8.12",
-    "seances_max": None,
-    "referentiel": "non",
-    "keywords_any": [
-        "deux membres inferieurs operes",
-        "deux membres inferieurs opérés",
-        "deux membre inferieur chirurgie",
-        "bilateral genoux operes",
-        "bilateral genoux opérés",
-        "deux genoux operes",
-        "deux genoux opérés"
-    ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_plusieurs_segments_non_operes",
@@ -540,7 +493,6 @@ NGAP_RULES = [
         "2 segments membre inferieur",
         "plusieurs segments membre inferieur"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_inf_plusieurs_segments_operes",
@@ -555,7 +507,6 @@ NGAP_RULES = [
         "2 segments membre inferieur operes",
         "plusieurs segments membre inferieur operes"
     ],
-    "required_fields": []
 },
     {
         "id": "membre_sup_canal_carpien",
@@ -574,7 +525,6 @@ NGAP_RULES = [
             "nerf médian",
             "nerf median"
         ],
-        "required_fields": []
     },
     {
         "id": "membre_sup_coiffe_non_operee",
@@ -595,7 +545,6 @@ NGAP_RULES = [
             "coiffe non operee",
             "épaule tendinopathie"
         ],
-        "required_fields": []
     },{
     "id": "membre_sup_epaule_bras_non_opere",
     "acte": "Rééducation des conséquences d'une affection de l'épaule ou du bras non opérée",
@@ -612,7 +561,6 @@ NGAP_RULES = [
         "affection epaule non operee",
         "affection épaule non opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_epaule_bras_opere",
@@ -630,7 +578,6 @@ NGAP_RULES = [
         "affection epaule operee",
         "affection épaule opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_coiffe_operee",
@@ -652,7 +599,6 @@ NGAP_RULES = [
         "réparation des tendons de l épaule",
         "acromioplastie"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_coude_avant_bras_non_opere",
@@ -668,7 +614,6 @@ NGAP_RULES = [
         "avant bras non opere",
         "avant-bras non opéré"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_fracture_avant_bras_distale_non_operee",
@@ -688,7 +633,6 @@ NGAP_RULES = [
         "fracture des deux os de l avant bras non operee",
         "fracture distale des deux os de l avant bras"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_coude_avant_bras_opere",
@@ -704,7 +648,6 @@ NGAP_RULES = [
         "avant bras opere",
         "avant-bras opéré"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_fracture_avant_bras_distale_operee",
@@ -723,7 +666,6 @@ NGAP_RULES = [
         "fracture distale avant-bras opérée",
         "fracture des deux os de l avant bras operee"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_fracture_coude_adulte_non_operee",
@@ -747,7 +689,6 @@ NGAP_RULES = [
         "fracture ou luxation du coude non operee",
         "fracture du coude adulte non operee"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_fracture_coude_adulte_operee",
@@ -771,7 +712,6 @@ NGAP_RULES = [
         "fracture ou luxation du coude operee",
         "fracture du coude adulte operee"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_poignet_main_non_opere",
@@ -787,7 +727,6 @@ NGAP_RULES = [
         "main non operee",
         "main non opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_poignet_main_opere",
@@ -803,7 +742,6 @@ NGAP_RULES = [
         "main operee",
         "main opérée"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_fracture_humerus_prox_non_operee",
@@ -825,7 +763,28 @@ NGAP_RULES = [
         "fracture extremite proximale humerus",
         "fracture epaule non operee humerus"
     ],
-    "required_fields": []
+},
+{
+    "id": "membre_sup_fracture_humerus_prox_operee",
+    "acte": "Rééducation après fracture opérée de l'extrémité proximale de l'humérus",
+    "famille": "membre superieur",
+    "detail": "fracture proximale de l'humérus opérée",
+    "cotation": "RSC 8.10",
+    "seances_max": 30,
+    "referentiel": "oui",
+    "keywords_any": [
+        "fracture humerus operee",
+        "fracture humerus opérée",
+        "fracture proximale humerus operee",
+        "fracture proximale humerus opérée",
+        "fracture humerus proximal operee",
+        "fracture humerus proximal opérée",
+        "fracture proximale de l humerus operee",
+        "fracture proximale de l humerus opérée",
+        "fracture de l extremite proximale de l humerus operee",
+        "fracture extremite proximale humerus operee",
+        "fracture epaule operee humerus"
+    ],
 },
 {
     "id": "membre_sup_plusieurs_segments_non_operes",
@@ -838,11 +797,8 @@ NGAP_RULES = [
     "keywords_any": [
         "deux segments membre superieur",
         "2 segments membre superieur",
-        "plusieurs segments membre superieur",
-        "deux membres superieurs non operes",
-        "deux membres superieurs non opérés"
+        "plusieurs segments membre superieur"
     ],
-    "required_fields": []
 },
 {
     "id": "membre_sup_plusieurs_segments_operes",
@@ -855,26 +811,17 @@ NGAP_RULES = [
     "keywords_any": [
         "deux segments membre superieur operes",
         "2 segments membre superieur operes",
-        "plusieurs segments membre superieur operes",
-        "deux membres superieurs operes",
-        "deux membres superieurs opérés"
+        "plusieurs segments membre superieur operes"
     ],
-    "required_fields": []
 },
     {
         "id": "respiratoire_desencombrement_urgent",
-        "acte": "Rééducation des maladies respiratoires avec désencombrement urgent",
+        "acte": "Rééducation respiratoire en contexte aigu",
         "famille": "respiratoire",
-        "detail": "désencombrement urgent",
+        "detail": "rééducation respiratoire en contexte aigu",
         "cotation": "ARL 8.49",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "desencombrement urgent",
-            "désencombrement urgent",
-            "bronchiolite",
-            "encombrement respiratoire aigu"
-        ],
         "keywords_any": [
             "bronchiolite",
             "désencombrement urgent",
@@ -883,154 +830,121 @@ NGAP_RULES = [
             "poussée aiguë respiratoire",
             "poussee aigue respiratoire"
         ],
-        "required_fields": []
     },
     {
         "id": "respiratoire_obstructive_restrictive_mixte",
-        "acte": "Rééducation des maladies respiratoires obstructives, restrictives ou mixtes",
+        "acte": "Rééducation respiratoire obstructive restrictive ou mixte hors handicap chronique",
         "famille": "respiratoire",
-        "detail": "maladies respiratoires obstructives, restrictives ou mixtes",
-        "cotation": "ARL 8.5",
+        "detail": "rééducation respiratoire obstructive restrictive ou mixte hors handicap chronique",
+        "cotation": "ARL 8.50",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "respiratoire obstructive",
-            "respiratoire restrictive",
-            "respiratoire mixte",
-            "insuffisance respiratoire"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "respiratoire obstructive",
             "respiratoire restrictive",
             "respiratoire mixte",
             "insuffisance respiratoire"
         ],
-        "required_fields": []
+    },
+    {
+        "id": "respiratoire_bpco_sans_handicap_chronique",
+        "acte": "Rééducation respiratoire obstructive restrictive ou mixte hors handicap chronique",
+        "famille": "respiratoire",
+        "detail": "rééducation respiratoire BPCO sans handicap chronique",
+        "cotation": "ARL 8.50",
+        "seances_max": None,
+        "referentiel": "non",
+        "keywords_any": [
+            "bpco",
+            "bronchopneumopathie chronique obstructive"
+        ],
     },
     {
         "id": "respiratoire_preop_postop",
-        "acte": "Rééducation respiratoire préopératoire ou post-opératoire",
+        "acte": "Rééducation respiratoire en préopératoire ou postopératoire",
         "famille": "respiratoire",
         "detail": "rééducation préopératoire ou post-opératoire",
         "cotation": "ARL 8.51",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "respiratoire preoperatoire",
-            "respiratoire préopératoire",
-            "respiratoire post operatoire",
-            "respiratoire post-opératoire"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "respiratoire preoperatoire",
             "respiratoire préopératoire",
             "respiratoire post operatoire",
             "respiratoire post-opératoire"
         ],
-        "required_fields": []
     },
     {
         "id": "respiratoire_mucoviscidose",
-        "acte": "Rééducation respiratoire dans le cadre de la mucoviscidose",
+        "acte": "Rééducation respiratoire mucoviscidose",
         "famille": "respiratoire",
         "detail": "mucoviscidose",
-        "cotation": "ARL 10",
+        "cotation": "ARL 10.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "mucoviscidose",
-            "mukoviscidose"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "mucoviscidose",
             "mukoviscidose"
         ],
-        "required_fields": []
     },
     {
         "id": "respiratoire_handicap_chronique_individuel",
-        "acte": "Rééducation du handicap respiratoire chronique en individuel",
+        "acte": "Rééducation respiratoire individuelle handicap chronique",
         "famille": "respiratoire",
         "detail": "handicap respiratoire chronique individuel",
-        "cotation": "ARL 28",
+        "cotation": "ARL 28.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "handicap respiratoire chronique individuel",
-            "respiratoire chronique individuel",
-            "bpco individuel",
-            "individuel"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "handicap respiratoire chronique individuel",
             "respiratoire chronique individuel",
             "bpco individuel",
             "individuel"
         ],
-        "required_fields": []
     },
     {
         "id": "respiratoire_handicap_chronique_groupe",
-        "acte": "Rééducation du handicap respiratoire chronique en groupe",
+        "acte": "Rééducation respiratoire collective handicap chronique",
         "famille": "respiratoire",
         "detail": "handicap respiratoire chronique groupe",
-        "cotation": "ARL 20",
+        "cotation": "ARL 20.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "handicap respiratoire chronique groupe",
-            "respiratoire chronique groupe",
-            "bpco groupe",
-            "groupe"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "handicap respiratoire chronique groupe",
             "respiratoire chronique groupe",
             "bpco groupe",
             "groupe"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_hemiplegie",
-        "acte": "Rééducation de l'hémiplégie",
+        "acte": "Hémiplégie",
         "famille": "neurologie",
         "detail": "hémiplégie",
-        "cotation": "NMI 9",
+        "cotation": "NMI 9.00",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "hemiplegie",
-            "hémiplégie",
-            "hemi"
-        ],
         "keywords_any": [
             "hémiplégie",
             "hemiplegie",
             "hémi",
             "hemi"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre",
         "acte": "Rééducation des atteintes périphériques radiculaires ou tronculaires localisées à un membre",
         "famille": "neurologie",
         "detail": "atteintes périphériques radiculaires ou tronculaires un membre",
-        "cotation": "NMI 8.5",
+        "cotation": "NMI 8.50",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "radiculaire un membre",
-            "tronculaire un membre",
-            "atteinte peripherique un membre"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "radiculaire un membre",
             "tronculaire un membre",
             "atteinte peripherique un membre"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_atteintes_peripheriques_radiculaires_tronculaires_plusieurs_membres",
@@ -1039,18 +953,12 @@ NGAP_RULES = [
         "detail": "atteintes périphériques radiculaires ou tronculaires plusieurs membres",
         "cotation": "NMI 10.01",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "radiculaire plusieurs membres",
-            "tronculaire plusieurs membres",
-            "atteinte peripherique plusieurs membres"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "radiculaire plusieurs membres",
             "tronculaire plusieurs membres",
             "atteinte peripherique plusieurs membres"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_paraplegie_tetraplegie",
@@ -1059,20 +967,13 @@ NGAP_RULES = [
         "detail": "paraplégie et tétraplégie",
         "cotation": "NMI 11.01",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "paraplegie",
-            "paraplégie",
-            "tetraplegie",
-            "tétraplégie"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "paraplegie",
             "paraplégie",
             "tetraplegie",
             "tétraplégie"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_affection_stable_un_membre",
@@ -1081,34 +982,24 @@ NGAP_RULES = [
         "detail": "affection neurologique stable un membre",
         "cotation": "NMI 8.51",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "neurologique stable un membre",
-            "affection stable un membre"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "neurologique stable un membre",
             "affection stable un membre"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_affection_stable_plusieurs",
         "acte": "Rééducation d'une affection neurologique stable concernant plusieurs membres",
         "famille": "neurologie",
         "detail": "affection neurologique stable plusieurs membres",
-        "cotation": "NMI 10",
+        "cotation": "NMI 10.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "neurologique stable plusieurs",
-            "affection stable plusieurs membres"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "neurologique stable plusieurs",
             "affection stable plusieurs membres"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_myopathie",
@@ -1117,100 +1008,69 @@ NGAP_RULES = [
         "detail": "myopathie",
         "cotation": "NMI 10.99",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "myopathie",
-            "myopathies"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "myopathie",
             "myopathies"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_encephalopathie_infantile",
         "acte": "Rééducation de l'encéphalopathie infantile",
         "famille": "neurologie",
         "detail": "encéphalopathie infantile",
-        "cotation": "NMI 11",
+        "cotation": "NMI 11.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "encephalopathie infantile",
-            "encéphalopathie infantile"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "encephalopathie infantile",
             "encéphalopathie infantile"
         ],
-        "required_fields": []
     },
     {
         "id": "neurologie_paralysie_cerebrale_polyhandicap",
-        "acte": "Rééducation des enfants présentant une paralysie cérébrale ou un polyhandicap",
+        "acte": "Paralysie cérébrale ou polyhandicap",
         "famille": "neurologie",
-        "detail": "rééducation des enfants présentant une paralysie cérébrale ou un polyhandicap",
-        "cotation": "TER 16",
+        "detail": "paralysie cérébrale ou polyhandicap",
+        "cotation": "TER 16.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "paralysie cerebrale",
-            "paralysie cérébrale",
-            "polyhandicap",
-            "enfant neurologique"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "paralysie cerebrale",
             "paralysie cérébrale",
             "polyhandicap",
             "enfant neurologique"
         ],
-        "required_fields": []
     },
     {
         "id": "maxillo_facial_hors_paralysie_faciale",
-        "acte": "Rééducation maxillo-faciale en dehors de la paralysie faciale",
+        "acte": "Rééducation maxillo-faciale hors paralysie faciale",
         "famille": "maxillo-facial / vestibulaire / ORL",
         "detail": "rééducation maxillo-faciale en dehors de la paralysie faciale",
         "cotation": "ARL 7.99",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "maxillo-facial",
-            "maxillo facial",
-            "temporo mandibulaire",
-            "atm"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "maxillo-facial",
             "maxillo facial",
             "temporo mandibulaire",
             "atm"
         ],
-        "required_fields": []
     },
     {
         "id": "vestibulaire_troubles_equilibre",
-        "acte": "Rééducation vestibulaire et des troubles de l'équilibre",
+        "acte": "Rééducation vestibulaire des troubles de l’équilibre",
         "famille": "maxillo-facial / vestibulaire / ORL",
         "detail": "rééducation vestibulaire et des troubles de l'équilibre",
-        "cotation": "ARL 8",
+        "cotation": "ARL 8.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "vestibulaire",
-            "troubles de l'equilibre",
-            "troubles de l équilibre",
-            "vertiges"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "vestibulaire",
             "troubles de l'equilibre",
             "troubles de l équilibre",
             "vertiges"
         ],
-        "required_fields": []
     },
     {
         "id": "orl_troubles_deglutition_isoles",
@@ -1219,20 +1079,13 @@ NGAP_RULES = [
         "detail": "rééducation des troubles de la déglutition isolés",
         "cotation": "ARL 8.01",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "deglutition isolee",
-            "déglutition isolée",
-            "trouble de la deglutition",
-            "trouble de la déglutition"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "deglutition isolee",
             "déglutition isolée",
             "trouble de la deglutition",
             "trouble de la déglutition"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_arteriopathie_membres_inferieurs",
@@ -1241,18 +1094,12 @@ NGAP_RULES = [
         "detail": "artériopathie des membres inférieurs",
         "cotation": "RAV 8.01",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "arteriopathie membres inferieurs",
-            "artériopathie membres inférieurs",
-            "arteriopathie"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "arteriopathie membres inferieurs",
             "artériopathie membres inférieurs",
             "arteriopathie"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_insuffisance_veineuse",
@@ -1261,72 +1108,49 @@ NGAP_RULES = [
         "detail": "insuffisance veineuse des membres inférieurs avec retentissement articulaire et/ou troubles trophiques",
         "cotation": "RAV 7.99",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "insuffisance veineuse membres inferieurs",
-            "insuffisance veineuse membres inférieurs",
-            "troubles trophiques"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "insuffisance veineuse membres inferieurs",
             "insuffisance veineuse membres inférieurs",
             "troubles trophiques"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_lymphoedeme_un_membre",
         "acte": "Rééducation des lymphœdèmes vrais par drainage manuel, un membre",
         "famille": "vasculaire",
         "detail": "lymphœdèmes vrais par drainage manuel un membre",
-        "cotation": "RAV 8",
+        "cotation": "RAV 8.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "lymphoedeme vrai un membre",
-            "lymphœdème vrai un membre",
-            "drainage manuel un membre"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "lymphoedeme vrai un membre",
             "lymphœdème vrai un membre",
             "drainage manuel un membre"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_lymphoedeme_deux_membres",
         "acte": "Rééducation des lymphœdèmes vrais par drainage manuel, deux membres",
         "famille": "vasculaire",
         "detail": "lymphœdèmes vrais par drainage manuel deux membres",
-        "cotation": "RAV 9",
+        "cotation": "RAV 9.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "lymphoedeme vrai deux membres",
-            "lymphœdème vrai deux membres",
-            "drainage manuel deux membres"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "lymphoedeme vrai deux membres",
             "lymphœdème vrai deux membres",
             "drainage manuel deux membres"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_lymphoedeme_sein",
         "acte": "Rééducation pour lymphœdème du membre supérieur après traitement d'un cancer du sein, associée à une rééducation de l'épaule homolatérale à la phase intensive du traitement du lymphœdème",
         "famille": "vasculaire",
         "detail": "lymphœdème membre supérieur post-cancer du sein",
-        "cotation": "RAV 15.5",
+        "cotation": "RAV 15.50",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "lymphoedeme membre superieur cancer du sein",
-            "lymphœdème membre supérieur cancer du sein",
-            "drainage lymphatique cancer du sein"
-        ],
         "keywords_any": [
             "lymphoedeme membre supérieur cancer du sein",
             "lymphœdème membre supérieur cancer du sein",
@@ -1334,43 +1158,32 @@ NGAP_RULES = [
             "lymphoedeme post cancer du sein",
             "lymphœdème post cancer du sein"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_bandage_un_membre",
         "acte": "Supplément pour bandage multicouche, un membre",
         "famille": "vasculaire",
         "detail": "supplément pour bandage multicouche un membre",
-        "cotation": "RAV 1",
+        "cotation": "RAV 1.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "bandage multicouche un membre",
-            "supplement bandage multicouche un membre"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "bandage multicouche un membre",
             "supplement bandage multicouche un membre"
         ],
-        "required_fields": []
     },
     {
         "id": "vasculaire_bandage_deux_membres",
         "acte": "Supplément pour bandage multicouche, deux membres",
         "famille": "vasculaire",
         "detail": "supplément pour bandage multicouche deux membres",
-        "cotation": "RAV 2",
+        "cotation": "RAV 2.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "bandage multicouche deux membres",
-            "supplement bandage multicouche deux membres"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "bandage multicouche deux membres",
             "supplement bandage multicouche deux membres"
         ],
-        "required_fields": []
     },
     {
         "id": "abdominal_preop_postop",
@@ -1379,56 +1192,37 @@ NGAP_RULES = [
         "detail": "rééducation abdominale pré-opératoire ou post-opératoire",
         "cotation": "RAB 8.01",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "abdominal preoperatoire",
-            "abdominal préopératoire",
-            "abdominal post operatoire",
-            "abdominal post-opératoire"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "abdominal preoperatoire",
             "abdominal préopératoire",
             "abdominal post operatoire",
             "abdominal post-opératoire"
         ],
-        "required_fields": []
     },
     {
         "id": "abdominal_post_partum",
         "acte": "Rééducation abdominale du post-partum",
         "famille": "abdominal",
         "detail": "rééducation abdominale du post-partum",
-        "cotation": "RAB 8",
+        "cotation": "RAB 8.00",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "post partum",
-            "post-partum",
-            "reeducation abdominale post partum"
-        ],
         "keywords_any": [
             "post partum",
             "post-partum",
             "rééducation abdominale post partum",
             "reeducation abdominale post partum"
         ],
-        "required_fields": []
     },
     {
         "id": "perinee_active",
         "acte": "Rééducation périnéale active sous contrôle manuel et/ou électrostimulation et/ou biofeedback",
         "famille": "perinee",
         "detail": "rééducation périnéale active",
-        "cotation": "RAB 8.5",
+        "cotation": "RAB 8.50",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "perinee",
-            "périnée",
-            "reeducation perineale",
-            "biofeedback perineal"
-        ],
         "keywords_any": [
             "périnée",
             "perinee",
@@ -1437,22 +1231,15 @@ NGAP_RULES = [
             "biofeedback périnéal",
             "biofeedback perineal"
         ],
-        "required_fields": []
     },
     {
         "id": "sujet_age_deambulation",
         "acte": "Rééducation analytique et globale, musculo-articulaire des deux membres inférieurs, de la posture, de l'équilibre et de la coordination chez le sujet âgé",
         "famille": "sujet age",
         "detail": "rééducation analytique et globale, musculo-articulaire chez le sujet âgé",
-        "cotation": "RPE 8.5",
+        "cotation": "RPE 8.50",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "deambulation sujet age",
-            "déambulation sujet âgé",
-            "equilibre sujet age",
-            "prévention chute sujet âgé"
-        ],
         "keywords_any": [
             "déambulation sujet âgé",
             "deambulation sujet age",
@@ -1461,24 +1248,15 @@ NGAP_RULES = [
             "prévention chute sujet âgé",
             "prevention chute sujet age"
         ],
-        "required_fields": []
     },
     {
         "id": "brulure_un_membre",
         "acte": "Rééducation d'un patient atteint de brûlures localisées à un membre ou à un segment de membre",
         "famille": "brulures",
         "detail": "brûlures localisées à un membre ou à un segment de membre",
-        "cotation": "RPB 8",
+        "cotation": "RPB 8.00",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "brulure membre",
-            "brûlure membre",
-            "brulure localisee",
-            "brûlure localisée",
-            "localisee membre",
-            "localisee segment"
-        ],
         "keywords_any": [
             "brulure membre",
             "brûlure membre",
@@ -1487,25 +1265,15 @@ NGAP_RULES = [
             "localisee membre",
             "localisee segment"
         ],
-        "required_fields": []
     },
     {
         "id": "brulure_plusieurs_membres_tronc",
         "acte": "Rééducation d'un patient atteint de brûlures étendues à plusieurs membres et/ou au tronc",
         "famille": "brulures",
         "detail": "brûlures étendues à plusieurs membres et/ou au tronc",
-        "cotation": "RPB 9",
+        "cotation": "RPB 9.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "brulure etendue",
-            "brûlure étendue",
-            "plusieurs membres",
-            "brulure tronc",
-            "brûlure tronc",
-            "etendues tronc",
-            "etendues plusieurs membres"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "brulure etendue",
             "brûlure étendue",
@@ -1515,44 +1283,29 @@ NGAP_RULES = [
             "etendues tronc",
             "etendues plusieurs membres"
         ],
-        "required_fields": []
     },
     {
         "id": "soins_palliatifs",
-        "acte": "Prise en charge, dans le cadre des soins palliatifs, comportant les actes nécessaires en fonction de situations cliniques",
+        "acte": "Soins palliatifs",
         "famille": "soins palliatifs",
-        "detail": "cotation journalière forfaitaire quel que soit le nombre d'interventions",
-        "cotation": "PLL 12",
+        "detail": "soins palliatifs forfait journalier",
+        "cotation": "PLL 12.00",
         "seances_max": None,
         "referentiel": "non",
-        "keywords": [
-            "soins palliatifs",
-            "palliatif",
-            "fin de vie",
-            "cotation journaliere forfaitaire"
-        ],
         "keywords_any": [
             "soins palliatifs",
             "palliatif",
             "fin de vie"
         ],
-        "required_fields": []
     },
     {
         "id": "rhumatismales_atteinte_localisee",
         "acte": "Rééducation des maladies rhumatismales inflammatoires avec atteinte localisée à un membre ou le tronc",
         "famille": "maladies rhumatismales inflammatoires",
         "detail": "atteinte localisée à un membre ou le tronc",
-        "cotation": "NMI 8",
+        "cotation": "NMI 8.00",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "polyarthrite rhumatoide",
-            "polyarthrite rhumatoïde",
-            "rhumatismal inflammatoire",
-            "rhumatisme inflammatoire",
-            "atteinte localisee"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "polyarthrite rhumatoide",
             "polyarthrite rhumatoïde",
@@ -1560,7 +1313,6 @@ NGAP_RULES = [
             "rhumatisme inflammatoire",
             "atteinte localisee"
         ],
-        "required_fields": []
     },
     {
         "id": "rhumatismales_atteinte_plusieurs_membres",
@@ -1569,58 +1321,37 @@ NGAP_RULES = [
         "detail": "atteinte de plusieurs membres, ou du tronc et d'un ou plusieurs membres",
         "cotation": "NMI 9.01",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "polyarthrite",
-            "plusieurs membres",
-            "tronc et membre",
-            "atteinte pluriterritoriale rhumatismale"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "polyarthrite",
             "plusieurs membres",
             "tronc et membre",
             "atteinte pluriterritoriale rhumatismale"
         ],
-        "required_fields": []
     },
     {
         "id": "plusieurs_territoires_sans_chirurgie",
-        "acte": "Rééducation de plusieurs territoires sans chirurgie, avec au moins 2 territoires lésés",
+        "acte": "Rééducation de plusieurs membres ou du tronc et d'un ou plusieurs membres sans chirurgie",
         "famille": "plusieurs territoires",
-        "detail": "sans chirurgie, au moins 2 territoires lésés",
+        "detail": "plusieurs membres ou tronc et un ou plusieurs membres sans chirurgie",
         "cotation": "TER 9.49",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "plusieurs territoires",
-            "deux territoires",
-            "sans chirurgie",
-            "multi territoires sans chirurgie"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "plusieurs territoires",
             "deux territoires",
             "sans chirurgie",
             "multi territoires sans chirurgie"
         ],
-        "required_fields": []
     },
     {
         "id": "plusieurs_territoires_avec_chirurgie",
-        "acte": "Rééducation de plusieurs territoires avec chirurgie sur au moins un des territoires, avec au moins 2 territoires lésés",
+        "acte": "Rééducation de plusieurs membres ou du tronc et d'un ou plusieurs membres avec chirurgie",
         "famille": "plusieurs territoires",
-        "detail": "avec chirurgie sur au moins un des territoires, au moins 2 territoires lésés",
+        "detail": "plusieurs membres ou tronc et un ou plusieurs membres avec chirurgie",
         "cotation": "TER 9.51",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "plusieurs territoires",
-            "deux territoires",
-            "avec chirurgie",
-            "multi territoires operes",
-            "multi territoires opérés"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "plusieurs territoires",
             "deux territoires",
@@ -1628,7 +1359,6 @@ NGAP_RULES = [
             "multi territoires operes",
             "multi territoires opérés"
         ],
-        "required_fields": []
     },
     {
         "id": "amputation_un_membre_superieur",
@@ -1637,15 +1367,7 @@ NGAP_RULES = [
         "detail": "un membre supérieur",
         "cotation": "APM 8.11",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "amputation un membre superieur",
-            "amputation un membre supérieur",
-            "amputation membre superieur",
-            "amputation membre supérieur",
-            "ampute membre superieur",
-            "amputé membre supérieur"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "amputation un membre superieur",
             "amputation un membre supérieur",
@@ -1654,7 +1376,6 @@ NGAP_RULES = [
             "ampute membre superieur",
             "amputé membre supérieur"
         ],
-        "required_fields": []
     },
     {
         "id": "amputation_un_membre_inferieur",
@@ -1663,15 +1384,7 @@ NGAP_RULES = [
         "detail": "un membre inférieur",
         "cotation": "APM 8.10",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "amputation un membre inferieur",
-            "amputation un membre inférieur",
-            "amputation membre inferieur",
-            "amputation membre inférieur",
-            "ampute membre inferieur",
-            "amputé membre inférieur"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "amputation un membre inferieur",
             "amputation un membre inférieur",
@@ -1680,23 +1393,15 @@ NGAP_RULES = [
             "ampute membre inferieur",
             "amputé membre inférieur"
         ],
-        "required_fields": []
     },
     {
         "id": "amputation_au_moins_deux_membres",
-        "acte": "Rééducation après amputation d'au moins 2 membres",
+        "acte": "Rééducation après amputation d'au moins deux membres ou du tronc et d'un ou plusieurs membres",
         "famille": "amputations",
-        "detail": "au moins 2 membres",
+        "detail": "au moins deux membres ou du tronc et d'un ou plusieurs membres",
         "cotation": "APM 9.50",
         "seances_max": None,
-        "referentiel": "non documente",
-        "keywords": [
-            "amputation au moins 2 membres",
-            "amputation deux membres",
-            "amputation 2 membres",
-            "amputation plusieurs membres",
-            "double amputation"
-        ],
+        "referentiel": "non",
         "keywords_any": [
             "amputation au moins 2 membres",
             "amputation deux membres",
@@ -1704,6 +1409,5 @@ NGAP_RULES = [
             "amputation plusieurs membres",
             "double amputation"
         ],
-        "required_fields": []
     }
 ]

@@ -1,543 +1,40 @@
 import re
 
 from analyse_message import extraire_indices, normaliser_texte
-from ngap_database import NGAP_RULES
-
-
-RULE_BY_ID = {regle["id"]: regle for regle in NGAP_RULES}
-NORMALIZED_RULE_EXPRESSIONS = {}
-for _regle in NGAP_RULES:
-    expressions = _regle.get("keywords_any", _regle.get("keywords", []))
-    NORMALIZED_RULE_EXPRESSIONS[_regle["id"]] = [normaliser_texte(expression) for expression in expressions]
-
-
-def trouver_regles_candidates(message):
-    message_normalise = normaliser_texte(message)
-    indices = extraire_indices(message)
-    candidates = []
-
-    for regle in NGAP_RULES:
-        if regle.get("famille") == "plusieurs territoires" and not indices.get("multi_territoires"):
-            continue
-        if "fracture" in regle.get("id", ""):
-            if not _contient_un_des(message_normalise, ["fracture", "luxation", "humerus"]):
-                continue
-        expressions = NORMALIZED_RULE_EXPRESSIONS.get(regle["id"], [])
-        meilleur_score = 0
-        for expression in expressions:
-            if expression in message_normalise:
-                meilleur_score = max(meilleur_score, len(expression))
-        if meilleur_score:
-            candidates.append((meilleur_score, regle))
-
-    if not candidates:
-        return []
-
-    if _contient_un_des(message_normalise, ["fracture", "luxation", "humerus"]):
-        fracture_candidates = [(score, regle) for score, regle in candidates if "fracture" in regle.get("id", "")]
-        if fracture_candidates:
-            candidates = fracture_candidates
-
-    meilleur_score = max(score for score, _ in candidates)
-    if len(candidates) >= 2:
-        second_score = sorted({score for score, _ in candidates}, reverse=True)[1] if len({score for score, _ in candidates}) >= 2 else 0
-        if meilleur_score > second_score:
-            return [regle for score, regle in candidates if score == meilleur_score]
-
-    return [regle for _, regle in candidates]
-
-
-def dedoublonner_regles(regles):
-    uniques = []
-    ids_vus = set()
-
-    for regle in regles:
-        if regle["id"] not in ids_vus:
-            uniques.append(regle)
-            ids_vus.add(regle["id"])
-
-    return uniques
-
-
-def trouver_regle_par_id(regle_id):
-    return RULE_BY_ID.get(regle_id)
-
-
-def _libelle_regle(regle):
-    return str(regle.get("acte", "")).strip()
-
-
-def _analyse_pathologie(regle):
-    famille = str(regle.get("famille", "")).strip().lower()
-    if famille == "neurologie":
-        return "neurologique"
-    if famille == "respiratoire":
-        return "respiratoire"
-    if famille == "vasculaire":
-        return "vasculaire"
-    if famille == "sujet age":
-        return "sujet âgé / déambulation"
-    if famille == "perinee":
-        return "périnéo-sphinctérien"
-    if famille == "abdominal":
-        return "abdominal"
-    if famille == "amputations":
-        return "amputation"
-    if famille == "soins palliatifs":
-        return "soins palliatifs"
-    if famille == "brulures":
-        return "brûlure"
-    if famille == "deviation rachis":
-        return "déviation du rachis"
-    if famille == "rachis":
-        return "rachis"
-    if famille == "maladies rhumatismales inflammatoires":
-        return "rhumatismale inflammatoire"
-    if famille in {"membre inferieur", "membre superieur", "plusieurs territoires"}:
-        return "orthopédique / rhumatologique"
-    if famille == "maxillo-facial / vestibulaire / ORL":
-        return "orl / vestibulaire / maxillo-facial"
-    return "clinique non précisée"
-
-
-def _analyse_membres(regle):
-    regle_id = str(regle.get("id", ""))
-    famille = str(regle.get("famille", "")).strip().lower()
-    detail = str(regle.get("detail", "")).strip().lower()
-    code = str(regle.get("cotation", "")).split()[0]
-    if famille == "plusieurs territoires":
-        return "plusieurs membres ou tronc + membre"
-    if "plusieurs segments du rachis" in detail:
-        return "plusieurs segments d'un même rachis"
-    if "plusieurs segments" in detail:
-        return "plusieurs segments du même membre"
-    if code in {"RIC", "RIM", "VIC", "VIM"}:
-        return "un membre inférieur"
-    if code in {"RSC", "RSM", "VSC", "VSM"}:
-        return "un membre supérieur"
-    if "membre inférieur" in _libelle_regle(regle) or "membre inférieur" in detail:
-        return "un membre inférieur"
-    if "membre supérieur" in _libelle_regle(regle) or "membre supérieur" in detail:
-        return "un membre supérieur"
-    if regle_id.startswith("rachis_") or regle_id.startswith("deviation_rachis_"):
-        return "rachis"
-    if famille == "neurologie" and "plusieurs" in regle_id:
-        return "plusieurs membres ou membre + tronc/face"
-    if famille == "neurologie":
-        return "un membre ou la face"
-    return "à préciser selon le contexte clinique"
-
-
-def _analyse_operation(regle):
-    texte = f"{_libelle_regle(regle)} {regle.get('detail', '')}".lower()
-    code = str(regle.get("cotation", "")).split()[0]
-    if code in {"RIM", "RSM", "RAM", "VIM", "VSM"} or "non opéré" in texte or "sans chirurgie" in texte:
-        return "non"
-    if code in {"RIC", "RSC", "RAO", "VIC", "VSC"} or "opéré" in texte or "chirurgie" in texte:
-        return "oui"
-    if code in {"TER", "NMI", "ARL", "RAV", "RAB", "RPE", "RPB", "APM", "PLL", "DRA"}:
-        return "non déterminant pour cet acte"
-    return "à préciser"
-
-
-def _analyse_type(regle):
-    famille = str(regle.get("famille", "")).strip().lower()
-    if famille == "neurologie":
-        return "neurologique"
-    if famille == "respiratoire":
-        return "respiratoire"
-    if famille == "vasculaire":
-        return "vasculaire"
-    if famille == "sujet age":
-        return "gériatrique"
-    if famille in {"membre inferieur", "membre superieur", "rachis", "deviation rachis", "plusieurs territoires"}:
-        return "orthopédique / rhumatologique"
-    if famille == "maladies rhumatismales inflammatoires":
-        return "rhumatologique inflammatoire"
-    if famille == "perinee":
-        return "périnéal"
-    if famille == "abdominal":
-        return "abdominal"
-    if famille == "soins palliatifs":
-        return "soins palliatifs"
-    if famille == "brulures":
-        return "cutané / brûlures"
-    if famille == "amputations":
-        return "amputation"
-    return "à confirmer"
-
-
-def _confiance_reponse(regle):
-    referentiel = str(regle.get("referentiel", "")).strip().lower()
-    code = str(regle.get("cotation", "")).split()[0]
-    if referentiel == "oui" or code in {"RIC", "RIM", "RSC", "RSM", "PLL", "RPE", "APM"}:
-        return "ÉLEVÉ"
-    if code in {"TER", "NMI", "ARL", "RAV"}:
-        return "MOYEN"
-    return "ÉLEVÉ"
-
-
-def _resume_seances(regle):
-    referentiel = str(regle.get("referentiel", "")).strip().lower()
-    if regle.get("seances_max") is not None:
-        return str(regle["seances_max"])
-    if referentiel == "oui":
-        return "non fourni par les données de référence"
-    return "hors référentiel / non précisé"
-
-
-def _resume_referentiel(regle):
-    return "oui" if str(regle.get("referentiel", "")).strip().lower() == "oui" else "non"
-
-
-def formater_reponse_finale(regle):
-    return (
-        f"Cotation NGAP : {regle['cotation']}\n"
-        f"Libellé NGAP : {_libelle_regle(regle)}\n\n"
-        "Analyse :\n"
-        f"- Pathologie : {_analyse_pathologie(regle)}\n"
-        f"- Membres : {_analyse_membres(regle)}\n"
-        f"- Opéré : {_analyse_operation(regle)}\n"
-        f"- Type : {_analyse_type(regle)}\n\n"
-        "Justification :\n"
-        "- logique NGAP stricte appliquée à partir du contexte clinique reconnu.\n\n"
-        f"Confiance : {_confiance_reponse(regle)}\n"
-        f"Nombre de séances max : {_resume_seances(regle)}\n"
-        f"Référentiel : {_resume_referentiel(regle)}"
-    )
-
-
-def extraire_regle_depuis_reponse(texte_reponse):
-    acte = None
-    cotation = None
-    for ligne in texte_reponse.splitlines():
-        if ligne.startswith("Acte : "):
-            acte = ligne.replace("Acte : ", "", 1).strip()
-        elif ligne.startswith("Libellé NGAP : "):
-            acte = ligne.replace("Libellé NGAP : ", "", 1).strip()
-        elif ligne.startswith("Cotation : "):
-            cotation = ligne.replace("Cotation : ", "", 1).strip()
-        elif ligne.startswith("Cotation NGAP : "):
-            cotation = ligne.replace("Cotation NGAP : ", "", 1).strip()
-    if not acte or not cotation:
-        return None
-    for regle in NGAP_RULES:
-        if _libelle_regle(regle) == acte and regle.get("cotation") == cotation:
-            return regle
-    return None
-
-
-def _resume_domaine(regle):
-    famille = regle.get("famille", "")
-    if famille in {"rachis", "deviation rachis", "membre inferieur", "membre superieur", "plusieurs territoires", "maladies rhumatismales inflammatoires"}:
-        return "Orthopédie / Rhumatologie"
-    if famille == "neurologie":
-        return "Neurologie"
-    if famille == "respiratoire":
-        return "Respiratoire"
-    if famille == "vasculaire":
-        return "Vasculaire"
-    if famille == "abdominal":
-        return "Abdominal"
-    if famille == "perinee":
-        return "Périnéal"
-    if famille == "brulures":
-        return "Brûlures"
-    if famille == "amputations":
-        return "Amputations"
-    if famille == "maxillo-facial / vestibulaire / ORL":
-        return "Maxillo / ORL / Vestibulaire"
-    if famille == "sujet age":
-        return "Sujet âgé"
-    return "NGAP kiné"
-
-
-def _resume_zone(regle):
-    detail = (regle.get("detail") or "").lower()
-    regle_id = regle.get("id", "")
-    if "rachis" in detail or "rachis" in regle_id or "cervicalgie" in detail or "lombalgie" in detail:
-        return "Rachis"
-    if any(term in detail for term in ["hanche", "cuisse"]) or "hanche" in regle_id:
-        return "Hanche / cuisse"
-    if any(term in detail for term in ["genou", "jambe"]) or "genou" in regle_id:
-        return "Genou / jambe"
-    if any(term in detail for term in ["cheville", "pied"]) or "cheville" in regle_id:
-        return "Cheville / pied"
-    if any(term in detail for term in ["épaule", "epaule", "bras"]) or "epaule" in regle_id:
-        return "Épaule / bras"
-    if any(term in detail for term in ["coude", "avant-bras", "avant bras"]) or "coude" in regle_id:
-        return "Coude / avant-bras"
-    if any(term in detail for term in ["poignet", "main", "canal carpien"]) or "poignet" in regle_id:
-        return "Poignet / main"
-    if "lymph" in detail or "bandage" in detail:
-        return "Système vasculaire"
-    if famille := regle.get("famille", ""):
-        if famille == "respiratoire":
-            return "Respiration"
-        if famille == "neurologie":
-            return "Système nerveux"
-        if famille == "perinee":
-            return "Périnée"
-        if famille == "abdominal":
-            return "Abdomen"
-        if famille == "brulures":
-            return "Peau / brûlures"
-    return "Zone clinique"
-
-
-def _resume_contexte(regle):
-    detail = (regle.get("detail") or "").lower()
-    acte = (regle.get("acte") or "").lower()
-    if "opéré" in acte or "operee" in acte or "opéré" in detail or "operee" in detail:
-        return "Chirurgie"
-    if "non opéré" in acte or "non operee" in acte or "sans chirurgie" in detail:
-        return "Sans chirurgie"
-    if any(term in acte for term in ["arthroplastie", "ligament", "méniscectomie", "meniscectomie", "libération du nerf médian", "chirurgie"]):
-        return "Chirurgie"
-    if "trauma" in detail or "traumatisme" in acte:
-        return "Trauma récent"
-    if "commune" in detail:
-        return "Forme commune"
-    if "déviation" in acte or "deviation" in acte:
-        return "Déviation"
-    return "Contexte ciblé"
-
-
-def _resume_sous_type(regle):
-    acte = (regle.get("acte") or "").lower()
-    detail = (regle.get("detail") or "").lower()
-    if "arthroplastie" in acte:
-        return "Arthroplastie"
-    if "ligament croisé" in acte or "ligament croise" in acte:
-        return "Ligamentoplastie"
-    if "méniscectomie" in acte or "meniscectomie" in acte:
-        return "Méniscectomie"
-    if "canal carpien" in acte:
-        return "Canal carpien"
-    if "coiffe" in acte:
-        return "Coiffe des rotateurs"
-    if "lombalgie commune" in acte:
-        return "Lombalgie commune"
-    if "cervicalgie commune" in acte:
-        return "Cervicalgie commune"
-    if "lymph" in acte:
-        return "Drainage lymphatique"
-    if "bandage" in acte:
-        return "Bandage multicouche"
-    if "brûlures" in acte or "brulures" in acte:
-        return "Brûlures"
-    if "plusieurs segments" in detail:
-        return "Plusieurs segments"
-    return ""
-
-
-def _schema_kind(regle):
-    zone = _resume_zone(regle)
-    mapping = {
-        "Rachis": "rachis",
-        "Hanche / cuisse": "hanche",
-        "Genou / jambe": "genou",
-        "Cheville / pied": "cheville",
-        "Épaule / bras": "epaule",
-        "Coude / avant-bras": "coude",
-        "Poignet / main": "main",
-        "Système vasculaire": "vasculaire",
-        "Respiration": "respiratoire",
-        "Système nerveux": "neurologie",
-        "Périnée": "perinee",
-        "Abdomen": "abdominal",
-        "Peau / brûlures": "brulures",
-    }
-    return mapping.get(zone, "generic")
-
-
-def _visual_mapping_for_rule(regle):
-    cotation = str(regle.get("cotation", "")).strip().upper()
-    code = cotation.split()[0] if cotation else ""
-    famille = regle.get("famille", "")
-
-    if cotation == "NMI 9.01" or code in {"TER", "APM"}:
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 2 if code == "NMI" else 1,
-            "color_code": "Multi",
-            "anatomical_tag": "multi",
-        }
-    if famille in {"plusieurs territoires", "amputations", "brulures"}:
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 1,
-            "color_code": "Blanc",
-            "anatomical_tag": "corps_entier",
-        }
-    if code in {"RAM", "RAO", "DRA"} or famille in {"rachis", "deviation rachis"}:
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 1,
-            "color_code": "Blanc",
-            "anatomical_tag": "rachis",
-        }
-    if "S" in code:
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 1,
-            "color_code": "Bleu",
-            "anatomical_tag": "membre_superieur",
-        }
-    if "I" in code:
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 1,
-            "color_code": "Rose",
-            "anatomical_tag": "membre_inferieur",
-        }
-    if famille == "neurologie":
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 2,
-            "color_code": "Rose",
-            "anatomical_tag": "neuromusculaire",
-        }
-    if famille == "respiratoire":
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 2,
-            "color_code": "Rose",
-            "anatomical_tag": "respiratoire",
-        }
-    if famille == "vasculaire":
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 2,
-            "color_code": "Rose",
-            "anatomical_tag": "vasculaire",
-        }
-    if famille in {"abdominal", "perinee"}:
-        return {
-            "pdf_source": "Schema-NGAP-Kine.pdf",
-            "page": 2,
-            "color_code": "Rose",
-            "anatomical_tag": "abdomino_perineal",
-        }
-    return {
-        "pdf_source": "Schema-NGAP-Kine.pdf",
-        "page": 1,
-        "color_code": "Blanc",
-        "anatomical_tag": "corps_entier",
-    }
-
-
-def _visual_render_for_rule(regle):
-    mapping = _visual_mapping_for_rule(regle)
-    color_code = mapping["color_code"]
-    color_map = {
-        "Bleu": "#A3D8E2",
-        "Rose": "#E96393",
-        "Multi": "#E96393",
-        "Blanc": "#FFFFFF",
-    }
-    focus_map = {
-        "membre_superieur": "MEMBRE SUPÉRIEUR",
-        "membre_inferieur": "MEMBRE INFÉRIEUR",
-        "rachis": "RACHIS",
-        "multi": "PLUSIEURS ZONES",
-        "corps_entier": "CORPS ENTIER",
-        "neuromusculaire": "AFFECTION NEUROMUSCULAIRE",
-        "respiratoire": "AFFECTION RESPIRATOIRE",
-        "vasculaire": "AFFECTION VASCULAIRE",
-        "abdomino_perineal": "ABDOMINO-PÉRINÉAL",
-    }
-    return {
-        "primary_color": color_map.get(color_code, "#FFFFFF"),
-        "anatomical_focus": focus_map.get(mapping["anatomical_tag"], "CORPS ENTIER"),
-        "background_style": "Rounded_Gradient_Teal",
-        "instruction_image": (
-            "Générer une silhouette minimaliste type PDF Kiné avec la zone "
-            f"{focus_map.get(mapping['anatomical_tag'], 'CORPS ENTIER')} "
-            f"en surbrillance couleur {color_code}"
-        ),
-    }
-
-
-def _visual_config_for_rule(regle):
-    mapping = _visual_mapping_for_rule(regle)
-    tag = mapping["anatomical_tag"]
-    if tag == "membre_superieur":
-        active_zone_color = "A3D8E2"
-        highlight_target = "ARMS"
-    elif tag == "membre_inferieur":
-        active_zone_color = "E96393"
-        highlight_target = "LEGS"
-    elif tag == "multi":
-        active_zone_color = "E96393"
-        highlight_target = "MULTI"
-    elif tag == "rachis":
-        active_zone_color = "2F4F4F"
-        highlight_target = "SPINE"
-    else:
-        active_zone_color = "FFFFFF"
-        highlight_target = "BODY"
-    return {
-        "body_base_color": "FFFFFF",
-        "active_zone_color": active_zone_color,
-        "highlight_target": highlight_target,
-        "ui_background": "Rounded_Teal_Gradient",
-    }
-
-
-def _visual_layer_for_rule(regle):
-    config = _visual_config_for_rule(regle)
-    return {
-        "background": config["ui_background"],
-        "base_body": "White_Fill_Black_Outline",
-        "active_overlay": {
-            "zone": config["highlight_target"],
-            "hex_color": f"#{config['active_zone_color']}",
-            "opacity": 1.0,
-        },
-    }
-
-
-def _clinique_payload_for_rule(regle):
-    cotation = str(regle.get("cotation", "")).strip()
-    if regle.get("seances_max") is not None:
-        dap = f"{regle['seances_max']} séances"
-    else:
-        dap = None
-    return {
-        "zone": _resume_zone(regle),
-        "cotation": cotation,
-        "dap": dap,
-    }
-
-
-def decrire_reponse_finale(texte_reponse, message="", contexte_precedent=""):
-    regle = extraire_regle_depuis_reponse(texte_reponse)
-    if regle is None:
-        return None
-
-    domaine = _resume_domaine(regle)
-    zone = _resume_zone(regle)
-    contexte = _resume_contexte(regle)
-    sous_type = _resume_sous_type(regle)
-    parcours = [domaine, zone, contexte]
-    if sous_type:
-        parcours.append(sous_type)
-
-    return {
-        "clinique": _clinique_payload_for_rule(regle),
-        "affichage_visuel": _visual_layer_for_rule(regle),
-        "schema_kind": _schema_kind(regle),
-        "title": zone,
-        "subtitle": " | ".join(parcours),
-        "description": f"Zone concernée : {zone.lower()}. Décision prise via : {' > '.join(parcours)}.",
-        "path": parcours,
-        "rule_id": regle["id"],
-        "visual_mapping": _visual_mapping_for_rule(regle),
-        "visual_render": _visual_render_for_rule(regle),
-        "visual_config": _visual_config_for_rule(regle),
-        "visual_layer": _visual_layer_for_rule(regle),
-    }
+from debug_trace import trace
+from formatage_reponse import decrire_reponse_finale, extraire_regle_depuis_reponse, formater_reponse_finale
+from helpers_cliniques import (
+    _age_moins_18,
+    _contient_brut_un_des,
+    _contient_mot,
+    _contient_un_des,
+    _membre_inf_bilateral_explicite,
+    _membre_inf_meme_membre_explicite,
+    _membre_sup_bilateral_explicite,
+    _neuro_etendue,
+    _plusieurs_membres_direct,
+    _reponse_chirurgie_negative,
+    _reponse_chirurgie_positive,
+    _segment_deviation_direct,
+    _segments_membre_direct,
+    _segments_rachis_detectes,
+    _texte_brut,
+    _trauma_recent_mention,
+)
+from inference_familles import (
+    inferer_regle_abdominal_perineal,
+    inferer_regle_amputation,
+    inferer_regle_brulures,
+    inferer_regle_maxillo_vestibulaire_deglutition,
+    inferer_regle_neurologie,
+    inferer_regle_plusieurs_territoires,
+    inferer_regle_respiratoire,
+    inferer_regle_rhumatismal_inflammatoire,
+    inferer_regle_soins_palliatifs,
+    inferer_regle_sujet_age,
+    inferer_regle_vasculaire,
+)
+from moteur_ngap import RULE_BY_ID, dedoublonner_regles, trouver_regle_par_id, trouver_regles_candidates
 
 
 def reponse_prudente(contexte_precedent="", attente="general_precision"):
@@ -570,11 +67,8 @@ def question_precision_pour_candidat_unique(message, regle):
 
     if famille in {"rachis", "deviation rachis"}:
         if regle.get("id") == "rachis_cervicalgie_commune":
-            age_moins_18 = _age_moins_18(message_normalise)
-            if age_moins_18 is None:
-                return "Question : moins de 18 ans ?", "rachis_cervicalgie_age"
-            if age_moins_18 is False:
-                return "Question : trauma recent ou autre atteinte rachis ?", "rachis_cervicalgie_adulte_precision"
+            # "cervicalgie commune" = RAM 8.07 directement, sans question supplémentaire.
+            return None, ""
         if (
             indices["segment"] == "lombaire"
             and indices.get("chirurgie") is None
@@ -658,564 +152,6 @@ def question_precision_pour_candidat_unique(message, regle):
     return None, ""
 
 
-def _contient_un_des(m, expressions):
-    return any(expr in m for expr in expressions)
-
-
-def _contient_mot(m, mot):
-    return mot in m.split()
-
-
-def _reponse_chirurgie_positive(m):
-    if _reponse_chirurgie_negative(m):
-        return False
-    return _contient_un_des(
-        m,
-        ["oui", "chirurgie", "opere", "operee", "post op", "post-op", "postoperatoire", "post operatoire"],
-    )
-
-
-def _reponse_chirurgie_negative(m):
-    return _contient_un_des(
-        m,
-        [
-            "non chirurgie",
-            "sans chirurgie",
-            "pas de chirurgie",
-            "sans operation",
-            "sans opération",
-            "pas opere",
-            "pas operee",
-            "pas opéré",
-            "pas opérée",
-            "non opere",
-            "non operee",
-            "non opéré",
-            "non opérée",
-            "non op",
-            "non",
-            "medical",
-        ],
-    )
-
-
-def _segments_rachis_detectes(m):
-    segments = set()
-    if _contient_un_des(m, ["cervical", "cervicale", "cervicalgie"]):
-        segments.add("cervical")
-    if _contient_un_des(m, ["dorsal", "thoracique"]):
-        segments.add("dorsal")
-    if _contient_un_des(m, ["lombaire", "lombo", "lombo sacre", "lombo-sacre", "lombalgie"]):
-        segments.add("lombaire")
-    return segments
-
-
-def _membre_inf_bilateral_explicite(m):
-    return (
-        _contient_un_des(
-            m,
-            [
-                "deux membres inferieurs",
-                "deux membre inferieur",
-                "membres inferieurs",
-                "des membre inferieur",
-                "les membre inferieur",
-                "bilateral",
-                "bilaterale",
-                "bilateraux",
-                "bilateralement",
-                "bilateral genoux",
-                "deux genoux",
-                "deux jambes",
-            ],
-        )
-        or (
-            "gauche" in m
-            and "droit" in m
-            and _contient_un_des(m, ["genou", "jambe", "cheville", "hanche", "cuisse", "pied"])
-        )
-    )
-
-
-def _membre_sup_bilateral_explicite(m):
-    return (
-        _contient_un_des(
-            m,
-            [
-                "deux membres superieurs",
-                "deux membre superieur",
-                "membres superieurs",
-                "des membre superieur",
-                "les membre superieur",
-                "bilateral",
-                "bilaterale",
-                "bilateraux",
-                "bilateralement",
-                "deux bras",
-                "deux epaules",
-                "deux épaules",
-                "deux coudes",
-                "deux poignets",
-                "deux mains",
-            ],
-        )
-        or (
-            "gauche" in m
-            and "droit" in m
-            and _contient_un_des(m, ["bras", "epaule", "épaule", "coude", "poignet", "main"])
-        )
-    )
-
-
-def _membre_inf_meme_membre_explicite(m):
-    return _contient_un_des(
-        m,
-        [
-            "deux segments membre inferieur",
-            "2 segments membre inferieur",
-            "plusieurs segments membre inferieur",
-            "meme membre",
-            "même membre",
-            "membre membre",
-            "un seul membre",
-            "sur le meme membre",
-            "sur le même membre",
-        ],
-    )
-
-
-def _age_moins_18(m):
-    if _contient_un_des(m, ["moins de 18 ans", "mineur", "enfant", "adolescent", "ado", "pediatrique", "pédiatrique"]):
-        return True
-    if _contient_un_des(m, ["adulte", "majeur", "plus de 18 ans"]):
-        return False
-    return None
-
-
-def _trauma_recent_mention(m):
-    if _contient_un_des(m, ["non traumatique", "pas de trauma", "pas de traumatisme", "sans trauma", "sans traumatisme"]):
-        return False
-    if _contient_un_des(m, ["trauma", "traumatisme", "recent", "récent", "coup du lapin"]):
-        return True
-    return None
-
-
-def _neuro_etendue(m):
-    if _contient_un_des(m, ["deux membres", "2 membres", "plusieurs membres"]):
-        return "plusieurs"
-    if _contient_mot(m, "plusieurs") or _contient_mot(m, "deux") or _contient_mot(m, "2"):
-        return "plusieurs"
-    if _contient_un_des(m, ["un membre", "1 membre", "face"]):
-        return "un"
-    if _contient_mot(m, "un"):
-        return "un"
-    if ("tronc" in m and ("membre" in m or "face" in m)):
-        return "plusieurs"
-    return None
-
-
-def inferer_regle_neurologie(message):
-    m = normaliser_texte(message)
-
-    infantile = _contient_un_des(
-        m,
-        ["neurologie infantile", "neurologique infantile", "retard moteur", "nourrisson", "bebe", "bébé", "enfant neurologique"]
-    )
-    if _contient_un_des(m, ["paralysie cerebrale", "paralysie cérébrale", "polyhandicap"]):
-        return "neurologie_paralysie_cerebrale_polyhandicap"
-    if _contient_un_des(m, ["encephalopathie infantile", "encéphalopathie infantile"]):
-        return "neurologie_encephalopathie_infantile"
-    if infantile:
-        return "NEED_INFANTILE_TYPE"
-    if "myopathie" in m:
-        return "neurologie_myopathie"
-    if _contient_un_des(m, ["paraplegie", "paraplégie", "tetraplegie", "tétraplégie"]):
-        return "neurologie_paraplegie_tetraplegie"
-    if _contient_un_des(m, ["hemiplegie", "hémiplégie", "avc"]):
-        return "neurologie_hemiplegie"
-
-    peripherique = _contient_un_des(
-        m,
-        [
-            "neuropathie peripherique", "neuropathie périphérique", "peripherique", "périphérique",
-            "radiculaire", "tronculaire", "sciatique", "cruralgie", "cervico brachiale",
-            "cervico-brachiale", "paralysie faciale", "canal carpien severe", "canal carpien sévère"
-        ]
-    )
-    stable = _contient_un_des(
-        m,
-        ["sep", "sclerose en plaques", "sclérose en plaques", "parkinson", "central", "centrale", "stable", "evolutive", "évolutive"]
-    )
-    etendue = _neuro_etendue(m)
-
-    if peripherique and etendue is None and _contient_un_des(
-        m,
-        ["sciatique", "cruralgie", "cervico brachiale", "cervico-brachiale", "paralysie faciale", "canal carpien severe", "canal carpien sévère"]
-    ):
-        etendue = "un"
-
-    if peripherique and etendue == "un":
-        return "neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre"
-    if peripherique and etendue == "plusieurs":
-        return "neurologie_atteintes_peripheriques_radiculaires_tronculaires_plusieurs_membres"
-    if stable and etendue == "un":
-        return "neurologie_affection_stable_un_membre"
-    if stable and etendue == "plusieurs":
-        return "neurologie_affection_stable_plusieurs"
-
-    return None
-
-
-def _resp_mode(m):
-    if _contient_un_des(m, ["en groupe", "groupe", "seance de groupe", "séance de groupe"]):
-        return "groupe"
-    if _contient_un_des(m, ["en individuel", "individuel"]):
-        return "individuel"
-    return None
-
-
-def inferer_regle_respiratoire(message):
-    message_brut = str(message).lower()
-    m = normaliser_texte(message)
-
-    if _contient_un_des(m, ["bronchiolite", "desencombrement urgent", "désencombrement urgent", "urgence respiratoire"]):
-        return "respiratoire_desencombrement_urgent"
-
-    if "mucoviscidose" in m:
-        return "respiratoire_mucoviscidose"
-
-    if _contient_un_des(message_brut, ["bpco", "bronchopneumopathie chronique obstructive"]):
-        if _contient_un_des(m, ["handicap respiratoire chronique"]) or _contient_un_des(message_brut, ["handicap respiratoire chronique"]):
-            mode = _resp_mode(m)
-            if mode == "individuel":
-                return "respiratoire_handicap_chronique_individuel"
-            if mode == "groupe":
-                return "respiratoire_handicap_chronique_groupe"
-            return "NEED_MODE"
-        return "respiratoire_bpco_sans_handicap_chronique"
-
-    if _contient_un_des(
-        m,
-        [
-            "pre-op respiratoire", "pré-op respiratoire", "preop respiratoire", "préop respiratoire",
-            "respiratoire pre-op", "respiratoire pré-op", "respiratoire preop", "respiratoire préop",
-            "postop respiratoire", "post-op respiratoire", "respiratoire post-op", "respiratoire postop",
-            "avant chirurgie thoracique", "apres chirurgie thoracique", "après chirurgie thoracique"
-        ]
-    ):
-        return "respiratoire_preop_postop"
-
-    chronique = _contient_un_des(
-        m,
-        [
-            "insuffisance respiratoire chronique", "handicap respiratoire chronique",
-            "rehabilitation respiratoire", "réhabilitation respiratoire",
-            "readaptation respiratoire", "réadaptation respiratoire", "respiratoire chronique"
-        ]
-    )
-    if chronique:
-        mode = _resp_mode(m)
-        if mode == "individuel":
-            return "respiratoire_handicap_chronique_individuel"
-        if mode == "groupe":
-            return "respiratoire_handicap_chronique_groupe"
-        return "NEED_MODE"
-
-    if _contient_un_des(m, ["obstructive", "restrictive", "mixte", "respiratoire", "insuffisance respiratoire"]):
-        return "respiratoire_obstructive_restrictive_mixte"
-
-    return None
-
-
-def _vasc_etendue(m):
-    if _contient_un_des(m, ["deux membres", "deux membre", "2 membres", "deux bras", "deux jambes"]):
-        return "deux"
-    if _contient_un_des(m, ["un membre", "1 membre", "un bras", "une jambe"]):
-        return "un"
-    if _contient_mot(m, "cou") or _contient_mot(m, "face"):
-        return "un"
-    return None
-
-
-def inferer_regle_vasculaire(message):
-    m = normaliser_texte(message)
-
-    if _contient_un_des(m, ["arteriopathie", "artériopathie", "arterite", "artérite"]):
-        return "vasculaire_arteriopathie_membres_inferieurs"
-
-    if _contient_un_des(m, ["insuffisance veineuse", "troubles trophiques"]):
-        return "vasculaire_insuffisance_veineuse"
-
-    lymph = _contient_un_des(m, ["lymphoedeme", "lymphœdeme", "lymphœdème", "drainage lymphatique", "drainage manuel"])
-    post_sein = _contient_un_des(m, ["cancer du sein", "post cancer du sein", "apres cancer du sein", "après cancer du sein"])
-    epaule_associee = _contient_un_des(m, ["epaule", "épaule", "bras", "membre superieur", "membre supérieur"])
-
-    if lymph and (post_sein or "sein" in m):
-        return "vasculaire_lymphoedeme_sein"
-
-    if _contient_un_des(m, ["bandage multicouche", "bandage"]):
-        etendue = _vasc_etendue(m)
-        if etendue == "un":
-            return "vasculaire_bandage_un_membre"
-        if etendue == "deux":
-            return "vasculaire_bandage_deux_membres"
-        return "NEED_EXTENT_BANDAGE"
-
-    if lymph:
-        if post_sein and not epaule_associee:
-            return "NEED_LYMPH_TYPE"
-        etendue = _vasc_etendue(m)
-        if etendue == "un":
-            return "vasculaire_lymphoedeme_un_membre"
-        if etendue == "deux":
-            return "vasculaire_lymphoedeme_deux_membres"
-        return "NEED_EXTENT_LYMPH"
-
-    if "vasculaire" in m:
-        return "NEED_VASC_TYPE"
-
-    return None
-
-
-def inferer_regle_abdominal_perineal(message):
-    m = normaliser_texte(message)
-    abdominal = _contient_un_des(m, ["abdominal", "abdo", "paroi abdominale", "sangle abdominale"])
-    perineal = _contient_un_des(
-        m,
-        [
-            "perinee", "périnée", "perineal", "périnéal",
-            "reeducation perineale", "rééducation périnéale",
-            "biofeedback", "electrostimulation perineale", "électrostimulation périnéale"
-        ]
-    )
-    postop = _contient_un_des(
-        m,
-        ["pre-op", "pré-op", "preop", "préop", "post-op", "postop", "post operatoire", "post-opératoire", "pre operatoire", "préopératoire"]
-    )
-    postpartum = _contient_un_des(m, ["post partum", "post-partum", "postpartum", "suite de couches"])
-
-    if abdominal and perineal:
-        return "NEED_ABDO_OR_PERINEAL"
-    if perineal:
-        return "perinee_active"
-    if abdominal and postpartum:
-        return "abdominal_post_partum"
-    if abdominal and postop:
-        return "abdominal_preop_postop"
-    if abdominal:
-        return "NEED_ABDO_TYPE"
-    if postpartum and not abdominal:
-        return "NEED_ABDO_OR_PERINEAL"
-    return None
-
-
-def inferer_regle_amputation(message):
-    m = normaliser_texte(message)
-
-    plusieurs = _contient_un_des(
-        m,
-        ["deux membres", "2 membres", "plusieurs membres", "bilateral", "bilaterale", "bilatéral", "bilatérale", "plusieurs"]
-    )
-    sup = _contient_un_des(
-        m,
-        ["membre superieur", "membre supérieur", "superieur", "supérieur", "bras", "avant bras", "avant-bras", "main", "poignet"]
-    )
-    inf = _contient_un_des(
-        m,
-        ["membre inferieur", "membre inférieur", "inferieur", "inférieur", "jambe", "cuisse", "genou", "cheville", "pied"]
-    )
-    amputation_mention = _contient_un_des(m, ["amputation", "ampute", "amputé", "apres amputation", "après amputation"])
-
-    if sup and inf:
-        return "amputation_au_moins_deux_membres"
-    if plusieurs:
-        return "amputation_au_moins_deux_membres"
-    if sup:
-        return "amputation_un_membre_superieur"
-    if inf:
-        return "amputation_un_membre_inferieur"
-    if amputation_mention:
-        return "NEED_TYPE"
-    return None
-
-
-def inferer_regle_brulures(message):
-    m = normaliser_texte(message)
-    brulure_mention = _contient_un_des(m, ["brulure", "brûlure", "brulures", "brûlures", "brule", "brûlé", "brulé"])
-    if not brulure_mention:
-        return None
-
-    etendue = _contient_un_des(
-        m,
-        ["plusieurs membres", "deux membres", "2 membres", "tronc", "thorax", "abdomen", "brulure etendue", "brûlure étendue"]
-    )
-    localisee = _contient_un_des(
-        m,
-        ["un membre", "1 membre", "un segment", "segment", "main", "bras", "jambe", "pied"]
-    )
-
-    if etendue:
-        return "brulure_plusieurs_membres_tronc"
-    if localisee:
-        return "brulure_un_membre"
-    return "NEED_EXTENT"
-
-
-def inferer_regle_plusieurs_territoires(message):
-    m = normaliser_texte(message)
-    indices = extraire_indices(message)
-
-    if not indices.get("multi_territoires"):
-        return None
-
-    if indices.get("chirurgie") == "oui":
-        return "plusieurs_territoires_avec_chirurgie"
-    if indices.get("chirurgie") == "non":
-        return "plusieurs_territoires_sans_chirurgie"
-
-    if _reponse_chirurgie_negative(m):
-        return "plusieurs_territoires_sans_chirurgie"
-    if _reponse_chirurgie_positive(m):
-        return "plusieurs_territoires_avec_chirurgie"
-
-    # Arbitrage minimal: demander la chirurgie si le message contient des territoires
-    # classiquement ambigus dans l'arborescence existante.
-    if _contient_un_des(m, ["genou", "rachis"]):
-        return "NEED_CHIR_MULTI"
-
-    return "plusieurs_territoires_sans_chirurgie"
-
-
-def inferer_regle_maxillo_vestibulaire_deglutition(message):
-    m = normaliser_texte(message)
-
-    if _contient_un_des(
-        m,
-        ["deglutition", "déglutition", "dysphagie", "trouble de la deglutition", "trouble de la déglutition"]
-    ):
-        return "orl_troubles_deglutition_isoles"
-
-    if _contient_un_des(
-        m,
-        ["vestibulaire", "vertiges", "troubles de l'equilibre", "troubles de l équilibre", "reeducation vestibulaire", "rééducation vestibulaire"]
-    ):
-        return "vestibulaire_troubles_equilibre"
-
-    if _contient_un_des(
-        m,
-        ["maxillo", "maxillo-facial", "maxillo facial", "machoire", "mâchoire", "atm", "articulation temporo mandibulaire"]
-    ):
-        return "maxillo_facial_hors_paralysie_faciale"
-
-    if _contient_mot(m, "orl"):
-        return "NEED_TYPE"
-
-    return None
-
-
-def inferer_regle_rhumatismal_inflammatoire(message):
-    m = normaliser_texte(message)
-    diagnostic_rhum = _contient_un_des(
-        m,
-        [
-            "polyarthrite",
-            "polyarthrite rhumatoide",
-            "polyarthrite rhumatoïde",
-            "spondylarthrite",
-            "rhumatisme inflammatoire",
-            "rhumatismal inflammatoire"
-        ]
-    )
-    if not diagnostic_rhum:
-        return None
-
-    atteinte_localisee = _contient_un_des(
-        m,
-        ["atteinte localisee", "atteinte localisée", "un membre", "1 membre"]
-    )
-    atteinte_plusieurs = _contient_un_des(
-        m,
-        ["plusieurs membres", "deux membres", "2 membres", "tronc et", "tronc +", "tronc membre"]
-    )
-    if atteinte_plusieurs:
-        return "rhumatismales_atteinte_plusieurs_membres"
-    if atteinte_localisee:
-        return "rhumatismales_atteinte_localisee"
-    return "NEED_EXTENT"
-
-
-def inferer_regle_sujet_age(message):
-    m = normaliser_texte(message)
-    if _contient_un_des(
-        m,
-        [
-            "sujet age", "sujet âgé", "personne agee", "personne âgée",
-            "reeducation personne agee", "rééducation personne âgée",
-            "prevention chute", "prévention chute",
-            "equilibre sujet age", "équilibre sujet âgé"
-        ]
-    ):
-        return "sujet_age_deambulation"
-    return None
-
-
-def _texte_brut(message):
-    return str(message).lower()
-
-
-def _contient_brut_un_des(message_brut, expressions):
-    return any(expression in message_brut for expression in expressions)
-
-
-def _segment_deviation_direct(message_brut, message_normalise):
-    if not (_contient_un_des(message_normalise, ["deviation", "deviation rachis", "scoliose"]) or _contient_brut_un_des(message_brut, ["déviation", "scoliose"])):
-        return None
-    if _contient_un_des(message_normalise, ["plusieurs segments", "deux segments", "thoraco lombaire", "thoraco-lombaire"]) or (
-        "plusieurs" in message_normalise and "rachis" in message_normalise
-    ):
-        return "deviation_rachis_plusieurs_segments"
-    if _contient_un_des(message_normalise, ["cervical"]):
-        return "deviation_rachis_cervical"
-    if _contient_un_des(message_normalise, ["dorsal", "thoracique"]):
-        return "deviation_rachis_dorsal"
-    if _contient_un_des(message_normalise, ["lombo", "lombaire", "lombosacre", "lombo sacre", "lordose"]):
-        return "deviation_rachis_lombosacre"
-    return "NEED_DEVIATION_SEGMENT"
-
-
-def _segments_membre_direct(message_normalise):
-    if not _contient_un_des(message_normalise, ["plusieurs segments", "deux segments", "2 segments"]):
-        return None
-    if _contient_un_des(message_normalise, ["rachis"]):
-        return "rachis_plusieurs_segments_opere" if _reponse_chirurgie_positive(message_normalise) else "rachis_plusieurs_segments"
-    if _contient_un_des(message_normalise, ["membre superieur", "membre supérieur", "ms", "bras", "epaule", "épaule", "coude", "poignet", "main"]):
-        return "membre_sup_plusieurs_segments_operes" if _reponse_chirurgie_positive(message_normalise) else "membre_sup_plusieurs_segments_non_operes"
-    if _contient_un_des(message_normalise, ["membre inferieur", "membre inférieur", "mi", "jambe", "genou", "cheville", "hanche", "cuisse", "pied"]):
-        return "membre_inf_plusieurs_segments_operes" if _reponse_chirurgie_positive(message_normalise) else "membre_inf_plusieurs_segments_non_operes"
-    return None
-
-
-def _plusieurs_membres_direct(message_brut, message_normalise):
-    bilateral = (
-        _membre_inf_bilateral_explicite(message_normalise)
-        or _membre_sup_bilateral_explicite(message_normalise)
-        or _contient_brut_un_des(message_brut, ["deux membres", "les deux membres", "plusieurs membres", "bilatéral", "bilatérale", "bilateral", "bilaterale"])
-        or ("tronc" in message_normalise and "membre" in message_normalise)
-    )
-    if not bilateral:
-        return None
-    if _contient_un_des(message_normalise, ["neuro", "neurologie", "neurologique", "hemiplegie", "hémiplégie", "paraplegie", "paraplégie", "tetraplegie", "tétraplégie", "myopathie", "sep", "parkinson", "paralysie faciale"]):
-        neuro_rule = inferer_regle_neurologie(message_normalise)
-        return neuro_rule or "neurologie_affection_stable_plusieurs"
-    if inferer_regle_sujet_age(message_normalise) == "sujet_age_deambulation":
-        return "sujet_age_deambulation"
-    if _reponse_chirurgie_positive(message_normalise):
-        return "plusieurs_territoires_avec_chirurgie"
-    if _reponse_chirurgie_negative(message_normalise):
-        return "plusieurs_territoires_sans_chirurgie"
-    return "NEED_MULTI_CHIR"
-
-
 def decision_prioritaire(message):
     message_brut = _texte_brut(message)
     message_normalise = normaliser_texte(message)
@@ -1240,8 +176,34 @@ def decision_prioritaire(message):
         if _reponse_chirurgie_positive(message_normalise):
             return {"kind": "rule", "value": "membre_sup_coiffe_operee"}
 
+    if (
+        "humerus" in message_normalise
+        and "fracture" in message_normalise
+    ) or _contient_un_des(message_normalise, ["fracture humerus", "fracture proximale humerus", "fracture de l humerus", "fracture extremite proximale humerus"]):
+        if _reponse_chirurgie_negative(message_normalise):
+            return {"kind": "rule", "value": "membre_sup_fracture_humerus_prox_non_operee"}
+        if _reponse_chirurgie_positive(message_normalise):
+            return {"kind": "rule", "value": "membre_sup_fracture_humerus_prox_operee"}
+        return {"kind": "question", "text": "Question : operee ou non ?", "attente": "epaule_chirurgie"}
+
+    if (
+        _contient_un_des(message_normalise, ["lca", "ligament croise"])
+        and "genou" in message_normalise
+        and _reponse_chirurgie_negative(message_normalise)
+    ):
+        return {"kind": "rule", "value": "membre_inf_genou_jambe_non_opere"}
+
     if _contient_un_des(message_normalise, ["ligamentoplastie"]) or (_contient_un_des(message_normalise, ["lca", "ligament croise"]) and "genou" in message_normalise):
         return {"kind": "rule", "value": "membre_inf_lca"}
+
+    if _contient_un_des(message_normalise, ["entorse genou", "entorse du genou"]):
+        if _reponse_chirurgie_negative(message_normalise):
+            return {"kind": "rule", "value": "membre_inf_genou_jambe_non_opere"}
+        if _reponse_chirurgie_positive(message_normalise):
+            if _contient_un_des(message_normalise, ["lca", "ligament croise"]):
+                return {"kind": "rule", "value": "membre_inf_lca"}
+            return {"kind": "rule", "value": "membre_inf_genou_jambe_opere"}
+        return {"kind": "question", "text": "Question : chirurgie du genou ou non ?", "attente": "genou_chirurgie"}
 
     if _contient_un_des(message_normalise, ["entorse cheville", "entorse externe"]) or (
         "cheville" in message_normalise and _contient_mot(message_normalise, "lle")
@@ -1308,6 +270,9 @@ def decision_prioritaire(message):
     if deviation:
         return {"kind": "rule", "value": deviation}
 
+    if _contient_brut_un_des(message_brut, ["cervicalgie commune"]) or _contient_un_des(message_normalise, ["rachis cervical commune"]):
+        return {"kind": "rule", "value": "rachis_cervicalgie_commune"}
+
     if _contient_un_des(message_normalise, ["trauma cervical", "traumatisme cervical", "trauma cervical recent", "trauma cervical", "coup du lapin"]) or ("rachis cervical" in message_normalise and _trauma_recent_mention(message_normalise)):
         return {"kind": "rule", "value": "rachis_trauma_cervical_recent"}
 
@@ -1329,15 +294,6 @@ def decision_prioritaire(message):
         return {"kind": "rule", "value": multi}
 
     return None
-
-
-def inferer_regle_soins_palliatifs(message):
-    m = normaliser_texte(message)
-    if _contient_un_des(m, ["soins palliatifs", "fin de vie", "accompagnement fin de vie"]):
-        return "soins_palliatifs"
-    return None
-
-
 def detecter_familles_explicites(message):
     m = normaliser_texte(message)
     familles = set()
@@ -1589,7 +545,7 @@ def determiner_question(message, candidates):
                 return "Question : operee ? entorse ? referentiel ?", "cheville_precision"
             if "hanche" in message_normalise or "cuisse" in message_normalise:
                 return "Question : chirurgie de hanche ou non ?", "hanche_chirurgie"
-            return "Question : quel contexte du membre inferieur ?", "membre_inf_precision"
+            return "Question : genou / cheville / hanche ?", "membre_inf_precision"
 
         if indices["territoire"] == "membre superieur":
             if indices["multiple"] or _membre_sup_bilateral_explicite(message_normalise):
@@ -1764,6 +720,7 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         }
 
     if attente == "rachis_cervicalgie_age":
+        # Note: ce handler est rarement declenche depuis la simplification du flux cervicalgie commune.
         indices_cervicalgie = extraire_indices(f"{contexte_precedent} {message}".strip())
         if indices_cervicalgie.get("moins_18") is True or _contient_un_des(message_normalise, ["oui", "mineur", "enfant", "adolescent"]):
             regle = trouver_regle_par_id("rachis_cervicalgie_commune")
@@ -1781,6 +738,7 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         }
 
     if attente == "rachis_cervicalgie_adulte_precision":
+        # Note: ce handler est rarement declenche depuis la simplification du flux cervicalgie commune.
         contexte_complet = f"{contexte_precedent} {message}".strip()
         message_total = normaliser_texte(contexte_complet)
         if _contient_un_des(message_total, ["trauma", "traumatisme", "recent", "récent", "coup du lapin"]):
@@ -2014,6 +972,34 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         }
 
     if attente == "epaule_chirurgie":
+        contexte_complet = f"{contexte_precedent} {message}".strip()
+        message_total = normaliser_texte(contexte_complet)
+        if (
+            "humerus" in message_total
+            and "fracture" in message_total
+        ) or _contient_un_des(message_total, ["fracture humerus", "fracture proximale humerus", "fracture de l humerus"]):
+            if _reponse_chirurgie_positive(normaliser_texte(message)):
+                regle = trouver_regle_par_id("membre_sup_fracture_humerus_prox_operee")
+                return {
+                    "texte": formater_reponse_finale(regle),
+                    "nouveau_contexte": "",
+                    "termine": True,
+                    "attente": ""
+                }
+            if _reponse_chirurgie_negative(normaliser_texte(message)):
+                regle = trouver_regle_par_id("membre_sup_fracture_humerus_prox_non_operee")
+                return {
+                    "texte": formater_reponse_finale(regle),
+                    "nouveau_contexte": "",
+                    "termine": True,
+                    "attente": ""
+                }
+            return {
+                "texte": "Question : operee ou non ?",
+                "nouveau_contexte": contexte_precedent,
+                "termine": False,
+                "attente": "epaule_chirurgie"
+            }
         if "coiffe" in message_normalise and ("oui" not in message_normalise and "non" not in message_normalise):
             return {
                 "texte": "Question : coiffe operee ou non ?",
@@ -2900,21 +1886,21 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         }
 
     if attente == "sciatique_orientation":
-        contexte_complet = f"{contexte_precedent} {message}".strip()
-        message_total = normaliser_texte(contexte_complet)
-        if _contient_un_des(message_total, ["rachis", "lombalgie", "lombaire", "ram"]):
+        if _contient_un_des(message_normalise, ["rachis", "lombaire", "lombo"]):
+            regle = trouver_regle_par_id("rachis_lombosacre_non_opere")
             return {
-                "texte": "Question : lombalgie commune ou autre atteinte rachis ?",
-                "nouveau_contexte": contexte_complet,
-                "termine": False,
-                "attente": "rachis_lombaire_precision"
+                "texte": formater_reponse_finale(regle),
+                "nouveau_contexte": "",
+                "termine": True,
+                "attente": ""
             }
-        if _contient_un_des(message_total, ["peripherique", "périphérique", "neuro"]):
+        if _contient_un_des(message_normalise, ["peripherique", "périphérique", "neuro", "neurologique"]):
+            regle = trouver_regle_par_id("neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre")
             return {
-                "texte": "Question : Un membre ou plusieurs ?",
-                "nouveau_contexte": contexte_complet,
-                "termine": False,
-                "attente": "neuro_peripherique_etendue"
+                "texte": formater_reponse_finale(regle),
+                "nouveau_contexte": "",
+                "termine": True,
+                "attente": ""
             }
         return {
             "texte": "Question : neuro peripherique ou rachis ?",
@@ -2942,9 +1928,18 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         }
 
     if attente == "general_precision":
+        tentative_directe = repondre(message)
+        if tentative_directe["termine"] or tentative_directe["attente"] != "general_precision":
+            return tentative_directe
+
+        message_complet = f"{contexte_precedent} {message}".strip()
+        tentative_combinee = repondre(message_complet)
+        if tentative_combinee["termine"] or tentative_combinee["attente"] != "general_precision":
+            return tentative_combinee
+
         return {
             "texte": "Question : quel diagnostic precis ?",
-            "nouveau_contexte": contexte_precedent,
+            "nouveau_contexte": message_complet,
             "termine": False,
             "attente": "general_precision"
         }
@@ -2968,7 +1963,8 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
         }
 
     if attente == "plusieurs_territoires_precision":
-        regle_multi = inferer_regle_plusieurs_territoires(f"{contexte_precedent} {message}".strip())
+        message_complet = f"{contexte_precedent} {message}".strip()
+        regle_multi = inferer_regle_plusieurs_territoires(message_complet)
         if regle_multi in ["plusieurs_territoires_sans_chirurgie", "plusieurs_territoires_avec_chirurgie"]:
             regle = trouver_regle_par_id(regle_multi)
             if regle_est_conclusive(regle):
@@ -2978,6 +1974,43 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
                     "termine": True,
                     "attente": ""
                 }
+
+        reponse_normalisee = normaliser_texte(message)
+        if _reponse_chirurgie_positive(reponse_normalisee):
+            regle = trouver_regle_par_id("plusieurs_territoires_avec_chirurgie")
+            return {
+                "texte": formater_reponse_finale(regle),
+                "nouveau_contexte": "",
+                "termine": True,
+                "attente": ""
+            }
+        if _reponse_chirurgie_negative(reponse_normalisee):
+            regle = trouver_regle_par_id("plusieurs_territoires_sans_chirurgie")
+            return {
+                "texte": formater_reponse_finale(regle),
+                "nouveau_contexte": "",
+                "termine": True,
+                "attente": ""
+            }
+
+        message_brut = message.strip().lower()
+        if message_brut in ["oui", "yes", "opere", "operes", "chirurgie"]:
+            regle = trouver_regle_par_id("plusieurs_territoires_avec_chirurgie")
+            return {
+                "texte": formater_reponse_finale(regle),
+                "nouveau_contexte": "",
+                "termine": True,
+                "attente": ""
+            }
+        if message_brut in ["non", "no", "pas opere", "pas operes", "medical"]:
+            regle = trouver_regle_par_id("plusieurs_territoires_sans_chirurgie")
+            return {
+                "texte": formater_reponse_finale(regle),
+                "nouveau_contexte": "",
+                "termine": True,
+                "attente": ""
+            }
+
         return {
             "texte": "Question : Chirurgie sur un des territoires ?",
             "nouveau_contexte": contexte_precedent,
@@ -3157,17 +2190,28 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
 
 
 def repondre(message, contexte_precedent="", attente=""):
+    trace("repondre_start", message=message, contexte=contexte_precedent, attente=attente)
+
+    def _trace_result(result):
+        trace(
+            "repondre_result",
+            termine=result["termine"],
+            attente=result["attente"],
+            nouveau_contexte=result["nouveau_contexte"],
+        )
+        return result
+
     if attente:
         resultat_court = gerer_reponse_courte(message, contexte_precedent, attente)
         if resultat_court is not None:
-            return resultat_court
+            return _trace_result(resultat_court)
         # Garde-fou: ne pas sortir de cotation finale si une attente est active mais non resolue.
-        return {
+        return _trace_result({
             "texte": "Question : pouvez-vous preciser le diagnostic ?",
             "nouveau_contexte": f"{contexte_precedent} {message}".strip(),
             "termine": False,
             "attente": "general_precision"
-        }
+        })
 
     message_complet = f"{contexte_precedent} {message}".strip()
     prioritaire = decision_prioritaire(message_complet)
@@ -3175,19 +2219,19 @@ def repondre(message, contexte_precedent="", attente=""):
         if prioritaire["kind"] == "rule":
             regle = trouver_regle_par_id(prioritaire["value"])
             if regle_est_conclusive(regle):
-                return {
+                return _trace_result({
                     "texte": formater_reponse_finale(regle),
                     "nouveau_contexte": "",
                     "termine": True,
                     "attente": ""
-                }
+                })
         if prioritaire["kind"] == "question":
-            return {
+            return _trace_result({
                 "texte": prioritaire["text"],
                 "nouveau_contexte": message_complet,
                 "termine": False,
                 "attente": prioritaire["attente"]
-            }
+            })
     message_brut = str(message_complet).lower()
     message_normalise = normaliser_texte(message_complet)
     indices = extraire_indices(message_complet)
@@ -3202,30 +2246,30 @@ def repondre(message, contexte_precedent="", attente=""):
     ):
         regle = trouver_regle_par_id("rachis_plusieurs_segments_opere" if indices.get("chirurgie") == "oui" else "rachis_plusieurs_segments")
         if regle_est_conclusive(regle):
-            return {
+            return _trace_result({
                 "texte": formater_reponse_finale(regle),
                 "nouveau_contexte": "",
                 "termine": True,
                 "attente": ""
-            }
+            })
 
     familles_explicites = detecter_familles_explicites(message_complet)
     if len(familles_explicites) >= 2:
-        return {
+        return _trace_result({
             "texte": "Question : Quelle famille principale ?",
             "nouveau_contexte": message_complet,
             "termine": False,
             "attente": "general_precision"
-        }
+        })
 
     message_normalise = normaliser_texte(message_complet)
     if any(term in message_brut for term in ["sciatique", "cruralgie"]):
-        return {
+        return _trace_result({
             "texte": "Question : neuro peripherique ou rachis ?",
             "nouveau_contexte": message_complet,
             "termine": False,
             "attente": "sciatique_orientation"
-        }
+        })
     regle_vasc_directe = inferer_regle_vasculaire(message_complet) if indices["territoire"] == "vasculaire" else None
     if regle_vasc_directe == "NEED_EXTENT_LYMPH":
         return {
@@ -3733,8 +2777,14 @@ CHOIX_ATTENTE = {
         {"label": "Plusieurs membres", "value": "plusieurs membres"},
     ],
     "plusieurs_territoires_precision": [
-        {"label": "Oui", "value": "oui"},
-        {"label": "Non", "value": "non"},
+        {"label": "Oui, opéré", "value": "oui"},
+        {"label": "Non, pas opéré", "value": "non"},
+    ],
+    "general_precision": [
+        {"label": "Membre inférieur", "value": "membre inferieur"},
+        {"label": "Membre supérieur", "value": "membre superieur"},
+        {"label": "Rachis", "value": "rachis"},
+        {"label": "Autre", "value": "autre pathologie"},
     ],
     "maxillo_vestibulaire_orl_precision": [
         {"label": "Maxillo", "value": "maxillo"},

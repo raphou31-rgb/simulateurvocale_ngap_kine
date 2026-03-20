@@ -1,9 +1,24 @@
 {
-  "name": "Assistant NGAP Kine",
-  "short_name": "NGAP Kine",
+  "name": "Assistant NGAP Kiné 2026",
+  "short_name": "NGAP Kiné",
+  "description": "Simulateur de cotation NGAP pour kinésithérapeutes",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f4efe6",
-  "theme_color": "#1f5c4a",
-  "icons": []
+  "background_color": "#F5F5F0",
+  "theme_color": "#2b7ca8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
