@@ -680,7 +680,7 @@
         analyze: 15000,
         transcribe: 45000,
       };
-      const AUTO_STOP_RECORDING_MS = 15000;
+      const AUTO_STOP_RECORDING_MS = 5000;
       const APP_VERSION = "front-refonte-20260320";
       const DEBUG_LOGS = false;
       const $ = (id) => document.getElementById(id);
@@ -1156,7 +1156,6 @@
               </div>
             </div>
           </section>
-          ${renderConversationThread()}
         `;
       }
 
@@ -1710,7 +1709,7 @@
               $("status").textContent = "Fin d'écoute. Analyse de la dictée...";
               recognition.stop();
             }
-          }, 4000);
+          }, 2000);
         }
 
         return {
@@ -1841,8 +1840,22 @@
         let pendingPermission = false;
         let cancelledBeforeStream = false;
         let permissionRequestTimedOut = false;
+        let silenceAudioContext = null;
+        let silenceAnimationFrame = 0;
+
+        function clearSilenceDetection() {
+          if (silenceAnimationFrame) {
+            cancelAnimationFrame(silenceAnimationFrame);
+            silenceAnimationFrame = 0;
+          }
+          if (silenceAudioContext) {
+            silenceAudioContext.close().catch(() => {});
+            silenceAudioContext = null;
+          }
+        }
 
         function stopTracks() {
+          clearSilenceDetection();
           if (!stream) {
             return;
           }
@@ -1944,6 +1957,62 @@
                 recordStartedAt = performance.now();
                 controller.onListening(this.path);
                 stopTimer = setTimeout(() => this.stop("auto"), AUTO_STOP_RECORDING_MS);
+
+                try {
+                  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+                  if (AudioContextCtor) {
+                    silenceAudioContext = new AudioContextCtor();
+                    const source = silenceAudioContext.createMediaStreamSource(stream);
+                    const analyser = silenceAudioContext.createAnalyser();
+                    analyser.fftSize = 512;
+                    source.connect(analyser);
+                    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                    let silenceStart = null;
+                    let speechDetected = false;
+                    const SILENCE_THRESHOLD = 15;
+                    const SILENCE_DURATION_MS = 2000;
+
+                    const checkSilence = () => {
+                      if (!recorder || recorder.state === "inactive") {
+                        clearSilenceDetection();
+                        return;
+                      }
+
+                      analyser.getByteFrequencyData(dataArray);
+                      const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+
+                      if (average > SILENCE_THRESHOLD) {
+                        speechDetected = true;
+                        silenceStart = null;
+                      } else if (speechDetected) {
+                        if (!silenceStart) {
+                          silenceStart = performance.now();
+                        } else if (performance.now() - silenceStart > SILENCE_DURATION_MS) {
+                          controller.logEvent("silence_auto_stop", {
+                            path: "audioFallbackBackend",
+                            silence_duration_ms: Math.round(performance.now() - silenceStart),
+                            recording_duration_ms: Math.round(performance.now() - recordStartedAt),
+                          });
+                          clearStopTimer();
+                          clearSilenceDetection();
+                          try {
+                            recorder.stop();
+                          } catch (_) {}
+                          return;
+                        }
+                      }
+
+                      silenceAnimationFrame = requestAnimationFrame(checkSilence);
+                    };
+
+                    setTimeout(() => {
+                      if (recorder && recorder.state !== "inactive") {
+                        silenceAnimationFrame = requestAnimationFrame(checkSilence);
+                      }
+                    }, 500);
+                  }
+                } catch (_) {}
+
                 resolve();
               };
 
@@ -1963,6 +2032,7 @@
 
               recorder.onstop = async () => {
                 clearStopTimer();
+                clearSilenceDetection();
                 const shouldDiscard = controller.getStopReason() === "reset";
                 const recordingDurationMs = recordStartedAt ? Math.round(performance.now() - recordStartedAt) : 0;
                 const blob = new Blob(chunks, {
