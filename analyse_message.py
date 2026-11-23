@@ -28,7 +28,7 @@ CLINICAL_NORMALIZATION_MAP = {
     "broche percutanee": "chirurgie",
     "lca": "ligament croise genou",
     "ligament croise anterieur": "ligament croise genou",
-    "lcp": "ligament croise genou",
+    "lcp": "lcpost genou",
     "ligament croise": "ligament croise genou",
     "plastie ligamentaire": "ligament croise genou chirurgie",
     "plastie en croix": "ligament croise genou chirurgie",
@@ -54,7 +54,7 @@ CLINICAL_NORMALIZATION_MAP = {
     "lle": "entorse cheville",
     "inversion": "entorse cheville",
     "foulure externe": "entorse cheville",
-    "entorse interne": "cheville non chirurgie",
+    "entorse interne": "entorse interne",
     "lli": "cheville non chirurgie",
     "fracture": "fracture orthopedique",
     "trait de fracture": "fracture orthopedique",
@@ -65,9 +65,9 @@ CLINICAL_NORMALIZATION_MAP = {
     "non consolidation": "fracture orthopedique",
     "fracture de l extremite distale": "fracture distale avant bras",
     "meniscectomie": "meniscectomie genou chirurgie",
-    "menisque": "meniscectomie genou chirurgie",
-    "menisque interne": "meniscectomie genou chirurgie",
-    "menisque externe": "meniscectomie genou chirurgie",
+    "menisque": "menisque genou",
+    "menisque interne": "menisque genou",
+    "menisque externe": "menisque genou",
     "suture meniscale": "meniscectomie genou chirurgie",
     "coiffe des rotateurs": "coiffe epaule",
     "suture de coiffe": "coiffe epaule chirurgie",
@@ -148,10 +148,6 @@ def normaliser_texte(texte):
     return texte
 
 
-def contient_expression(message_normalise, expression):
-    return normaliser_texte(expression) in message_normalise
-
-
 def detecter_territoires_segment(segment_normalise):
     territoires = set()
 
@@ -227,7 +223,7 @@ def _extraire_indices_cached(message):
     ]):
         indices["moins_18"] = False
 
-    if any(mot in message_normalise for mot in ["deux", "2", "bilateral", "bilaterale", "bilateraux", "bilateralement", "genoux", "membres inferieurs"]):
+    if any(re.search(rf"\b{mot}\b", message_normalise) for mot in ["deux", "2", "bilateral", "bilaterale", "bilateraux", "bilateralement", "genoux", "membres inferieurs"]):
         indices["multiple"] = True
 
     if all(mot in message_normalise for mot in ["tronc", "membre"]):

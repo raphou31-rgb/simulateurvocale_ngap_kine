@@ -74,7 +74,7 @@ def inferer_regle_respiratoire(message):
         return "respiratoire_mucoviscidose"
 
     if _contient_un_des(message_brut, ["bpco", "bronchopneumopathie chronique obstructive"]):
-        if _contient_un_des(m, ["handicap respiratoire chronique"]) or _contient_un_des(message_brut, ["handicap respiratoire chronique"]):
+        if _contient_un_des(m, ["handicap respiratoire chronique", "rehabilitation", "readaptation"]) or _contient_un_des(message_brut, ["handicap respiratoire chronique", "réhabilitation", "réadaptation"]):
             mode = _resp_mode(m)
             if mode == "individuel":
                 return "respiratoire_handicap_chronique_individuel"
@@ -267,10 +267,8 @@ def inferer_regle_plusieurs_territoires(message):
     if _reponse_chirurgie_positive(m):
         return "plusieurs_territoires_avec_chirurgie"
 
-    if _contient_un_des(m, ["genou", "rachis"]):
-        return "NEED_CHIR_MULTI"
-
-    return "plusieurs_territoires_sans_chirurgie"
+    # Chirurgie non précisée : on demande toujours (jamais de "sans chirurgie" par défaut).
+    return "NEED_CHIR_MULTI"
 
 
 def inferer_regle_maxillo_vestibulaire_deglutition(message):

@@ -452,6 +452,30 @@ def _clinique_payload_for_rule(regle):
     }
 
 
+_CODES_ARTICLE_I = {"RAM", "RAO", "DRA", "RIM", "RIC", "VIM", "VIC", "RSM", "RSC", "VSM", "VSC"}
+
+
+def alerte_revalorisation(regle, aujourd_hui=None):
+    """Alerte affichée à partir du 01/07/2027 sur les cotations 8.07-8.13 de l'article I,
+    tant que la base n'a pas été mise à jour avec la revalorisation (+0,3)."""
+    from datetime import date
+
+    from ngap_database import PROCHAINE_REVALORISATION
+
+    aujourd_hui = aujourd_hui or date.today()
+    if aujourd_hui < date.fromisoformat(PROCHAINE_REVALORISATION["date"]):
+        return ""
+    code, _, coef = str(regle.get("cotation", "")).partition(" ")
+    try:
+        valeur = float(coef)
+    except ValueError:
+        return ""
+    if code in _CODES_ARTICLE_I and 8.07 <= valeur <= 8.13:
+        return (f" ⚠️ Revalorisation prévue au 01/07/2027 : {code} {valeur:.2f} -> {code} {valeur + 0.3:.2f}."
+                " Vérifier la NGAP en vigueur avant de facturer.")
+    return ""
+
+
 def decrire_reponse_finale(texte_reponse, message="", contexte_precedent=""):
     regle = extraire_regle_depuis_reponse(texte_reponse)
     if regle is None:
@@ -471,7 +495,7 @@ def decrire_reponse_finale(texte_reponse, message="", contexte_precedent=""):
         "schema_kind": _schema_kind(regle),
         "title": zone,
         "subtitle": " | ".join(parcours),
-        "description": f"Zone concernée : {zone.lower()}. Décision prise via : {' > '.join(parcours)}.",
+        "description": f"Zone concernée : {zone.lower()}. Décision prise via : {' > '.join(parcours)}." + alerte_revalorisation(regle),
         "path": parcours,
         "rule_id": regle["id"],
         "visual_mapping": _visual_mapping_for_rule(regle),

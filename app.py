@@ -36,7 +36,7 @@ except ImportError:  # pragma: no cover
 
 BASE_DIR = Path(__file__).parent
 STATIC_DIR = BASE_DIR / "static"
-MAX_AUDIO_UPLOAD_BYTES = 10 * 1024 * 1024
+MAX_AUDIO_UPLOAD_BYTES = 2 * 1024 * 1024  # 2 Mo : une dictée de 20 s pèse quelques centaines de Ko
 app = Flask(__name__, static_folder=None)
 limiter = Limiter(
     get_remote_address,
@@ -150,6 +150,16 @@ def parse_multipart_formdata(content_type_header: str, raw_body: bytes):
         raise TranscriptionError("Fichier audio multipart manquant.", status=HTTPStatus.BAD_REQUEST, code="audio_file_missing")
 
     return fields, file_part
+
+
+DEFAULT_STT_PROMPT = (
+    "Dictée d'un kinésithérapeute pour une cotation NGAP. Vocabulaire : rééducation, opéré, non opéré, "
+    "prothèse totale de genou, PTG, PTH, LCA, ligamentoplastie, méniscectomie, coiffe des rotateurs, "
+    "canal carpien, rotule, radius distal, Pouteau-Colles, scaphoïde, épicondylite, capsulite, entorse de cheville, "
+    "lombalgie commune, cervicalgie, rachis lombo-sacré, dorsal, scoliose, hernie discale, arthrodèse, "
+    "hémiplégie, paraplégie, Parkinson, sclérose en plaques, BPCO, bronchiolite, mucoviscidose, "
+    "lymphœdème, bandage, rééducation périnéale, post-partum, vestibulaire, déglutition, brûlure, amputation, soins palliatifs."
+)
 
 
 class OpenAITranscriptionClient:
@@ -284,7 +294,7 @@ def build_transcription_client():
         api_key=api_key,
         base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").strip() or "https://api.openai.com/v1",
         model=os.environ.get("OPENAI_STT_MODEL", "gpt-4o-mini-transcribe").strip() or "gpt-4o-mini-transcribe",
-        prompt=os.environ.get("OPENAI_STT_PROMPT", "Transcription médicale en français pour cabinet de kinésithérapie.").strip(),
+        prompt=os.environ.get("OPENAI_STT_PROMPT", DEFAULT_STT_PROMPT).strip(),
     )
 
 
@@ -416,8 +426,6 @@ def static_files(filename):
 @app.get("/health")
 def health():
     """Health check pour Render et monitoring."""
-    import sys
-
     from ngap_database import NGAP_RULES
 
     has_openai_key = bool(os.environ.get("OPENAI_API_KEY", "").strip())
@@ -426,7 +434,6 @@ def health():
             "status": "ok",
             "rules_count": len(NGAP_RULES),
             "stt_configured": has_openai_key,
-            "python_version": sys.version,
         }
     )
 

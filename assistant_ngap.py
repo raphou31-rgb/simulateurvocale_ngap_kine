@@ -2189,7 +2189,7 @@ def gerer_reponse_courte(message, contexte_precedent, attente):
     return None
 
 
-def repondre(message, contexte_precedent="", attente=""):
+def _repondre_brut(message, contexte_precedent="", attente=""):
     trace("repondre_start", message=message, contexte=contexte_precedent, attente=attente)
 
     def _trace_result(result):
@@ -2586,6 +2586,765 @@ def repondre(message, contexte_precedent="", attente=""):
     }
 
 
+
+# ---------------------------------------------------------------------------
+# Garde-fous de conformité au tableau NGAP 01-01-2026
+# ---------------------------------------------------------------------------
+
+
+def _sans_oui_non(m):
+    """Retire les "oui"/"non" isolés (réponses à d'autres questions : âge, trauma...) pour
+    qu'ils ne soient pas lus comme "opéré" / "non opéré"."""
+    m = re.sub(r"\boui\b", " ", m)
+    return re.sub(r"\bnon\b(?!\s+(chirurgie|opere|operee|operes|operees|chirurgical))", " ", m)
+
+
+def _chir_pos(m):
+    return _reponse_chirurgie_positive(_sans_oui_non(m))
+
+
+def _chir_neg(m):
+    return _reponse_chirurgie_negative(_sans_oui_non(m))
+# (métropole).
+# Appliqués autour du moteur historique pour corriger des cas où il se trompait.
+# ---------------------------------------------------------------------------
+
+_SEGMENTS_MEMBRE = {
+    "inf": {
+        "hanche_cuisse": ["hanche", "cuisse", "pth"],
+        "genou_jambe": ["genou", "jambe", "rotule", "patella", "ptg", "menisque", "lca"],
+        "cheville_pied": ["cheville", "pied", "malleole", "orteil", "hallux"],
+    },
+    "sup": {
+        "epaule_bras": ["epaule", "bras", "clavicule", "coiffe"],
+        "coude_avant_bras": ["coude", "avant bras", "olecrane"],
+        "poignet_main": ["poignet", "main", "doigt", "pouce", "scaphoide", "carpien"],
+    },
+}
+
+_BILATERAL = ["deux genoux", "deux chevilles", "deux hanches", "deux epaules", "deux coudes", "deux poignets",
+              "deux mains", "deux pieds", "deux jambes", "deux bras", "bilateral", "droit et gauche",
+              "gauche et droit", "deux membres", "plusieurs membres", "tronc"]
+
+_SEGMENT_SUP_REGLES = {
+    "epaule_bras": ("membre_sup_epaule_bras_non_opere", "membre_sup_epaule_bras_opere"),
+    "coude_avant_bras": ("membre_sup_coude_avant_bras_non_opere", "membre_sup_coude_avant_bras_opere"),
+    "poignet_main": ("membre_sup_poignet_main_non_opere", "membre_sup_poignet_main_opere"),
+}
+
+# Questions de sécurité : on préfère demander plutôt que supposer.
+# Cible d'une option : id de règle | ("CHIR", non_opere, opere) | ("RELANCE", texte_ajoute) | ("Q", attente).
+QUESTIONS_SECURITE = {
+    "lca_type": ("Question : LCA opere (ligamentoplastie) ou non opere ?", [
+        ("Non opéré", "non|pas", "membre_inf_genou_jambe_non_opere"),
+        ("Opéré (ligamentoplastie)", "opere|oui|ligamentoplastie|plastie", "membre_inf_lca"),
+    ]),
+    "menisque_type": ("Question : menisque non opere, meniscectomie, ou autre chirurgie (suture) ?", [
+        ("Non opéré", "non|pas", "membre_inf_genou_jambe_non_opere"),
+        ("Méniscectomie", "meniscectomie", "membre_inf_meniscectomie"),
+        ("Autre chirurgie (suture...)", "autre|suture", "membre_inf_genou_jambe_opere"),
+    ]),
+    "bpco_type": ("Question : BPCO avec rehabilitation respiratoire ?", [
+        ("Sans réhabilitation", "sans|non", "respiratoire_bpco_sans_handicap_chronique"),
+        ("Réhabilitation individuelle", "individuel", "respiratoire_handicap_chronique_individuel"),
+        ("Réhabilitation en groupe", "groupe", "respiratoire_handicap_chronique_groupe"),
+    ]),
+    "respi_type": ("Question : quel contexte respiratoire ?", [
+        ("Aigu / désencombrement urgent", "aigu", "respiratoire_desencombrement_urgent"),
+        ("Pré / post-opératoire", "op", "respiratoire_preop_postop"),
+        ("BPCO / insuffisance chronique", "bpco", ("Q", "bpco_type")),
+        ("Mucoviscidose", "mucoviscidose", "respiratoire_mucoviscidose"),
+        ("Autre (asthme, obstructive, restrictive)", "autre", "respiratoire_obstructive_restrictive_mixte"),
+    ]),
+    "lymph_type": ("Question : quel type de lymphoedeme ?", [
+        ("Après cancer du sein", "sein", ("Q", "lymph_sein_phase")),
+        ("Deux membres", "deux", "vasculaire_lymphoedeme_deux_membres"),
+        ("Un membre (ou cou/face)", "un", "vasculaire_lymphoedeme_un_membre"),
+    ]),
+    "luxation_coude_fracture": ("Question : luxation du coude avec fracture associee ?", [
+        ("Sans fracture", "sans|non|pas", ("CHIR", "membre_sup_coude_avant_bras_non_opere", "membre_sup_coude_avant_bras_opere")),
+        ("Avec fracture", "avec|oui|fracture", ("CHIR", "membre_sup_fracture_coude_adulte_non_operee", "membre_sup_fracture_coude_adulte_operee")),
+    ]),
+    "fracture_avant_bras_type": ("Question : fracture de l extremite distale (poignet) ou plus haute (diaphyse / coude) ?", [
+        ("Extrémité distale (poignet)", "distal|poignet|radius", ("CHIR", "membre_sup_fracture_avant_bras_distale_non_operee", "membre_sup_fracture_avant_bras_distale_operee")),
+        ("Diaphyse / coude", "diaphyse|coude|haut|milieu", ("CHIR", "membre_sup_fracture_coude_adulte_non_operee", "membre_sup_fracture_coude_adulte_operee")),
+    ]),
+    "neuro_periph_etendue": ("Question : atteinte peripherique d un seul membre (ou la face) ou de plusieurs membres ?", [
+        ("Un membre ou la face", "un|face|seul", "neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre"),
+        ("Plusieurs membres", "plusieurs|deux|membres", "neurologie_atteintes_peripheriques_radiculaires_tronculaires_plusieurs_membres"),
+    ]),
+    "lymph_sein_phase": ("Question : lymphoedeme apres cancer du sein : phase intensive (seance de 60 min avec reeducation de l epaule) ?", [
+        ("Phase intensive (60 min)", "intensive|oui|60", "vasculaire_lymphoedeme_sein"),
+        ("Hors phase intensive", "hors|non|entretien", "vasculaire_lymphoedeme_un_membre"),
+    ]),
+    "avc_type": ("Question : AVC avec hemiplegie ?", [
+        ("Hémiplégie", "hemiplegie", "neurologie_hemiplegie"),
+        ("Autre séquelle, un membre", "un", "neurologie_affection_stable_un_membre"),
+        ("Autre séquelle, plusieurs membres", "plusieurs", "neurologie_affection_stable_plusieurs"),
+    ]),
+    "brulure_etendue": ("Question : brulure d un membre (ou segment) ou etendue a plusieurs membres / tronc ?", [
+        ("Plusieurs membres / tronc", "plusieurs", "brulure_plusieurs_membres_tronc"),
+        ("Un membre ou un segment", "un", "brulure_un_membre"),
+    ]),
+    "ter_chirurgie": ("Question : plusieurs territoires, avec chirurgie sur au moins un ?", [
+        ("Sans chirurgie", "non|sans", "plusieurs_territoires_sans_chirurgie"),
+        ("Avec chirurgie", "oui|avec", "plusieurs_territoires_avec_chirurgie"),
+    ]),
+    "ligamentoplastie_localisation": ("Question : ligamentoplastie de quelle articulation ?", [
+        ("Genou (LCA)", "genou|lca|croise anterieur", "membre_inf_lca"),
+        ("Cheville", "cheville", ("RELANCE", "cheville chirurgie")),
+        ("Autre", "autre", ("RELANCE", "autre articulation operee")),
+    ]),
+    "prothese_localisation": ("Question : prothese de quelle articulation ?", [
+        ("Genou", "genou", "membre_inf_ptg"),
+        ("Hanche", "hanche", "membre_inf_pth"),
+        ("Épaule", "epaule", "membre_sup_epaule_bras_opere"),
+        ("Cheville", "cheville", "membre_inf_cheville_pied_opere"),
+        ("Coude", "coude", "membre_sup_coude_avant_bras_opere"),
+        ("Poignet / main / doigt", "poignet|main|doigt", "membre_sup_poignet_main_opere"),
+    ]),
+    "entorse_localisation": ("Question : entorse de quelle articulation ?", [
+        ("Cheville", "cheville", ("RELANCE", "cheville")),
+        ("Genou", "genou", ("RELANCE", "genou")),
+        ("Poignet / main / doigt", "poignet", ("RELANCE", "poignet")),
+        ("Coude", "coude", ("RELANCE", "coude")),
+        ("Épaule", "epaule", ("RELANCE", "epaule")),
+    ]),
+    "entorse_cheville_type": ("Question : entorse externe (laterale) de la cheville ?", [
+        ("Entorse externe", "externe|laterale|oui", ("CHIR", "membre_inf_entorse_cheville_non_operee", "membre_inf_entorse_cheville_operee")),
+        ("Autre entorse (interne...)", "autre|interne|mediale|non", ("CHIR", "membre_inf_cheville_pied_non_opere", "membre_inf_cheville_pied_opere")),
+    ]),
+}
+
+
+# Cotations "génériques" d'un segment : si aucun diagnostic n'a été donné, on demande le type,
+# car le tableau prévoit une cotation différente (référentiel R.. ou DRA) pour certains diagnostics.
+TYPES_SEGMENT = {
+    "membre_sup_epaule_bras_non_opere": ("Question : epaule non operee : quel diagnostic ?", [
+        ("Tendinopathie de la coiffe", "coiffe|tendin", "membre_sup_coiffe_non_operee"),
+        ("Fracture (humérus)", "fracture|humerus", "membre_sup_fracture_humerus_prox_non_operee"),
+        ("Autre (capsulite, luxation, arthrose...)", "autre|capsulite|luxation|arthrose|raideur", "membre_sup_epaule_bras_non_opere"),
+    ]),
+    "membre_sup_epaule_bras_opere": ("Question : epaule operee : quelle chirurgie ?", [
+        ("Coiffe des rotateurs (suture)", "coiffe|suture|rotateur", "membre_sup_coiffe_operee"),
+        ("Autre (prothèse, fracture, butée...)", "autre|prothese|fracture|butee|luxation|stabilisation", "membre_sup_epaule_bras_opere"),
+    ]),
+    "membre_sup_coude_avant_bras_non_opere": ("Question : coude / avant-bras non opere : quel diagnostic ?", [
+        ("Fracture du coude", "fracture du coude|coude|olecrane", "membre_sup_fracture_coude_adulte_non_operee"),
+        ("Fracture distale de l'avant-bras (radius)", "radius|distal|poignet", "membre_sup_fracture_avant_bras_distale_non_operee"),
+        ("Autre (épicondylite...)", "autre|epicondyl|tendin", "membre_sup_coude_avant_bras_non_opere"),
+    ]),
+    "membre_sup_coude_avant_bras_opere": ("Question : coude / avant-bras opere : quelle chirurgie ?", [
+        ("Fracture du coude", "fracture du coude|coude|olecrane", "membre_sup_fracture_coude_adulte_operee"),
+        ("Fracture distale de l'avant-bras (radius)", "radius|distal|poignet", "membre_sup_fracture_avant_bras_distale_operee"),
+        ("Autre", "autre", "membre_sup_coude_avant_bras_opere"),
+    ]),
+    "membre_sup_poignet_main_non_opere": ("Question : poignet / main non opere : quel diagnostic ?", [
+        ("Fracture du radius distal", "radius|distal|pouteau", "membre_sup_fracture_avant_bras_distale_non_operee"),
+        ("Autre (entorse, tendinite, fracture d'un os de la main...)", "autre|entorse|tendin|scaphoide|doigt|main", "membre_sup_poignet_main_non_opere"),
+    ]),
+    "membre_sup_poignet_main_opere": ("Question : poignet / main opere : quelle chirurgie ?", [
+        ("Canal carpien", "canal|carpien", "membre_sup_canal_carpien"),
+        ("Fracture du radius distal", "radius|distal|pouteau", "membre_sup_fracture_avant_bras_distale_operee"),
+        ("Autre (doigt, tendon, scaphoïde...)", "autre|doigt|tendon|scaphoide|ressaut|dupuytren", "membre_sup_poignet_main_opere"),
+    ]),
+    "membre_inf_cheville_pied_non_opere": ("Question : cheville / pied non opere : entorse externe ?", [
+        ("Entorse externe (latérale)", "externe|laterale|entorse", "membre_inf_entorse_cheville_non_operee"),
+        ("Autre (fracture, tendinite, pied...)", "autre|fracture|tendin|pied|achille", "membre_inf_cheville_pied_non_opere"),
+    ]),
+    "membre_inf_cheville_pied_opere": ("Question : cheville / pied opere : chirurgie d une entorse externe (ligaments lateraux) ?", [
+        ("Entorse externe / ligaments latéraux", "externe|laterale|entorse|ligament", "membre_inf_entorse_cheville_operee"),
+        ("Autre (fracture, tendon, pied...)", "autre|fracture|tendon|pied|achille|hallux", "membre_inf_cheville_pied_opere"),
+    ]),
+    "membre_inf_genou_jambe_opere": ("Question : genou opere : quelle chirurgie ?", [
+        ("Prothèse", "prothese|arthroplastie|ptg", "membre_inf_ptg"),
+        ("LCA (ligamentoplastie)", "lca|ligamentoplastie|croise", "membre_inf_lca"),
+        ("Méniscectomie", "meniscectomie", "membre_inf_meniscectomie"),
+        ("Autre (fracture, ostéotomie, suture méniscale...)", "autre|fracture|osteotomie|suture|rotule", "membre_inf_genou_jambe_opere"),
+    ]),
+    "membre_inf_hanche_cuisse_operee": ("Question : hanche operee : prothese ?", [
+        ("Prothèse de hanche", "prothese|arthroplastie|pth", "membre_inf_pth"),
+        ("Autre (fracture, ostéosynthèse...)", "autre|fracture|osteosynthese|clou|vis", "membre_inf_hanche_cuisse_operee"),
+    ]),
+    "rachis_cervical_non_opere": ("Question : rachis cervical non opere : quel diagnostic ?", [
+        ("Cervicalgie commune", "commune|cervicalgie|specifique", "rachis_cervicalgie_commune"),
+        ("Traumatisme récent", "trauma|recent|accident|lapin", "rachis_trauma_cervical_recent"),
+        ("Déviation (scoliose...)", "deviation|scoliose", "deviation_rachis_cervical"),
+        ("Autre", "autre|arthrose|hernie|nevralgie", "rachis_cervical_non_opere"),
+    ]),
+    "rachis_lombosacre_non_opere": ("Question : rachis lombaire non opere : quel diagnostic ?", [
+        ("Lombalgie commune", "commune|lombalgie|specifique", "rachis_lombalgie_commune"),
+        ("Déviation (scoliose...)", "deviation|scoliose|lordose", "deviation_rachis_lombosacre"),
+        ("Autre (hernie, arthrose, sciatique...)", "autre|hernie|arthrose|sciatique|canal|spondylo", "rachis_lombosacre_non_opere"),
+    ]),
+    "rachis_dorsal_non_opere": ("Question : rachis dorsal non opere : deviation (scoliose, cyphose) ?", [
+        ("Déviation (scoliose, cyphose)", "deviation|scoliose|cyphose", "deviation_rachis_dorsal"),
+        ("Autre", "autre|non|dorsalgie|arthrose", "rachis_dorsal_non_opere"),
+    ]),
+    "rachis_plusieurs_segments": ("Question : plusieurs segments du rachis non operes : deviation (scoliose) ?", [
+        ("Déviation (scoliose...)", "deviation|scoliose", "deviation_rachis_plusieurs_segments"),
+        ("Autre", "autre|non|arthrose|douleur", "rachis_plusieurs_segments"),
+    ]),
+}
+for _regle, (_texte, _options) in TYPES_SEGMENT.items():
+    QUESTIONS_SECURITE[f"type_{_regle}"] = (_texte, _options)
+
+# Mots qui ne sont PAS un diagnostic (segment, chirurgie, latéralité, remplissage).
+_MOTS_NEUTRES = set("""
+de du la le l d des un une et a au aux en pour par sur avec chez se c est il elle y ce cette son sa ses
+reeducation cotation kine kinesitherapie patient patiente monsieur madame bonjour euh alors j ai mon ma pour
+droit droite gauche cote bilateral seance seances domicile cabinet plait te s mineur adulte ans douleur douleurs
+non pas sans chirurgie opere operee operes operees operer operation oui n an en nom mon on nono perret rez ope
+ete eu jamais intervention post op postop operatoire conservateur traitement
+epaule epaules bras coude coudes avant poignet poignets main mains genou genoux jambe jambes hanche hanches cuisse
+cheville chevilles pied pieds rachis cervical cervicale dorsal dorsale lombaire lombo sacre lombosacre thoracique
+colonne segment segments plusieurs membre membres superieur inferieur orthopedique sup inf
+rajhi lombair epol epaul chevil coud hanch genous lombere
+""".split())
+
+
+def _sans_diagnostic(contexte):
+    """Vrai si le texte (brut, avant normalisation qui efface les diagnostics) ne contient
+    que des mots de segment / chirurgie / remplissage."""
+    import unicodedata
+    brut = unicodedata.normalize("NFD", str(contexte).lower())
+    brut = "".join(c for c in brut if unicodedata.category(c) != "Mn")
+    brut = re.sub(r"\[[^\]]*\]", " ", brut)
+    return all(mot in _MOTS_NEUTRES for mot in re.findall(r"[a-z]+", brut))
+
+
+def _garde_fou_type_segment(resultat, contexte_total):
+    if not resultat.get("termine"):
+        return resultat
+    regle = extraire_regle_depuis_reponse(resultat["texte"])
+    if not regle or regle["id"] not in TYPES_SEGMENT or not _sans_diagnostic(contexte_total):
+        return resultat
+    return _poser(f"type_{regle['id']}", contexte_total)
+
+
+def _valeur_choix(m, valeur):
+    """valeur = alternatives séparées par "|" ; chaque mot doit commencer un mot de la réponse.
+    L'ordre des options compte ("non" est testé avant "opere")."""
+    mots = m.split()
+    return any(
+        all(any(mot.startswith(attendu) for mot in mots) for attendu in alternative.split())
+        for alternative in valeur.split("|")
+    )
+
+
+def _appliquer_cible(cible, contexte):
+    m = normaliser_texte(contexte)
+    if isinstance(cible, str):
+        if cible.startswith("deviation_rachis"):
+            return _garde_fou_deviation(_resultat_regle(cible), contexte)
+        return _resultat_regle(cible)
+    if cible[0] == "Q":
+        texte, _ = QUESTIONS_SECURITE[cible[1]]
+        return _question(texte, contexte, cible[1])
+    if cible[0] == "RELANCE":
+        return repondre(f"{contexte} {cible[1]}")
+    _, non_opere, opere = cible
+    if _chir_neg(m):
+        return _resultat_regle(non_opere)
+    if _chir_pos(m):
+        return _resultat_regle(opere)
+    return _question("Question : opere ou non ?", f"{contexte} [{non_opere}|{opere}]", "segment_chirurgie")
+
+
+def _repondre_question_securite(attente, message, contexte_precedent):
+    texte, options = QUESTIONS_SECURITE[attente]
+    m = normaliser_texte(message)
+    for _, valeur, cible in options:
+        if _valeur_choix(m, normaliser_texte(valeur)):
+            return _appliquer_cible(cible, f"{contexte_precedent} {message}".strip())
+    return _question(texte, contexte_precedent, attente)
+
+
+def _poser(attente, contexte):
+    return _question(QUESTIONS_SECURITE[attente][0], contexte, attente)
+
+
+def _garde_fou_ambiguite(m, message_complet, segments):
+    """Cas où le moteur historique supposait une information non donnée."""
+    chir_connue = _chir_pos(m) or _chir_neg(m)
+    brut = message_complet.lower()
+
+    lateralites = (bool(re.search(r"\bdroit", brut)) and bool(re.search(r"\bgauche", brut))) \
+        or bool(re.search(r"bilat[ée]ral|des deux c[oô]t[ée]s", brut))
+    tous_groupes = set().union(*segments.values()) if segments else set()
+
+    # Amputation de plusieurs membres (membre sup + inf) : APM 9.80.
+    if _contient_un_des(m, ["amputation", "ampute"]) and (len(segments) >= 2 or lateralites):
+        return _resultat_regle("amputation_au_moins_deux_membres")
+    # Brûlures de plusieurs membres : RPB 9.00.
+    if "brul" in m and (len(segments) >= 2 or len(tous_groupes) >= 2 or lateralites):
+        return _resultat_regle("brulure_plusieurs_membres_tronc")
+
+    # Côté droit ET côté gauche sur les membres = plusieurs membres (TER), jamais "plusieurs segments d'un membre".
+    if lateralites and segments and not any(t in m for t in _HORS_ORTHO) and not re.search(r"m[eê]me (c[oô]t[eé]|membre|bras|jambe)", brut):
+        op = re.search(r"(?<!non )(?<!pas )\bop[ée]r[ée]e?s?\b|chirurgie|prothese|prothèse|\bpt[hg]\b|plastie|ectomie|suture", brut)
+        if op and not re.search(r"(non|pas)[ -]op[ée]r[ée]e?s?\s*$", brut.strip()) or re.search(r"\bop[ée]r[ée]e?s?\b.*\bnon op|non op.*(?<!non )\bop[ée]r[ée]e?\b", brut):
+            return _resultat_regle("plusieurs_territoires_avec_chirurgie")
+        if _chir_neg(m):
+            return _resultat_regle("plusieurs_territoires_sans_chirurgie")
+        return _poser("ter_chirurgie", message_complet)
+
+    # Canal carpien non opéré : poignet/main non opéré (VSM 8.10).
+    if "canal carpien" in m and _chir_neg(m) and not lateralites:
+        return _resultat_regle("membre_sup_poignet_main_non_opere")
+
+    # Luxation du coude (sans fracture) : VSM / VSC 8.09.
+    if "luxation" in brut and "coude" in brut and "fracture" not in brut:
+        return _poser("luxation_coude_fracture", message_complet)
+
+    # Fracture de l'avant-bras sans précision distale/coude : on demande.
+    if "fracture" in m and tous_groupes == {"coude_avant_bras"} and "avant bras" in m and not _contient_un_des(m, ["distal", "coude", "olecrane", "radius"]):
+        return _poser("fracture_avant_bras_type", message_complet)
+
+    # Hanche opérée pour fracture sans prothèse (clou, vis, ostéosynthèse) : VIC 8.09.
+    if tous_groupes == {"hanche_cuisse"} and "fracture" in m and _chir_pos(m) and not _contient_un_des(m, ["prothese", "arthroplastie", "pth"]):
+        return _resultat_regle("membre_inf_hanche_cuisse_operee")
+
+    # Abdominal : opéré / hernie / éventration = RAB 8.01.
+    if _contient_un_des(m, ["abdominal", "abdominale", "paroi abdominale"]) and not _contient_un_des(m, ["partum", "accouchement"]) \
+            and (_chir_pos(m) or _contient_un_des(m, ["hernie", "eventration"])):
+        return _resultat_regle("abdominal_preop_postop")
+
+    # BPCO explicitement sans réhabilitation : ARL 8.50.
+    if re.search(r"(sans|pas de) (r[ée]habilitation|r[ée]adaptation)", brut):
+        return _resultat_regle("respiratoire_bpco_sans_handicap_chronique")
+
+    # Respiratoire : aigu / désencombrement = ARL 8.49 ; pré/post-op = ARL 8.51 (avant le rachis "thoracique").
+    if "bronchiolite" in m:
+        return _resultat_regle("respiratoire_desencombrement_urgent")
+    if _contient_un_des(m, ["respiratoire", "respi", "bronch", "desencombrement", "poumon", "pulmonaire"]):
+        if _contient_un_des(m, ["chirurgie thoracique", "pre op", "preop", "post op", "postop", "operatoire", "avant chirurgie", "apres chirurgie", "chirurgie"]) \
+                and not _contient_un_des(m, ["bpco", "mucoviscidose"]):
+            return _resultat_regle("respiratoire_preop_postop")
+        if _contient_un_des(m, ["desencombrement", "aigu", "aigue", "urgen", "encombrement"]) and not _contient_un_des(m, ["bpco", "mucoviscidose", "chronique"]):
+            return _resultat_regle("respiratoire_desencombrement_urgent")
+
+    # Cervicalgie / lombalgie commune (ou non spécifique), même si d'autres mots s'intercalent.
+    rien_d_autre = not _contient_un_des(m, ["trauma", "recent", "lapin", "deviation", "scoliose"]) and not _chir_pos(m) and not segments
+    if rien_d_autre and re.search(r"cervicalgie", brut) and re.search(r"commune|non[ -]sp[ée]cifique", brut) and not re.search(r"lombalgie|dorsalgie", brut):
+        return _resultat_regle("rachis_cervicalgie_commune")
+    if rien_d_autre and re.search(r"lombalgie", brut) and re.search(r"commune|non[ -]sp[ée]cifique", brut) and not re.search(r"cervicalgie|dorsalgie", brut):
+        return _resultat_regle("rachis_lombalgie_commune")
+
+    # Neuropathie périphérique : NMI 8.50 (un membre / face) ou NMI 11.01 (plusieurs membres).
+    if re.search(r"neuropathie|polyneuro|polyn[ée]vrite|plexus|tronculaire", brut):
+        if re.search(r"polyneuro|polyn[ée]vrite|deux|plusieurs|membres|bilat", brut):
+            return _resultat_regle("neurologie_atteintes_peripheriques_radiculaires_tronculaires_plusieurs_membres")
+        if re.search(r"un membre|un bras|une jambe|face|main|pied", brut):
+            return _resultat_regle("neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre")
+        return _poser("neuro_periph_etendue", message_complet)
+
+    # Rhumatisme inflammatoire sur plusieurs membres (pluriels ou plusieurs segments) : NMI 9.01.
+    if _contient_un_des(m, ["polyarthrite", "spondylarthrite", "rhumatisme inflammatoire", "rhumatismal inflammatoire", "pelvispondylite"]):
+        groupes = set().union(*segments.values()) if segments else set()
+        if lateralites or len(groupes) >= 2 or len(segments) >= 2 or re.search(r"\b(mains|genoux|pieds|epaules|épaules|hanches|chevilles|poignets|coudes)\b", brut):
+            return _resultat_regle("rhumatismales_atteinte_plusieurs_membres")
+
+    # Ligamentoplastie : RIC 8.08 uniquement pour le LCA du genou.
+    if "ligamentoplastie" in m or "plastie" in message_complet.lower():
+        if segments.get("inf") == {"cheville_pied"} and "sup" not in segments:
+            return _question(QUESTIONS_SECURITE["entorse_cheville_type"][0], f"{message_complet} chirurgie", "entorse_cheville_type")
+        if not segments:
+            return _poser("ligamentoplastie_localisation", message_complet)
+
+    # Rachis opéré sur un seul segment : RAO (pas de lombalgie commune / cervicalgie possible).
+    rachis = _segments_rachis_detectes(m)
+    if (
+        len(rachis) == 1 and not segments
+        and _chir_pos(m) and not _chir_neg(m)
+        and not _contient_un_des(m, ["deviation", "scoliose", "cyphose", "lordose"])
+    ):
+        regle_rao = {"cervical": "rachis_cervical_opere", "dorsal": "rachis_dorsal_opere", "lombaire": "rachis_lombosacre_opere"}.get(next(iter(rachis)))
+        if regle_rao:
+            return _resultat_regle(regle_rao)
+
+    # Main / doigts hors fracture et canal carpien : VSM 8.10 / VSC 8.11.
+    if (
+        segments == {"sup": {"poignet_main"}}
+        and _contient_un_des(m, ["doigt", "pouce", "ressaut", "dupuytren", "rhizarthrose", "trapeze"])
+        and not _contient_un_des(m, ["fracture", "canal carpien", "radius", "avant bras", "entorse"])
+    ):
+        return _appliquer_cible(("CHIR", "membre_sup_poignet_main_non_opere", "membre_sup_poignet_main_opere"), message_complet)
+
+    # Genou opéré, autre chirurgie (ostéotomie, rotule, plateau tibial...) : VIC 8.10.
+    if (
+        segments == {"inf": {"genou_jambe"}}
+        and _chir_pos(m)
+        and _contient_un_des(m, ["osteotomie", "autre", "plateau tibial", "tuberosite", "arthrolyse", "arthroscopie"])
+        and not _contient_un_des(m, ["prothese", "lca", "ligament croise", "meniscectomie", "ptg", "arthroplastie", "ligamentoplastie"])
+    ):
+        return _resultat_regle("membre_inf_genou_jambe_opere")
+
+    # Rhumatisme inflammatoire limité au tronc : NMI 8.00 ("un membre ou le tronc").
+    if (
+        _contient_un_des(m, ["spondylarthrite", "polyarthrite", "rhumatisme inflammatoire", "pelvispondylite"])
+        and "tronc" in m and not segments and "membre" not in m
+    ):
+        return _resultat_regle("rhumatismales_atteinte_localisee")
+
+    # Croisé postérieur : pas de référentiel (RIC 8.08 = ligamentoplastie du croisé ANTÉRIEUR uniquement).
+    if "lcpost" in m:
+        return _appliquer_cible(("CHIR", "membre_inf_genou_jambe_non_opere", "membre_inf_genou_jambe_opere"), message_complet)
+    if _contient_un_des(m, ["lca", "ligament croise"]) and not chir_connue and not _contient_un_des(m, ["ligamentoplastie", "plastie", "greffe", "kj", "dt4"]):
+        return _poser("lca_type", message_complet)
+    if "menisque" in m and re.search(r"sutur|r[ée]paration", message_complet.lower()):
+        return _resultat_regle("membre_inf_genou_jambe_opere")
+    if "menisque" in m and "meniscectomie" not in m and not _chir_neg(m):
+        return _poser("menisque_type", message_complet)
+    bpco = "bpco" in m or "bpco" in message_complet.lower() or "respiratoire chronique" in m
+    if bpco and not _contient_un_des(m, ["rehabilitation", "readaptation", "individuel", "groupe", "handicap", "sans rehab"]):
+        return _poser("bpco_type", message_complet)
+    if "respiratoire" in m and not bpco and not _contient_un_des(m, [
+        "bronchiolite", "desencombrement", "urgen", "aigu", "mucoviscidose", "pre op", "preop", "post op", "postop",
+        "rehabilitation", "readaptation", "obstructive", "restrictive", "mixte", "asthme", "chirurgie", "chronique", "operatoire",
+    ]):
+        return _poser("respi_type", message_complet)
+    if "lymph" in m and "sein" in m and not _contient_un_des(m, ["intensive", "60 min", "hors phase", "entretien", "bandage"]):
+        return _poser("lymph_sein_phase", message_complet)
+    brut = normaliser_texte(message_complet.replace("bras", "").replace("jambe", ""))
+    if "lymph" in m and not _contient_un_des(brut, ["sein", "bandage", "deux", "2 membres", "un membre", "1 membre", "un seul", "cou", "face"]):
+        return _poser("lymph_type", message_complet)
+    brut_avc = normaliser_texte(message_complet.lower().replace("avc", " ").replace("accident vasculaire", " "))
+    if (re.search(r"\bavc\b", message_complet.lower()) or "accident vasculaire" in message_complet.lower()) and not _contient_un_des(brut_avc, ["hemipleg", "plegie", "membre"]):
+        return _poser("avc_type", message_complet)
+    if "brul" in m and not segments and not _contient_un_des(m, ["plusieurs", "deux", "tronc", "un membre", "segment", "etendue"]):
+        return _poser("brulure_etendue", message_complet)
+    if "tronc" in m and "membre" not in m and not chir_connue and segments and not any(t in m for t in _HORS_ORTHO):
+        return _poser("ter_chirurgie", message_complet)
+    if "entorse" in m and not segments and not _contient_un_des(m, ["cervical", "rachis", "lombaire", "dorsal"]):
+        return _poser("entorse_localisation", message_complet)
+    if (
+        "entorse" in m
+        and segments == {"inf": {"cheville_pied"}}
+        and not _contient_un_des(m, ["externe", "laterale", "lateral", "interne", "mediale", "medial", "autre entorse"])
+        and not re.search(r"\b(lle|ligament lateral)", message_complet.lower())
+    ):
+        return _poser("entorse_cheville_type", message_complet)
+    return None
+
+
+_HORS_ORTHO = ["lymph", "oedeme", "brul", "amput", "hemipleg", "paraleg", "tetrapleg", "paralys", "neuro", "polyarthrite",
+               "spondylarthrite", "rhumat", "sclerose", "parkinson", "avc", "arteri", "veine", "veineu", "myopath"]
+
+_DEVIATION_VERS_COMMUN = {
+    # (rule DRA) -> (adulte non opéré, opéré)
+    "deviation_rachis_lombosacre": ("rachis_lombosacre_non_opere", "rachis_lombosacre_opere"),
+    "deviation_rachis_dorsal": ("rachis_dorsal_non_opere", "rachis_dorsal_opere"),
+    "deviation_rachis_plusieurs_segments": ("rachis_plusieurs_segments", "rachis_plusieurs_segments_opere"),
+    "deviation_rachis_cervical": ("rachis_cervical_non_opere", "rachis_cervical_opere"),
+}
+
+
+def _resultat_regle(regle_id):
+    return {"texte": formater_reponse_finale(trouver_regle_par_id(regle_id)), "nouveau_contexte": "", "termine": True, "attente": ""}
+
+
+def _question(texte, contexte, attente):
+    return {"texte": texte, "nouveau_contexte": contexte, "termine": False, "attente": attente}
+
+
+def _segments_par_membre(m):
+    m = f" {m} "
+    trouves = {}
+    for membre, groupes in _SEGMENTS_MEMBRE.items():
+        texte = m.replace("avant bras", " avbr ") if membre == "sup" else m
+        for groupe, mots in groupes.items():
+            mots_effectifs = ["avbr" if mot == "avant bras" else mot for mot in mots]
+            if any(_contient_mot(texte, mot) or _contient_mot(texte, mot + "s") for mot in mots_effectifs):
+                trouves.setdefault(membre, set()).add(groupe)
+    return trouves
+
+
+def _garde_fou_avant(message_complet):
+    m = normaliser_texte(message_complet)
+
+    segments_bruts = _segments_par_membre(m)
+    ambigu = _garde_fou_ambiguite(m, message_complet, segments_bruts)
+    if ambigu is not None:
+        return ambigu
+
+    # Prothèse : cotation selon l'articulation citée (jamais PTG par défaut).
+    if (
+        _contient_un_des(m, ["prothese", "arthroplastie", "pth", "ptg", "pte"])
+        and not any(t in m for t in _HORS_ORTHO)
+        and not _segments_rachis_detectes(m)
+        and not _contient_un_des(m, ["cervicalgie", "lombalgie", "dorsalgie", "rachis", "tronc"])
+    ):
+        groupes = set().union(*segments_bruts.values()) if segments_bruts else set()
+        if len(groupes) == 1:
+            return _resultat_regle({
+                "hanche_cuisse": "membre_inf_pth", "genou_jambe": "membre_inf_ptg",
+                "cheville_pied": "membre_inf_cheville_pied_opere", "epaule_bras": "membre_sup_epaule_bras_opere",
+                "coude_avant_bras": "membre_sup_coude_avant_bras_opere", "poignet_main": "membre_sup_poignet_main_opere",
+            }[next(iter(groupes))])
+        if not groupes and not _contient_un_des(m, ["rachis", "lombaire", "cervical", "dorsal", "discale"]):
+            return _poser("prothese_localisation", message_complet)
+
+    # Hémiplégie = NMI 9.00 même si le bras et la jambe sont cités (pas TER plusieurs territoires).
+    if "hemipleg" in m and not _contient_un_des(m, ["infantile", "enfant", "paralysie cerebrale", "polyhandicap"]):
+        return _resultat_regle("neurologie_hemiplegie")
+
+    # Fracture épaule/bras : non opérée = RSM 8.10 (référentiel), opérée = VSC 8.10 (tableau 2026).
+    if (
+        "fracture" in m
+        and segments_bruts.get("sup") == {"epaule_bras"}
+        and "inf" not in segments_bruts
+        and not _contient_un_des(m, ["clavicule", "omoplate", "scapula", "coude", "enfant"])
+    ):
+        return _appliquer_cible(("CHIR", "membre_sup_fracture_humerus_prox_non_operee", "membre_sup_fracture_humerus_prox_operee"), message_complet)
+
+    # Fracture distale des deux os de l'avant-bras : RSM 8.11 / RSC 8.10.
+    if "fracture" in m and "distale avant bras" in m:
+        return _appliquer_cible(("CHIR", "membre_sup_fracture_avant_bras_distale_non_operee", "membre_sup_fracture_avant_bras_distale_operee"), message_complet)
+
+    # Fracture du coude (adulte) : RSM / RSC 8.12, même si l'avant-bras est aussi cité.
+    if "fracture" in m and _contient_mot(m, "coude") and not _contient_un_des(m, ["enfant", "poignet", "epaule", "humerus"]):
+        if _chir_neg(m):
+            return _resultat_regle("membre_sup_fracture_coude_adulte_non_operee")
+        if _chir_pos(m):
+            return _resultat_regle("membre_sup_fracture_coude_adulte_operee")
+
+    # Plusieurs segments d'UN membre (tableau : VIM/VIC 8.12, VSM 8.11 / VSC 8.12).
+    segments = {} if any(terme in m for terme in _HORS_ORTHO) else _segments_par_membre(m)
+    if len(segments) == 1 and not _contient_un_des(m, _BILATERAL):
+        membre, groupes = next(iter(segments.items()))
+        if len(groupes) >= 2:
+            prefixe = "membre_inf_plusieurs_segments" if membre == "inf" else "membre_sup_plusieurs_segments"
+            if _chir_neg(m):
+                return _resultat_regle(f"{prefixe}_non_operes")
+            if _chir_pos(m):
+                return _resultat_regle(f"{prefixe}_operes")
+            return _question("Question : plusieurs segments du meme membre, operes ou non ?", f"{message_complet} [{prefixe}]", "plusieurs_segments_chirurgie")
+
+    # Entorse d'un segment du membre supérieur (pouce, doigt, poignet, coude...) : jamais RIM (réservé cheville).
+    if "entorse" in m and set(segments) == {"sup"} and len(segments["sup"]) == 1:
+        segment = next(iter(segments["sup"]))
+        non_opere, opere = _SEGMENT_SUP_REGLES[segment]
+        if _chir_neg(m):
+            return _resultat_regle(non_opere)
+        if _chir_pos(m):
+            return _resultat_regle(opere)
+        return _question("Question : opere ou non ?", f"{message_complet} [{non_opere}|{opere}]", "segment_chirurgie")
+
+    # "Fracture du poignet" : radius distal (RSM/RSC, référentiel) ou os du poignet/main (VSM/VSC) ?
+    if (
+        "fracture" in m
+        and _contient_mot(m, "poignet")
+        and segments.get("sup") == {"poignet_main"}
+        and not _contient_un_des(m, ["avant bras", "radius", "cubitus", "scaphoide", "carpe", "metacarp", "doigt", "pouce", "canal carpien"])
+    ):
+        return _question("Question : fracture du radius distal ou d un os du poignet/main ?", message_complet, "fracture_poignet_type")
+
+    # Rotule = segment genou/jambe (jamais membre supérieur).
+    if _contient_un_des(m, ["rotule", "patella", "rotulien"]) and segments.get("inf") == {"genou_jambe"} and "sup" not in segments:
+        if _chir_neg(m):
+            return _resultat_regle("membre_inf_genou_jambe_non_opere")
+        if _chir_pos(m):
+            return _resultat_regle("membre_inf_genou_jambe_opere")
+        return _question("Question : rotule operee ou non ?", f"{message_complet} genou", "rotule_chirurgie")
+    return None
+
+
+def _garde_fou_deviation(resultat, contexte_total):
+    """Code DRA réservé aux moins de 18 ans non opérés ; sinon cotation rachis commune."""
+    if not resultat.get("termine"):
+        return resultat
+    regle = extraire_regle_depuis_reponse(resultat["texte"])
+    if not regle or regle["id"] not in _DEVIATION_VERS_COMMUN:
+        return resultat
+    m = normaliser_texte(contexte_total)
+    non_opere, opere = _DEVIATION_VERS_COMMUN[regle["id"]]
+    if _chir_pos(m) and not _chir_neg(m):
+        return _resultat_regle(opere)
+    age_moins_18 = _age_moins_18(m)
+    if age_moins_18 is True:
+        return resultat
+    if age_moins_18 is None:
+        return _question("Question : patient de moins de 18 ans ?", f"{contexte_total} [{regle['id']}]", "rachis_deviation_age")
+    if regle["id"] == "deviation_rachis_cervical" and _trauma_recent_mention(m):
+        return _resultat_regle("rachis_trauma_cervical_recent")
+    return _resultat_regle(non_opere)
+
+
+_NOMBRE = r"(?:\d+|un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|quinze|vingt|quelques|plusieurs)"
+_UNITE_DUREE = r"(?:jours?|j|semaines?|sem|mois|ans?|annees?|années?|heures?|h)"
+_RE_DUREE = re.compile(rf"\b(?:il y a|depuis|pendant|apres|après|des|dès|ca fait|ça fait)?\s*{_NOMBRE}\s+{_UNITE_DUREE}\b", re.IGNORECASE)
+_RE_AGE = re.compile(r"\b(\d{1,3})\s*ans\b", re.IGNORECASE)
+_RE_SEANCES = re.compile(rf"\b{_NOMBRE}\s+s[ée]ances?\b", re.IGNORECASE)
+
+
+def _nettoyer_message(message):
+    """Retire durées / nombre de séances et remplace l'âge chiffré, pour que
+    "72 ans", "il y a 2 semaines" ou "trois semaines" ne soient pas lus comme
+    "2 membres" / "plusieurs territoires"."""
+    texte = str(message or "")
+    texte = _RE_SEANCES.sub(" ", texte)
+    if re.search(r"(lombalgie|cervicalgie)", texte, flags=re.IGNORECASE):
+        texte = re.sub(r"\bnon[ -]sp[ée]cifiques?\b", "commune", texte, flags=re.IGNORECASE)
+
+    def _age(match):
+        debut = texte_courant[max(0, match.start() - 12):match.start()].lower()
+        if any(marque in debut for marque in ["il y a", "depuis", "pendant", "fait"]):
+            return " "
+        if "moins de" in debut:
+            return " mineur " if int(match.group(1)) <= 18 else " "
+        if "plus de" in debut:
+            return " adulte " if int(match.group(1)) >= 18 else " "
+        return " mineur " if int(match.group(1)) < 18 else " adulte "
+
+    texte_courant = texte
+    texte = _RE_AGE.sub(_age, texte)
+    texte = _RE_DUREE.sub(" ", texte)
+    return re.sub(r"\s+", " ", texte).strip()
+
+
+def repondre(message, contexte_precedent="", attente=""):
+    message = _nettoyer_message(message) or message
+    if attente == "rachis_deviation_age":
+        regle_id = re.search(r"\[(deviation_rachis_\w+)\]", contexte_precedent or "")
+        m = normaliser_texte(message)
+        age = _age_moins_18(m)
+        if age is None and _contient_mot(m, "oui"):
+            age = True
+        if age is None and _contient_mot(m, "non"):
+            age = False
+        if regle_id and age is not None:
+            contexte = re.sub(r"\s*\[deviation_rachis_\w+\]", "", contexte_precedent)
+            contexte += " moins de 18 ans" if age else " adulte"
+            return _garde_fou_deviation(_resultat_regle(regle_id.group(1)), contexte)
+        return _question("Question : patient de moins de 18 ans ?", contexte_precedent, "rachis_deviation_age")
+
+    if attente == "plusieurs_segments_chirurgie":
+        prefixe = re.search(r"\[(membre_(?:inf|sup)_plusieurs_segments)\]", contexte_precedent or "")
+        m = normaliser_texte(message)
+        if prefixe and (_chir_neg(m) or _contient_mot(m, "non")):
+            return _resultat_regle(f"{prefixe.group(1)}_non_operes")
+        if prefixe and (_chir_pos(m) or _contient_mot(m, "oui")):
+            return _resultat_regle(f"{prefixe.group(1)}_operes")
+        return _question("Question : plusieurs segments du meme membre, operes ou non ?", contexte_precedent, "plusieurs_segments_chirurgie")
+
+    if attente == "poignet_chirurgie" and "canal carpien" in normaliser_texte(message):
+        m_rep = normaliser_texte(message)
+        if not (_chir_pos(m_rep) or _chir_neg(m_rep)):
+            return _question("Question : opere ou non ?",
+                             f"{contexte_precedent} {message} [membre_sup_poignet_main_non_opere|membre_sup_canal_carpien]",
+                             "segment_chirurgie")
+
+    if attente == "poignet_chirurgie" and "canal carpien" in normaliser_texte(contexte_precedent):
+        m = normaliser_texte(message)
+        if _chir_neg(m) or _contient_mot(m, "non"):
+            return _resultat_regle("membre_sup_poignet_main_non_opere")
+        if _chir_pos(m) or _contient_mot(m, "oui"):
+            return _resultat_regle("membre_sup_canal_carpien")
+
+    # Type de chirurgie genou / hanche : on utilise la question de sécurité (suture méniscale,
+    # ostéotomie, fracture... = autre chirurgie, jamais méniscectomie par défaut).
+    if attente == "genou_chirurgie_type":
+        return _repondre_question_securite("type_membre_inf_genou_jambe_opere", message, contexte_precedent)
+    if attente == "hanche_chirurgie_type":
+        return _repondre_question_securite("type_membre_inf_hanche_cuisse_operee", message, contexte_precedent)
+
+    if attente == "plusieurs_territoires_precision":
+        m_rep = normaliser_texte(message)
+        if _contient_mot(m_rep, "avec"):
+            return _resultat_regle("plusieurs_territoires_avec_chirurgie")
+        if _contient_mot(m_rep, "sans"):
+            return _resultat_regle("plusieurs_territoires_sans_chirurgie")
+
+    if attente in QUESTIONS_SECURITE:
+        return _repondre_question_securite(attente, message, contexte_precedent)
+
+    if attente == "segment_chirurgie":
+        regles = re.search(r"\[(\w+)\|(\w+)\]", contexte_precedent or "")
+        m = normaliser_texte(message)
+        contexte_total = re.sub(r"\s*\[\w+\|\w+\]", "", f"{contexte_precedent} {message}")
+        if regles and (_chir_neg(m) or _contient_mot(m, "non")):
+            return _garde_fou_type_segment(_resultat_regle(regles.group(1)), contexte_total)
+        if regles and (_chir_pos(m) or _contient_mot(m, "oui")):
+            return _garde_fou_type_segment(_resultat_regle(regles.group(2)), contexte_total)
+        return _question("Question : opere ou non ?", contexte_precedent, "segment_chirurgie")
+
+    if attente == "fracture_poignet_type":
+        m = normaliser_texte(message)
+        contexte = normaliser_texte(contexte_precedent)
+        if _contient_un_des(m, ["radius", "avant bras", "distal"]):
+            regles = ("membre_sup_fracture_avant_bras_distale_non_operee", "membre_sup_fracture_avant_bras_distale_operee")
+        elif _contient_un_des(m, ["poignet", "main", "scaphoide", "carpe", "os"]):
+            regles = ("membre_sup_poignet_main_non_opere", "membre_sup_poignet_main_opere")
+        else:
+            return _question("Question : fracture du radius distal ou d un os du poignet/main ?", contexte_precedent, "fracture_poignet_type")
+        if _chir_neg(contexte):
+            return _resultat_regle(regles[0])
+        if _chir_pos(contexte):
+            return _resultat_regle(regles[1])
+        return _question("Question : opere ou non ?", f"{contexte_precedent} [{regles[0]}|{regles[1]}]", "segment_chirurgie")
+
+    if attente == "rotule_chirurgie":
+        m = normaliser_texte(message)
+        if _chir_neg(m) or _contient_mot(m, "non"):
+            return _resultat_regle("membre_inf_genou_jambe_non_opere")
+        if _chir_pos(m) or _contient_mot(m, "oui"):
+            return _resultat_regle("membre_inf_genou_jambe_opere")
+        return _question("Question : rotule operee ou non ?", contexte_precedent, "rotule_chirurgie")
+
+    if attente == "abdominal_precision":
+        m_rep = normaliser_texte(message)
+        if "partum" in m_rep or "accouchement" in m_rep:
+            return _resultat_regle("abdominal_post_partum")
+        if _contient_un_des(m_rep, ["op", "operatoire", "chirurgie", "opere"]):
+            return _resultat_regle("abdominal_preop_postop")
+
+    message_complet = f"{contexte_precedent} {message}".strip()
+    if not attente:
+        avant = _garde_fou_avant(message_complet)
+        if avant is not None:
+            return _garde_fou_type_segment(avant, message_complet)
+    resultat = _repondre_brut(message, contexte_precedent, attente)
+
+    # Réponse à une question d'âge du moteur : on la garde pour le contrôle DRA (pas de 2e question).
+    if attente.endswith("_age"):
+        m_rep = normaliser_texte(message)
+        if _contient_mot(m_rep, "oui"):
+            message_complet += " mineur"
+        elif _contient_mot(m_rep, "non"):
+            message_complet += " adulte"
+
+    # Anti-boucle : si le moteur repose exactement la même question, on ré-analyse tout le contexte.
+    if attente and not resultat["termine"] and resultat["attente"] == attente:
+        frais = repondre(message_complet)
+        if frais["termine"] or frais["attente"] != attente:
+            return frais
+
+    # Questions combinées ("opéré ? entorse ? référentiel ?") remplacées par deux questions simples.
+    if not resultat["termine"] and resultat["attente"] in _SEGMENT_PRECISION:
+        m_ctx = normaliser_texte(message_complet)
+        non_opere, opere = _SEGMENT_PRECISION[resultat["attente"]]
+        if resultat["attente"] == "cheville_precision" and (
+            _contient_un_des(m_ctx, ["entorse externe", "laterale", "lateral"])
+            or re.search(r"\b(lle|externe)\b", message_complet.lower())
+        ):
+            non_opere, opere = "membre_inf_entorse_cheville_non_operee", "membre_inf_entorse_cheville_operee"
+        elif resultat["attente"] == "epaule_precision" and "coiffe" in m_ctx:
+            non_opere, opere = "membre_sup_coiffe_non_operee", "membre_sup_coiffe_operee"
+        elif resultat["attente"] == "epaule_precision" and "fracture" in m_ctx:
+            non_opere, opere = "membre_sup_fracture_humerus_prox_non_operee", "membre_sup_fracture_humerus_prox_operee"
+        return _appliquer_cible(("CHIR", non_opere, opere), message_complet)
+
+    resultat = _garde_fou_deviation(resultat, message_complet)
+    return _garde_fou_type_segment(resultat, message_complet)
+
+
+_SEGMENT_PRECISION = {
+    "cheville_precision": ("membre_inf_cheville_pied_non_opere", "membre_inf_cheville_pied_opere"),
+    "epaule_precision": ("membre_sup_epaule_bras_non_opere", "membre_sup_epaule_bras_opere"),
+}
+
+
 def traiter_transcription_texte(message: str, contexte_precedent: str = "", attente: str = ""):
     return repondre(message, contexte_precedent, attente)
 
@@ -2634,6 +3393,26 @@ CHOIX_ATTENTE = {
     "membre_sup_multiple_precision": [
         {"label": "Opérés", "value": "operes"},
         {"label": "Non opérés", "value": "non operes"},
+    ],
+    "rachis_deviation_age": [
+        {"label": "Moins de 18 ans", "value": "oui"},
+        {"label": "Adulte", "value": "non"},
+    ],
+    "plusieurs_segments_chirurgie": [
+        {"label": "Opérés", "value": "operes"},
+        {"label": "Non opérés", "value": "non operes"},
+    ],
+    "segment_chirurgie": [
+        {"label": "Opéré", "value": "oui opere"},
+        {"label": "Non opéré", "value": "non opere"},
+    ],
+    "fracture_poignet_type": [
+        {"label": "Radius distal", "value": "radius distal"},
+        {"label": "Os du poignet / main", "value": "os du poignet main"},
+    ],
+    "rotule_chirurgie": [
+        {"label": "Opérée", "value": "operee"},
+        {"label": "Non opérée", "value": "non operee"},
     ],
     "epaule_chirurgie": [
         {"label": "Opérée", "value": "operee"},
@@ -2784,7 +3563,9 @@ CHOIX_ATTENTE = {
         {"label": "Membre inférieur", "value": "membre inferieur"},
         {"label": "Membre supérieur", "value": "membre superieur"},
         {"label": "Rachis", "value": "rachis"},
-        {"label": "Autre", "value": "autre pathologie"},
+        {"label": "Neurologie", "value": "neurologie"},
+        {"label": "Respiratoire", "value": "respiratoire"},
+        {"label": "Lymphœdème / vasculaire", "value": "lymphoedeme"},
     ],
     "maxillo_vestibulaire_orl_precision": [
         {"label": "Maxillo", "value": "maxillo"},
@@ -2833,4 +3614,6 @@ def proposer_choix(message: str, contexte_precedent: str = "", attente: str = ""
             for regle in candidates[:4]
         ]
 
+    if attente in QUESTIONS_SECURITE:
+        return [{"label": label, "value": valeur.split("|")[0]} for label, valeur, _ in QUESTIONS_SECURITE[attente][1]]
     return CHOIX_ATTENTE.get(attente, [])

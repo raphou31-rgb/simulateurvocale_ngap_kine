@@ -12,10 +12,10 @@ KNOWN_COTATIONS = {
 }
 RULE_BY_ID = {r["id"]: r for r in NGAP_RULES}
 OFFICIAL_COTATIONS_2026 = {
-    "APM 8.10", "APM 8.11", "APM 9.50",
+    "APM 8.10", "APM 8.11", "APM 9.80",
     "ARL 7.99", "ARL 8.00", "ARL 8.01", "ARL 8.49", "ARL 8.50", "ARL 8.51", "ARL 10.00", "ARL 20.00", "ARL 28.00",
     "DRA 8.08", "DRA 8.09", "DRA 8.10", "DRA 8.11",
-    "NMI 8.00", "NMI 8.50", "NMI 8.51", "NMI 9.00", "NMI 9.01", "NMI 10.00", "NMI 10.01", "NMI 10.99", "NMI 11.00", "NMI 11.01",
+    "NMI 8.00", "NMI 8.50", "NMI 8.51", "NMI 9.00", "NMI 9.01", "NMI 11.00", "NMI 11.01", "NMI 11.99", "NMI 12.00", "NMI 12.01",
     "PLL 12.00",
     "RAB 8.00", "RAB 8.01", "RAB 8.50",
     "RAM 8.07", "RAM 8.08", "RAM 8.09", "RAM 8.10", "RAM 8.11", "RAM 8.12", "RAM 8.13",
@@ -27,7 +27,7 @@ OFFICIAL_COTATIONS_2026 = {
     "RPE 8.50",
     "RSC 8.09", "RSC 8.10", "RSC 8.11", "RSC 8.12",
     "RSM 8.09", "RSM 8.10", "RSM 8.11", "RSM 8.12",
-    "TER 9.49", "TER 9.51", "TER 16.00",
+    "TER 9.79", "TER 9.81", "TER 16.00",
     "VIC 8.09", "VIC 8.10", "VIC 8.11", "VIC 8.12",
     "VIM 8.09", "VIM 8.10", "VIM 8.11", "VIM 8.12",
     "VSC 8.09", "VSC 8.10", "VSC 8.11", "VSC 8.12",
@@ -97,7 +97,7 @@ class TestNGAPNonRegression(unittest.TestCase):
             "membre_sup_coude_avant_bras_non_opere": "VSM 8.09",
             "membre_sup_poignet_main_non_opere": "VSM 8.10",
             "membre_sup_poignet_main_opere": "VSC 8.11",
-            "membre_sup_fracture_humerus_prox_operee": "RSC 8.10",
+            "membre_sup_fracture_humerus_prox_operee": "VSC 8.10",
             "membre_sup_plusieurs_segments_non_operes": "VSM 8.11",
             "membre_sup_plusieurs_segments_operes": "VSC 8.12",
             "vasculaire_bandage_un_membre": "RAV 1.00",
@@ -107,22 +107,25 @@ class TestNGAPNonRegression(unittest.TestCase):
             "rhumatismales_atteinte_localisee": "NMI 8.00",
             "neurologie_atteintes_peripheriques_radiculaires_tronculaires_un_membre": "NMI 8.50",
             "neurologie_hemiplegie": "NMI 9.00",
-            "neurologie_affection_stable_plusieurs": "NMI 10.00",
-            "neurologie_encephalopathie_infantile": "NMI 11.00",
+            "neurologie_affection_stable_plusieurs": "NMI 11.00",
+            "neurologie_encephalopathie_infantile": "NMI 12.00",
             "neurologie_paralysie_cerebrale_polyhandicap": "TER 16.00",
             "respiratoire_bpco_sans_handicap_chronique": "ARL 8.50",
             "respiratoire_obstructive_restrictive_mixte": "ARL 8.50",
             "respiratoire_mucoviscidose": "ARL 10.00",
             "respiratoire_handicap_chronique_individuel": "ARL 28.00",
             "respiratoire_handicap_chronique_groupe": "ARL 20.00",
-            "plusieurs_territoires_sans_chirurgie": "TER 9.49",
-            "plusieurs_territoires_avec_chirurgie": "TER 9.51",
+            "plusieurs_territoires_sans_chirurgie": "TER 9.79",
+            "plusieurs_territoires_avec_chirurgie": "TER 9.81",
         }
         for rule_id, cotation in expected.items():
             self.assertEqual(RULE_BY_ID[rule_id]["cotation"], cotation, rule_id)
 
     def assert_final_with_known_cotation(self, message: str, expected_cotation: str):
         result = repondre(message)
+        if not result["termine"] and result["attente"].startswith("type_"):
+            # Segment sans diagnostic : l'app demande le type ; on répond "autre" (cotation générique).
+            result = repondre("autre", result["nouveau_contexte"], result["attente"])
         self.assertTrue(result["termine"], f"Expected final answer for: {message}")
         cotation = _extract_cotation(result["texte"])
         self.assertEqual(cotation, expected_cotation)
@@ -159,7 +162,7 @@ class TestNGAPNonRegression(unittest.TestCase):
 
     def test_genou_lca_final(self):
         self.assert_final_with_known_cotation(
-            "lca genou",
+            "ligamentoplastie lca genou",
             RULE_BY_ID["membre_inf_lca"]["cotation"],
         )
 
@@ -183,14 +186,14 @@ class TestNGAPNonRegression(unittest.TestCase):
 
     def test_croise_anterieur_voice_mapping_final(self):
         self.assert_final_with_known_cotation(
-            "suite a une rupture du croise anterieur",
+            "suite a une ligamentoplastie du croise anterieur",
             RULE_BY_ID["membre_inf_lca"]["cotation"],
         )
 
     def test_lcp_voice_mapping_final(self):
         self.assert_final_with_known_cotation(
-            "lcp genou",
-            RULE_BY_ID["membre_inf_lca"]["cotation"],
+            "lcp genou opéré",
+            "VIC 8.10",
         )
 
     def test_didt_voice_mapping_final(self):
@@ -208,14 +211,14 @@ class TestNGAPNonRegression(unittest.TestCase):
     def test_suture_meniscale_voice_mapping_final(self):
         self.assert_final_with_known_cotation(
             "suture meniscale du genou",
-            RULE_BY_ID["membre_inf_meniscectomie"]["cotation"],
+            "VIC 8.10",  # suture méniscale ≠ méniscectomie (référentiel RIC 8.09)
         )
 
     def test_menisque_interne_voice_mapping_final(self):
-        self.assert_final_with_known_cotation(
-            "menisque interne opere",
-            RULE_BY_ID["membre_inf_meniscectomie"]["cotation"],
-        )
+        result = repondre("menisque interne opere")
+        self.assertEqual(result["attente"], "menisque_type")
+        result = repondre("meniscectomie", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["membre_inf_meniscectomie"]["cotation"])
 
     def test_canal_carpien_final(self):
         self.assert_short_question(
@@ -230,7 +233,7 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_final_format_matches_expert_template(self):
-        result = repondre("lca genou")
+        result = repondre("lca genou opéré")
         self.assertTrue(result["termine"])
         self.assertIn("Cotation NGAP : ", result["texte"])
         self.assertIn("Libellé NGAP : ", result["texte"])
@@ -245,25 +248,25 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_bpco_majuscule_sans_handicap_chronique_final(self):
-        self.assert_final_with_known_cotation(
-            "BPCO",
-            RULE_BY_ID["respiratoire_bpco_sans_handicap_chronique"]["cotation"],
-        )
+        result = repondre("BPCO")
+        self.assertEqual(result["attente"], "bpco_type")
+        result = repondre("sans rehabilitation", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["respiratoire_bpco_sans_handicap_chronique"]["cotation"])
 
     def test_lymphoedeme_short_question(self):
-        self.assert_short_question("lymphoedeme", "Question : Un ou deux membres + localisation ?")
+        self.assert_short_question("lymphoedeme", "Question : quel type de lymphoedeme ?")
 
     def test_douleur_cheville_demande_precision_complete(self):
         self.assert_short_question(
             "douleur de cheville",
-            "Question : operee ? entorse ? referentiel ?",
+            "Question : opere ou non ?",
         )
         self.assert_choices_present("douleur de cheville")
 
     def test_douleur_epaule_demande_precision_complete(self):
         self.assert_short_question(
             "douleur d epaule",
-            "Question : operee ? coiffe ? fracture ? referentiel ?",
+            "Question : opere ou non ?",
         )
         self.assert_choices_present("douleur d epaule")
 
@@ -320,7 +323,7 @@ class TestNGAPNonRegression(unittest.TestCase):
 
     def test_lymphoedeme_cancer_sein_bras_final(self):
         self.assert_final_with_known_cotation(
-            "lymphoedeme apres cancer du sein un bras",
+            "lymphoedeme apres cancer du sein un bras phase intensive",
             RULE_BY_ID["vasculaire_lymphoedeme_sein"]["cotation"],
         )
 
@@ -364,10 +367,10 @@ class TestNGAPNonRegression(unittest.TestCase):
         self.assert_choices_present("Reeducation des genoux deux membres inférieurs")
 
     def test_deux_genoux_apres_chirurgie_final(self):
-        self.assert_final_with_known_cotation("les deux genoux apres chirurgie", "TER 9.51")
+        self.assert_final_with_known_cotation("les deux genoux apres chirurgie", "TER 9.81")
 
     def test_bilateral_genoux_operes_final(self):
-        self.assert_final_with_known_cotation("bilateral genoux operes", "TER 9.51")
+        self.assert_final_with_known_cotation("bilateral genoux operes", "TER 9.81")
 
     def test_deux_segments_meme_membre_apres_chirurgie_final(self):
         self.assert_final_with_known_cotation(
@@ -376,7 +379,7 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_deux_membres_inferieurs_non_operes_final(self):
-        self.assert_final_with_known_cotation("reeducation des deux membres inferieurs pas operee", "TER 9.49")
+        self.assert_final_with_known_cotation("reeducation des deux membres inferieurs pas operee", "TER 9.79")
 
     def test_membres_inferieurs_pluriel_demande_ter_et_non_segments(self):
         self.assert_short_question(
@@ -391,21 +394,21 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_deux_membres_superieurs_non_operes_final(self):
-        self.assert_final_with_known_cotation("reeducation des deux membres superieurs non operes", "TER 9.49")
+        self.assert_final_with_known_cotation("reeducation des deux membres superieurs non operes", "TER 9.79")
 
     def test_deux_membres_inf_puis_non_donne_ter_sans_chirurgie(self):
         r1 = repondre("Reeducation des genoux deux membres inferieurs")
         self.assertFalse(r1["termine"])
         r2 = repondre("non", r1["nouveau_contexte"], r1["attente"])
         self.assertTrue(r2["termine"])
-        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.49")
+        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.79")
 
     def test_deux_membres_inf_puis_oui_donne_ter_avec_chirurgie(self):
         r1 = repondre("Reeducation des genoux deux membres inferieurs")
         self.assertFalse(r1["termine"])
         r2 = repondre("oui", r1["nouveau_contexte"], r1["attente"])
         self.assertTrue(r2["termine"])
-        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.51")
+        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.81")
 
     def test_genou_opere_demande_type_chirurgie(self):
         self.assert_short_question(
@@ -429,13 +432,19 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_membres_sup_et_inf_final(self):
+        result = repondre("membres sup et inf")
+        self.assertFalse(result["termine"])  # chirurgie non précisée : on demande
         self.assert_final_with_known_cotation(
-            "membres sup et inf",
+            "membres sup et inf non operes",
             RULE_BY_ID["plusieurs_territoires_sans_chirurgie"]["cotation"],
         )
 
     def test_deviation_rachis_cervical_demande_age(self):
-        self.assert_final_with_known_cotation("deviation rachis cervical", "DRA 8.11")
+        result = repondre("deviation rachis cervical")
+        self.assertFalse(result["termine"])
+        self.assertIn("18 ans", result["texte"])
+        result = repondre("oui", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), "DRA 8.11")
 
     def test_scoliose_demande_segment(self):
         result = repondre("scoliose")
@@ -500,10 +509,10 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_voice_variant_lymfoedeme_final(self):
-        self.assert_final_with_known_cotation(
-            "lymfoedeme bras",
-            RULE_BY_ID["vasculaire_lymphoedeme_un_membre"]["cotation"],
-        )
+        result = repondre("lymfoedeme bras")
+        self.assertEqual(result["attente"], "lymph_type")
+        result = repondre("un membre", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["vasculaire_lymphoedeme_un_membre"]["cotation"])
 
     def test_voice_variant_nom_ope_rez_final(self):
         self.assert_final_with_known_cotation(
@@ -569,7 +578,7 @@ class TestNGAPNonRegression(unittest.TestCase):
             r1["attente"],
         )
         self.assertTrue(r2["termine"])
-        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.49")
+        self.assertEqual(_extract_cotation(r2["texte"]), "TER 9.79")
 
     def test_general_precision_propose_des_choix(self):
         result = repondre("douleur")
@@ -582,7 +591,9 @@ class TestNGAPNonRegression(unittest.TestCase):
                 {"label": "Membre inférieur", "value": "membre inferieur"},
                 {"label": "Membre supérieur", "value": "membre superieur"},
                 {"label": "Rachis", "value": "rachis"},
-                {"label": "Autre", "value": "autre pathologie"},
+                {"label": "Neurologie", "value": "neurologie"},
+                {"label": "Respiratoire", "value": "respiratoire"},
+                {"label": "Lymphœdème / vasculaire", "value": "lymphoedeme"},
             ],
         )
 
@@ -617,10 +628,7 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_lordose_final(self):
-        self.assert_final_with_known_cotation(
-            "lordose",
-            RULE_BY_ID["deviation_rachis_lombosacre"]["cotation"],
-        )
+        self.assert_final_with_known_cotation("lordose 12 ans", "DRA 8.09")
 
     def test_pth_final(self):
         self.assert_final_with_known_cotation(
@@ -695,7 +703,7 @@ class TestNGAPNonRegression(unittest.TestCase):
 
     def test_entorse_cheville_operee_final(self):
         self.assert_final_with_known_cotation(
-            "entorse cheville opérée",
+            "entorse externe cheville opérée",
             RULE_BY_ID["membre_inf_entorse_cheville_operee"]["cotation"],
         )
 
@@ -707,7 +715,7 @@ class TestNGAPNonRegression(unittest.TestCase):
 
     def test_entorse_interne_cheville_final(self):
         self.assert_final_with_known_cotation(
-            "entorse interne cheville",
+            "entorse interne cheville non opérée",
             RULE_BY_ID["membre_inf_cheville_pied_non_opere"]["cotation"],
         )
 
@@ -747,16 +755,16 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_luxation_coude_non_operee_final(self):
-        self.assert_final_with_known_cotation(
-            "luxation coude non opérée",
-            RULE_BY_ID["membre_sup_fracture_coude_adulte_non_operee"]["cotation"],
-        )
+        result = repondre("luxation coude non opérée")
+        self.assertEqual(result["attente"], "luxation_coude_fracture")
+        result = repondre("avec fracture", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["membre_sup_fracture_coude_adulte_non_operee"]["cotation"])
 
     def test_luxation_coude_operee_final(self):
-        self.assert_final_with_known_cotation(
-            "luxation coude opérée",
-            RULE_BY_ID["membre_sup_fracture_coude_adulte_operee"]["cotation"],
-        )
+        result = repondre("luxation coude opérée")
+        self.assertEqual(result["attente"], "luxation_coude_fracture")
+        result = repondre("avec fracture", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["membre_sup_fracture_coude_adulte_operee"]["cotation"])
 
     def test_coude_fracture_operee_final(self):
         self.assert_final_with_known_cotation(
@@ -767,9 +775,9 @@ class TestNGAPNonRegression(unittest.TestCase):
     def test_pouteau_colles_demande_chirurgie(self):
         result = repondre("pouteau colles")
         self.assertFalse(result["termine"])
-        self.assertEqual(result["texte"], "Question : operee ou non ?")
-        self.assertEqual(result["attente"], "coude_chirurgie")
-        self.assertLessEqual(len(result["texte"]), 60)
+        self.assertEqual(result["attente"], "segment_chirurgie")
+        result = repondre("non", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), "RSM 8.11")
 
     def test_pouteau_colles_non_operee_final(self):
         reponse = repondre("pouteau colles")
@@ -828,8 +836,11 @@ class TestNGAPNonRegression(unittest.TestCase):
     def test_poignet_casse_demande_chirurgie(self):
         result = repondre("poignet cassé")
         self.assertFalse(result["termine"])
-        self.assertEqual(result["texte"], "Question : operee ou non ?")
-        self.assertEqual(result["attente"], "poignet_chirurgie")
+        self.assertEqual(result["attente"], "fracture_poignet_type")
+        result = repondre("radius distal", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(result["attente"], "segment_chirurgie")
+        result = repondre("non", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), "RSM 8.11")
 
     def test_genou_simple_demande_chirurgie(self):
         result = repondre("genou")
@@ -872,10 +883,10 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_bpco_sans_handicap_chronique_final(self):
-        self.assert_final_with_known_cotation(
-            "bpco",
-            RULE_BY_ID["respiratoire_bpco_sans_handicap_chronique"]["cotation"],
-        )
+        result = repondre("bpco")
+        self.assertEqual(result["attente"], "bpco_type")
+        result = repondre("sans rehabilitation", result["nouveau_contexte"], result["attente"])
+        self.assertEqual(_extract_cotation(result["texte"]), RULE_BY_ID["respiratoire_bpco_sans_handicap_chronique"]["cotation"])
 
     def test_handicap_respiratoire_chronique_groupe_final(self):
         self.assert_final_with_known_cotation(
@@ -934,7 +945,7 @@ class TestNGAPNonRegression(unittest.TestCase):
         )
 
     def test_seances_lca(self):
-        self.assert_seances("lca genou", "40")
+        self.assert_seances("lca genou opere", "40")
 
     def test_seances_pth(self):
         self.assert_seances("prothese totale de hanche", "15")
@@ -943,9 +954,157 @@ class TestNGAPNonRegression(unittest.TestCase):
         self.assert_seances("cervicalgie commune", "15")
 
     def test_deviation_rachis_cervical_adulte_trauma_non_final(self):
-        result = repondre("deviation rachis cervical")
+        result = repondre("deviation rachis cervical adulte sans trauma")
         self.assertTrue(result["termine"])
-        self.assertEqual(_extract_cotation(result["texte"]), "DRA 8.11")
+        self.assertEqual(_extract_cotation(result["texte"]), "RAM 8.12")
+
+
+class TestConformiteTableau2026(unittest.TestCase):
+    """Cas corrigés lors de l'audit du 23/11/2026 (tableau NGAP 01-01-2026 métropole)."""
+
+    def _cot(self, message, *suites):
+        result = repondre(message)
+        for suite in suites:
+            result = repondre(suite, result["nouveau_contexte"], result["attente"])
+        if not result["termine"] and result["attente"].startswith("type_"):
+            result = repondre("autre", result["nouveau_contexte"], result["attente"])
+        self.assertTrue(result["termine"], f"{message} {suites}: {result['texte']}")
+        return _extract_cotation(result["texte"])
+
+    def test_rotule_genou_pas_membre_sup(self):
+        self.assertEqual(self._cot("fracture rotule opérée"), "VIC 8.10")
+        self.assertEqual(self._cot("fracture de la rotule non opérée"), "VIM 8.11")
+        self.assertEqual(self._cot("fracture de la rotule", "operee"), "VIC 8.10")
+
+    def test_deviation_adulte_pas_dra(self):
+        self.assertEqual(self._cot("scoliose adulte 45 ans", "lombaire"), "RAM 8.11")
+        self.assertEqual(self._cot("scoliose dorsale 60 ans"), "RAM 8.10")
+        self.assertEqual(self._cot("scoliose", "plusieurs segments", "non"), "RAM 8.13")
+        self.assertEqual(self._cot("scoliose cervicale adulte trauma récent"), "RAM 8.08")
+
+    def test_deviation_mineur_dra(self):
+        self.assertEqual(self._cot("scoliose 14 ans", "lombaire"), "DRA 8.09")
+        self.assertEqual(self._cot("scoliose dorsale adolescent"), "DRA 8.08")
+        self.assertEqual(self._cot("scoliose", "plusieurs segments", "oui"), "DRA 8.10")
+        self.assertEqual(self._cot("scoliose 15 ans cervical"), "DRA 8.11")
+
+    def test_bpco_rehabilitation(self):
+        self.assertEqual(self._cot("BPCO réhabilitation respiratoire individuelle"), "ARL 28.00")
+        self.assertEqual(self._cot("BPCO réhabilitation respiratoire en groupe"), "ARL 20.00")
+        self.assertEqual(self._cot("BPCO", "sans"), "ARL 8.50")
+
+    def test_plusieurs_segments_meme_membre(self):
+        self.assertEqual(self._cot("genou et cheville opérés"), "VIC 8.12")
+        self.assertEqual(self._cot("hanche et genou opérés"), "VIC 8.12")
+        self.assertEqual(self._cot("hanche et genou non opérés"), "VIM 8.12")
+        self.assertEqual(self._cot("épaule et coude non opérés"), "VSM 8.11")
+        self.assertEqual(self._cot("coude et poignet opérés"), "VSC 8.12")
+        self.assertEqual(self._cot("épaule et coude", "non"), "VSM 8.11")
+
+    def test_un_seul_segment_inchange(self):
+        self.assertEqual(self._cot("coude avant-bras non opéré"), "VSM 8.09")
+        self.assertEqual(self._cot("cheville non opérée"), "VIM 8.10")
+        self.assertEqual(self._cot("prothèse totale de genou"), "RIC 8.12")
+
+    def test_humerus_opere_vsc(self):
+        self.assertEqual(self._cot("fracture humérus proximal opérée"), "VSC 8.10")
+        self.assertEqual(self._cot("fracture de l'humérus non opérée"), "RSM 8.10")
+
+    def test_hemiplegie_bras_jambe(self):
+        self.assertEqual(self._cot("hémiplégie bras et jambe"), "NMI 9.00")
+
+    def test_fracture_coude_avant_bras(self):
+        self.assertEqual(self._cot("fracture du coude et de l'avant-bras opérée"), "RSC 8.12")
+        self.assertEqual(self._cot("fracture du coude non opérée"), "RSM 8.12")
+
+    def test_correcteur_ne_change_pas_les_vrais_mots(self):
+        from analyse_message import normaliser_texte
+        for mot, interdit in [("rotule", "epaule"), ("pouce", "coude"), ("paume", "epaule"),
+                              ("orthese", "prothese"), ("chute", "coude"), ("moignon", "poignet")]:
+            self.assertNotIn(interdit, normaliser_texte(mot), mot)
+
+
+    def test_dictee_age_et_durees_ignores(self):
+        self.assertEqual(self._cot("patiente de 72 ans opérée d'une prothèse de hanche il y a trois semaines"), "RIC 8.10")
+        self.assertEqual(self._cot("PTH il y a 2 semaines"), "RIC 8.10")
+        self.assertEqual(self._cot("PTG opérée il y a 2 mois"), "RIC 8.12")
+        self.assertEqual(self._cot("monsieur a une lombalgie commune depuis deux mois"), "RAM 8.09")
+        self.assertEqual(self._cot("moins de 18 ans scoliose dorsale"), "DRA 8.08")
+        self.assertEqual(self._cot("scoliose dorsale 17 ans"), "DRA 8.08")
+        self.assertEqual(self._cot("les deux genoux opérés"), "TER 9.81")
+
+    def test_correcteur_ne_deforme_pas(self):
+        from analyse_message import normaliser_texte
+        self.assertNotIn("croise", normaliser_texte("il y a trois semaines"))
+        self.assertNotIn("dorsal", normaliser_texte("radius distal"))
+        self.assertIn("epaule", normaliser_texte("epaul"))
+        self.assertIn("cheville", normaliser_texte("chevil"))
+
+    def test_entorse_membre_superieur_pas_rim(self):
+        self.assertEqual(self._cot("entorse du pouce non opérée"), "VSM 8.10")
+        self.assertEqual(self._cot("entorse du pouce", "non"), "VSM 8.10")
+        self.assertEqual(self._cot("entorse du coude", "oui"), "VSC 8.09")
+
+    def test_questions_plutot_que_supposer(self):
+        cas = {
+            "LCA": ("lca_type", "non", "VIM 8.11"),
+            "ligament croisé": ("lca_type", "opere", "RIC 8.08"),
+            "ménisque": ("menisque_type", "meniscectomie", "RIC 8.09"),
+            "BPCO": ("bpco_type", "groupe", "ARL 20.00"),
+            "kiné respiratoire": ("respi_type", "aigu", "ARL 8.49"),
+            "lymphoedème bras": ("lymph_type", "sein", None),
+            "lymphoedème après cancer du sein": ("lymph_sein_phase", "intensive", "RAV 15.50"),
+            "lymphoedème sein": ("lymph_sein_phase", "hors phase", "RAV 8.00"),
+            "AVC": ("avc_type", "hemiplegie", "NMI 9.00"),
+            "brûlure": ("brulure_etendue", "plusieurs", "RPB 9.00"),
+            "entorse": ("entorse_localisation", "poignet", None),
+            "entorse de la cheville non opérée": ("entorse_cheville_type", "externe", "RIM 8.10"),
+        }
+        for message, (attente, reponse, cotation) in cas.items():
+            result = repondre(message)
+            self.assertFalse(result["termine"], message)
+            self.assertEqual(result["attente"], attente, message)
+            result = repondre(reponse, result["nouveau_contexte"], result["attente"])
+            if cotation:
+                self.assertEqual(_extract_cotation(result["texte"]), cotation, message)
+        self.assertEqual(self._cot("entorse cheville", "autre", "non"), "VIM 8.10")
+        self.assertEqual(self._cot("tronc et bras", "avec"), "TER 9.81")
+        self.assertEqual(self._cot("lcp genou non opéré"), "VIM 8.11")
+
+    def test_alerte_revalorisation_2027(self):
+        from datetime import date
+        from formatage_reponse import alerte_revalorisation
+        ram = RULE_BY_ID["rachis_lombalgie_commune"]
+        self.assertEqual(alerte_revalorisation(ram, date(2026, 11, 23)), "")
+        self.assertIn("RAM 8.39", alerte_revalorisation(ram, date(2027, 7, 1)))
+        self.assertEqual(alerte_revalorisation(RULE_BY_ID["neurologie_hemiplegie"], date(2027, 7, 1)), "")
+
+    def test_cotations_en_vigueur_23_11_2026(self):
+        attendu = {
+            "plusieurs_territoires_sans_chirurgie": "TER 9.79",
+            "plusieurs_territoires_avec_chirurgie": "TER 9.81",
+            "amputation_au_moins_deux_membres": "APM 9.80",
+            "neurologie_atteintes_peripheriques_radiculaires_tronculaires_plusieurs_membres": "NMI 11.01",
+            "neurologie_paraplegie_tetraplegie": "NMI 12.01",
+            "neurologie_affection_stable_plusieurs": "NMI 11.00",
+            "neurologie_myopathie": "NMI 11.99",
+            "neurologie_encephalopathie_infantile": "NMI 12.00",
+            "neurologie_hemiplegie": "NMI 9.00",
+            "neurologie_affection_stable_un_membre": "NMI 8.51",
+        }
+        for rule_id, cotation in attendu.items():
+            self.assertEqual(RULE_BY_ID[rule_id]["cotation"], cotation, rule_id)
+
+    def test_entorse_cheville_formulations(self):
+        for phrase in ["entorse externe cheville non opérée", "entorse externe de la cheville non opérée",
+                       "c'est pour une entorse externe de la cheville droite non opérée"]:
+            self.assertEqual(self._cot(phrase), "RIM 8.10", phrase)
+
+    def test_fracture_poignet_radius_ou_carpe(self):
+        self.assertEqual(self._cot("fracture du poignet non opérée", "radius distal"), "RSM 8.11")
+        self.assertEqual(self._cot("fracture du poignet opérée", "os du poignet main"), "VSC 8.11")
+        self.assertEqual(self._cot("fracture du radius distal opérée"), "RSC 8.10")
+        self.assertEqual(self._cot("fracture de Pouteau-Colles non opérée"), "RSM 8.11")
 
 
 if __name__ == "__main__":

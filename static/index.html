@@ -456,11 +456,6 @@
         font-weight: 500;
       }
 
-      .badge.seances {
-        background: #e6f1fb;
-        color: #0c447c;
-      }
-
       .badge.referentiel {
         background: var(--success-bg);
         color: var(--success-text);
@@ -680,7 +675,7 @@
         analyze: 15000,
         transcribe: 45000,
       };
-      const AUTO_STOP_RECORDING_MS = 5000;
+      const AUTO_STOP_RECORDING_MS = 20000; // filet de sécurité : l'arrêt normal se fait après 2 s de silence
       const APP_VERSION = "front-refonte-20260320";
       const DEBUG_LOGS = false;
       const $ = (id) => document.getElementById(id);
@@ -924,10 +919,6 @@
         return extractField(answer, ["Libellé NGAP : ", "Acte : "]);
       }
 
-      function extractSeances(answer) {
-        return extractField(answer, ["Nombre de séances max : "]);
-      }
-
       function extractReferentiel(answer) {
         return extractField(answer, ["Référentiel : "]);
       }
@@ -1102,13 +1093,11 @@
       function buildCopyString(answer) {
         const cotation = extractCotation(answer);
         const acte = extractActe(answer);
-        const seances = extractSeances(answer);
         const referentiel = extractReferentiel(answer);
         const parts = [];
 
         if (cotation) parts.push(cotation);
         if (acte) parts.push(acte);
-        if (hasMeaningfulValue(seances)) parts.push(`${seances} max`);
         if (normalizeVoiceText(referentiel) === "oui") parts.push("Référentiel");
         if (String(answer).includes("Opéré : oui")) {
           parts.push("Opéré");
@@ -1162,7 +1151,6 @@
       function renderResultCard(meta, answer) {
         const cotation = extractCotation(answer);
         const acte = extractActe(answer);
-        const seances = extractSeances(answer);
         const referentiel = extractReferentiel(answer);
         const path = Array.isArray(meta?.path) ? meta.path : [];
         const colors = getColorForMeta(meta);
@@ -1173,9 +1161,6 @@
         const bodySvg = renderBodySchema(tag, schemaKind, colors);
         let badges = "";
 
-        if (hasMeaningfulValue(seances)) {
-          badges += `<span class="badge seances">${escapeHtml(seances)} max</span>`;
-        }
         if (normalizeVoiceText(referentiel) === "oui") {
           badges += `<span class="badge referentiel">Référentiel</span>`;
         }
@@ -1702,14 +1687,18 @@
           }
         }
 
+        let speechHeard = false;
+
         function scheduleSilenceTimeout() {
           clearSilenceTimer();
+          // 6 s pour commencer à parler, puis 2,5 s de silence après la parole.
+          const delay = speechHeard ? 2500 : 6000;
           silenceTimer = setTimeout(() => {
             if (recognition && controller.getStopReason() !== "reset") {
               $("status").textContent = "Fin d'écoute. Analyse de la dictée...";
               recognition.stop();
             }
-          }, 2000);
+          }, delay);
         }
 
         return {
@@ -1720,6 +1709,7 @@
             }
 
             finalTranscript = "";
+            speechHeard = false;
 
             return new Promise((resolve, reject) => {
               recognition = new SpeechRecognition();
@@ -1740,11 +1730,13 @@
               };
 
               recognition.onspeechstart = () => {
+                speechHeard = true;
                 $("status").textContent = "Écoute en cours...";
                 scheduleSilenceTimeout();
               };
 
               recognition.onresult = (event) => {
+                speechHeard = true;
                 let interimTranscript = "";
                 for (let index = event.resultIndex; index < event.results.length; index += 1) {
                   const transcript = pickBestAlternative(event.results[index]);

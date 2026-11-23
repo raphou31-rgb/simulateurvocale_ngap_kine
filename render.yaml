@@ -9,8 +9,6 @@ services:
         sync: false
       - key: OPENAI_STT_MODEL
         value: gpt-4o-mini-transcribe
-      - key: OPENAI_STT_PROMPT
-        value: "Transcription médicale en français pour cabinet de kinésithérapie."
       - key: STT_PROVIDER
         value: openai
       - key: NGAP_DEBUG

@@ -1,3 +1,14 @@
+# Base des cotations NGAP masso-kinésithérapie (métropole).
+# À jour au 23/11/2026 : tableau NGAP 01/01/2026 + avenant 8 (TER/APM au 28/05/2026, JO 19/12/2025)
+# + revalorisation NMI au 01/09/2026 (avenant 7).
+# Prochaine échéance connue : 01/07/2027, +0,3 sur les cotations 8.07 à 8.13 de l'article I
+# (orthopédie/rhumatologie). Voir PROCHAINE_REVALORISATION.
+NGAP_A_JOUR_AU = "2026-11-23"
+PROCHAINE_REVALORISATION = {
+    "date": "2027-07-01",
+    "description": "+0,3 sur les cotations 8.07 a 8.13 de l'article I (ex-AMS 7.5) : 8.07 -> 8.37 ... 8.13 -> 8.43",
+}
+
 NGAP_RULES = [
     {
     "id": "rachis_lombalgie_commune",
@@ -769,9 +780,9 @@ NGAP_RULES = [
     "acte": "Rééducation après fracture opérée de l'extrémité proximale de l'humérus",
     "famille": "membre superieur",
     "detail": "fracture proximale de l'humérus opérée",
-    "cotation": "RSC 8.10",
-    "seances_max": 30,
-    "referentiel": "oui",
+    "cotation": "VSC 8.10",
+    "seances_max": None,
+    "referentiel": "non",
     "keywords_any": [
         "fracture humerus operee",
         "fracture humerus opérée",
@@ -951,7 +962,7 @@ NGAP_RULES = [
         "acte": "Rééducation des atteintes périphériques radiculaires ou tronculaires concernant plusieurs membres",
         "famille": "neurologie",
         "detail": "atteintes périphériques radiculaires ou tronculaires plusieurs membres",
-        "cotation": "NMI 10.01",
+        "cotation": "NMI 11.01",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -965,7 +976,7 @@ NGAP_RULES = [
         "acte": "Rééducation de la paraplégie et de la tétraplégie",
         "famille": "neurologie",
         "detail": "paraplégie et tétraplégie",
-        "cotation": "NMI 11.01",
+        "cotation": "NMI 12.01",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -993,7 +1004,7 @@ NGAP_RULES = [
         "acte": "Rééducation d'une affection neurologique stable concernant plusieurs membres",
         "famille": "neurologie",
         "detail": "affection neurologique stable plusieurs membres",
-        "cotation": "NMI 10.00",
+        "cotation": "NMI 11.00",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -1006,7 +1017,7 @@ NGAP_RULES = [
         "acte": "Rééducation de la myopathie",
         "famille": "neurologie",
         "detail": "myopathie",
-        "cotation": "NMI 10.99",
+        "cotation": "NMI 11.99",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -1019,7 +1030,7 @@ NGAP_RULES = [
         "acte": "Rééducation de l'encéphalopathie infantile",
         "famille": "neurologie",
         "detail": "encéphalopathie infantile",
-        "cotation": "NMI 11.00",
+        "cotation": "NMI 12.00",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -1161,7 +1172,7 @@ NGAP_RULES = [
     },
     {
         "id": "vasculaire_bandage_un_membre",
-        "acte": "Supplément pour bandage multicouche, un membre",
+        "acte": "Supplément pour bandage multicouche, un membre (à ajouter à RAV 8.00)",
         "famille": "vasculaire",
         "detail": "supplément pour bandage multicouche un membre",
         "cotation": "RAV 1.00",
@@ -1174,7 +1185,7 @@ NGAP_RULES = [
     },
     {
         "id": "vasculaire_bandage_deux_membres",
-        "acte": "Supplément pour bandage multicouche, deux membres",
+        "acte": "Supplément pour bandage multicouche, deux membres (à ajouter à RAV 9.00)",
         "famille": "vasculaire",
         "detail": "supplément pour bandage multicouche deux membres",
         "cotation": "RAV 2.00",
@@ -1334,7 +1345,7 @@ NGAP_RULES = [
         "acte": "Rééducation de plusieurs membres ou du tronc et d'un ou plusieurs membres sans chirurgie",
         "famille": "plusieurs territoires",
         "detail": "plusieurs membres ou tronc et un ou plusieurs membres sans chirurgie",
-        "cotation": "TER 9.49",
+        "cotation": "TER 9.79",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -1349,7 +1360,7 @@ NGAP_RULES = [
         "acte": "Rééducation de plusieurs membres ou du tronc et d'un ou plusieurs membres avec chirurgie",
         "famille": "plusieurs territoires",
         "detail": "plusieurs membres ou tronc et un ou plusieurs membres avec chirurgie",
-        "cotation": "TER 9.51",
+        "cotation": "TER 9.81",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [
@@ -1399,7 +1410,7 @@ NGAP_RULES = [
         "acte": "Rééducation après amputation d'au moins deux membres ou du tronc et d'un ou plusieurs membres",
         "famille": "amputations",
         "detail": "au moins deux membres ou du tronc et d'un ou plusieurs membres",
-        "cotation": "APM 9.50",
+        "cotation": "APM 9.80",
         "seances_max": None,
         "referentiel": "non",
         "keywords_any": [

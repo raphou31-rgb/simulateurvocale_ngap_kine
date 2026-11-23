@@ -67,10 +67,10 @@ PHRASE_NORMALIZATION_MAP = {
     "changement de prothese": "prothese chirurgie",
     "ligament croise anterieur": "ligament croise genou",
     "croise anterieur": "ligament croise genou",
-    "ligament croise posterieur": "ligament croise genou",
-    "croise posterieur": "ligament croise genou",
+    "ligament croise posterieur": "lcpost genou",
+    "croise posterieur": "lcpost genou",
     "ligament croise": "ligament croise genou",
-    "lcp": "ligament croise genou",
+    "lcp": "lcpost genou",
     "plastie ligamentaire": "ligament croise genou chirurgie",
     "plastie en croix": "ligament croise genou chirurgie",
     "refection des ligaments": "ligament croise genou chirurgie",
@@ -102,12 +102,12 @@ PHRASE_NORMALIZATION_MAP = {
     "luxation coude": "fracture orthopedique coude",
     "pouteau colles": "fracture distale avant bras",
     "pouteau-colles": "fracture distale avant bras",
-    "menisque": "meniscectomie genou chirurgie",
-    "menisque interne": "meniscectomie genou chirurgie",
-    "menisque externe": "meniscectomie genou chirurgie",
-    "menisque opere": "meniscectomie genou chirurgie",
-    "menisque operee": "meniscectomie genou chirurgie",
-    "suture meniscale": "meniscectomie genou chirurgie",
+    "menisque": "menisque genou",
+    "menisque interne": "menisque genou",
+    "menisque externe": "menisque genou",
+    "menisque opere": "menisque genou chirurgie",
+    "menisque operee": "menisque genou chirurgie",
+    "suture meniscale": "suture menisque genou chirurgie",
     "lesion du menisque operee": "meniscectomie genou chirurgie",
     "reeducation des genoux": "genoux",
     "deux genoux": "deux membres inferieurs",
@@ -191,10 +191,12 @@ PHRASE_NORMALIZATION_MAP = {
     "bébé": "neurologie infantile",
     "imc": "paralysie cerebrale",
     "lle": "entorse cheville",
+    "epol": "epaule",
+    "epole": "epaule",
     "inversion": "entorse cheville",
     "entorse de la cheville classique": "entorse cheville",
     "foulure externe": "entorse cheville",
-    "entorse interne": "cheville non chirurgie",
+    "entorse interne": "entorse interne",
     "lli": "cheville non chirurgie",
     "instabilite chronique sans traumatisme recent": "cheville non chirurgie",
     "instabilité chronique sans traumatisme récent": "cheville non chirurgie",
@@ -277,6 +279,68 @@ FUZZY_CANONICAL_WORDS = {
 
 
 ASR_REGEX_REPLACEMENTS = [
+    # Déformations de dictée et formulations de prothèse.
+    (r"\bnom (de |d )?(operee?s?|operer|operez|opere|chirurgie)\b", "non opere"),
+    (r"\b(prothese|arthroplastie)s? (totale?s? |complete )?(de la |du |de l |d |de |d une )?(hanche|genou|epaule)\b", r"prothese \4 chirurgie"),
+    (r"\bp t h\b", "pth"),
+    (r"\bp t g\b", "ptg"),
+    (r"\bp t e\b", "pte"),
+    (r"\bl c a\b", "lca"),
+    # Négations / affirmations de chirurgie (texte sans accents, apostrophes -> espaces).
+    (r"\bn ?(a|ont|est|sont) (pas|jamais) (ete |eu d |eu de |eu )?(operee?s?|opere|operation|chirurgie|intervention)\b", "non opere"),
+    (r"\b(jamais|pas) (ete )?operee?s?\b", "non opere"),
+    (r"\bnon[ -]?(chirurgicale?s?|operatoires?)\b", "non opere"),
+    (r"\bnon-(operee?s?)\b", r"non \1"),
+    (r"\b(pas|sans|aucune?) (d |de |d une |de l )?(operation|intervention|chirurgie)s?\b", "non opere"),
+    (r"\btraitement (conservateur|fonctionnel|non chirurgical)\b", "non opere"),
+    (r"\b(suite a|apres|post) (une |l |son |sa )?(operation|intervention)\b", "opere"),
+    (r"\b(a|ont|est|sont) ete (operee?s?)\b", "opere"),
+    (r"\b(a|ont|avait|avaient) eu (une |l |son |sa )?(operation|intervention|chirurgie)\b", "opere"),
+    # Rattachement anatomique -> segment du tableau NGAP (texte déjà sans accents).
+    (r"\b(pouces?|doigts?|phalanges?|metacarpiens?|paumes?)\b", r"\1 main"),
+    (r"\bentorse (de la |de |du |d une )?(cheville|chevilles)\b", "entorse cheville"),
+    (r"\bentorse (de la |de |du )?(genou|genoux)\b", "entorse genou"),
+    (r"\bavant-bras\b", "avant bras"),
+    (r"\b(suture|reparation) (du |des |de )?menisques?\b", "suture menisque"),
+    (r"\bfracture (de l |d une |de la |du )?(extremite (inferieure |distale )?(de l |des deux os de l )?)avant bras\b", "fracture distale avant bras"),
+    (r"\bfracture (de l |d une |de la |du )?avant bras distal[e]?\b", "fracture distale avant bras"),
+    (r"\b(scaphoide|trapeze|metacarpe|metacarpien|carpe)\b", r"\1 poignet"),
+    (r"\bliberation (du |d un )?(canal|tunnel) carpien\b", "canal carpien chirurgie"),
+    (r"\bl[1-5]( ?[-/ ] ?(l[1-5]|s1))?\b", "lombaire"),
+    (r"\bc[1-7]( ?[-/ ] ?(c[1-7]|d1|t1))?\b", "cervical"),
+    (r"\b[dt](1[0-2]|[1-9])( ?[-/ ] ?[dt](1[0-2]|[1-9]))\b", "dorsal"),
+    (r"\b(plaque|vis|clou|broches?|haubanage|osteosynthese|enclouage|embrochage)\b", r"\1 opere"),
+    (r"\ben attente (d une |de l |de |d )?(chirurgie|operation|intervention)\b", "non opere"),
+    (r"\b(lli|lle|lcm|ligament lateral interne|ligament collateral (interne|medial)) (du |de la |de )?genou\b", "ligament genou"),
+    (r"\blli\b", "ligament interne genou"),
+    (r"\bosteotomie (tibiale|de valgisation|de varisation|haute)\b", "osteotomie genou chirurgie"),
+    (r"\bosteotomie\b(?! genou)", "osteotomie chirurgie"),
+    (r"\bencephalopathie (de l |chez l |d un |chez un )?enfant\b", "encephalopathie infantile"),
+    (r"\b(pneumopathie|pneumonie)\b", r"\1 respiratoire"),
+    (r"\bdupuytren\b", "dupuytren main"),
+    (r"\bplateau tibial\b", "plateau tibial genou"),
+    (r"\b(quatre|4|tous les) membres\b", "plusieurs membres"),
+    (r"\bolecrane\b", "olecrane coude"),
+    (r"\b(bimalleolaire|trimalleolaire|malleole|malleolaire|pilon tibial)\b", r"\1 cheville"),
+    (r"\bhallux valgus\b", "hallux valgus pied"),
+    (r"\b(col du femur|col femoral|trochanter|trochanterienne|cotyle)\b", r"\1 hanche"),
+    (r"\bosteotomie tibiale\b", "osteotomie genou chirurgie"),
+    (r"\bprothese (d |de l |de |d une )?epaule\b", "prothese epaule chirurgie"),
+    (r"\b(prothese|arthroplastie) unicompartimentale( du| de)? genou\b", "prothese totale genou"),
+    (r"\breconstruction (du |de )?(ligament )?croise anterieur\b", "ligamentoplastie lca genou"),
+    (r"\bamputation (trans)?(tibiale|femorale)\b", "amputation jambe"),
+    (r"\b(cervicalgie|lombalgie) non specifique\b", r"\1 commune"),
+    (r"\barthrodese\b", "arthrodese chirurgie"),
+    (r"\basthme\b", "asthme respiratoire obstructive"),
+    (r"\b(reeducation )?geriatrique\b", "sujet age"),
+    (r"\bgonarthrose\b", "gonarthrose genou"),
+    (r"\bcoxarthrose\b", "coxarthrose hanche"),
+    (r"\b(tendon d )?achille\b", "achille cheville"),
+    (r"\b(fasciite|aponevrosite|epine calcaneenne)( plantaire)?\b", "fasciite cheville pied"),
+    (r"\bpouteau[ -]?colles?\b", "fracture distale avant bras"),
+    (r"\bgoyrand[ -]?smith\b", "fracture distale avant bras"),
+    (r"\bfracture (de l |du |de la )?(extremite (inferieure|distale) (du |de l )?)?(radius|cubitus|ulna) (distal|distale|inferieur|inferieure)\b", "fracture distale avant bras"),
+    (r"\bfracture (de l |du )?extremite (inferieure|distale) (du |de l )?(radius|cubitus|ulna)\b", "fracture distale avant bras"),
     (r"\bre[ -]?education\b", "reeducation"),
     (r"\bcotassion\b", "cotation"),
     (r"\bcotacion\b", "cotation"),
@@ -347,9 +411,23 @@ def _apply_fuzzy_word_corrections(text: str) -> str:
     return " ".join(corrected)
 
 
+# Vrais mots médicaux/courants qui ne doivent JAMAIS être "corrigés" vers un autre segment
+# (ex. rotule -> epaule, pouce -> coude, orthese -> prothese, chute -> coude).
+FUZZY_PROTECTED_WORDS = {
+    "rotule", "doigt", "doigts", "pouce", "achille", "paume", "orthese", "chute", "chutes", "moignon",
+    "coupe", "poule", "boule", "toute", "toutes", "route", "doute", "goutte", "seule", "aule",
+    "bassin", "nuque", "orteil", "talon", "tibia", "femur", "radius", "cubitus", "humerus",
+    "pieds", "jambe", "jambes", "cuisse", "main", "mains", "bras", "coudes", "poignets", "hanches",
+    "chevilles", "epaules", "membres", "opere", "operee", "operes", "operees", "droit", "gauche",
+    "dorsale", "cervicale", "lombaires", "cervicales", "dorsales", "distal", "distale", "proximal", "proximale",
+}
+
+
 def _find_fuzzy_replacement(word: str) -> Optional[str]:
     clean_word = re.sub(r"[^a-z]", "", word.lower())
     if len(clean_word) < 4:
+        return None
+    if clean_word in FUZZY_PROTECTED_WORDS:
         return None
     if clean_word in PHRASE_NORMALIZATION_TOKENS and clean_word not in FUZZY_CANONICAL_WORDS:
         return None
@@ -359,8 +437,13 @@ def _find_fuzzy_replacement(word: str) -> Optional[str]:
     best_word = None
     best_distance = None
     for canonical, options in FUZZY_CANONICAL_WORDS.items():
+        # Garde-fous : même première lettre, et tolérance limitée pour les mots courts
+        # (évite "trois" -> "croise", "distal" -> "dorsal").
+        if clean_word[0] != canonical[0]:
+            continue
+        max_distance = min(options["max_distance"], 1 if len(canonical) <= 5 else 2 if len(canonical) <= 9 else 3)
         distance = _levenshtein_distance(clean_word, canonical)
-        if distance > options["max_distance"]:
+        if distance > max_distance:
             continue
         if best_distance is None or distance < best_distance:
             best_word = canonical

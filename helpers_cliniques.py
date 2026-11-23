@@ -1,10 +1,20 @@
 """Helpers de détection clinique partagés par le moteur NGAP."""
 
+import re
+
 from analyse_message import normaliser_texte
 
 
 def _contient_un_des(m, expressions):
-    return any(expr in m for expr in expressions)
+    """Sous-chaîne, sauf pour les abréviations courtes (<= 3 lettres : mi, ms, sep, lca, avc, lle...)
+    qui doivent être des mots entiers ("mi" ne doit pas matcher "domicile", ni "lle" "cheville")."""
+    for expr in expressions:
+        if len(expr) <= 3:
+            if re.search(rf"(?<![a-z0-9]){re.escape(expr)}(?![a-z0-9])", m):
+                return True
+        elif expr in m:
+            return True
+    return False
 
 
 def _contient_mot(m, mot):
@@ -134,6 +144,9 @@ def _age_moins_18(m):
         return True
     if _contient_un_des(m, ["adulte", "majeur", "plus de 18 ans"]):
         return False
+    age = re.search(r"\b(\d{1,3}) ?ans\b", m)
+    if age:
+        return int(age.group(1)) < 18
     return None
 
 
